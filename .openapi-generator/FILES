@@ -7,11 +7,13 @@ model/addFieldsData.ts
 model/addFieldsTemplateResponse.ts
 model/authenticationError.ts
 model/authenticationSuccessResponse.ts
+model/combinePdfsData.ts
 model/combinedSubmission.ts
 model/combinedSubmissionAction.ts
 model/combinedSubmissionData.ts
 model/copyTemplateData.ts
 model/createCombinedSubmissionResponse.ts
+model/createCustomFileData.ts
 model/createCustomFileResponse.ts
 model/createFolderData.ts
 model/createFolderDataFolder.ts

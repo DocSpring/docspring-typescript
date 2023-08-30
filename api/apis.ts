@@ -1,5 +1,6 @@
 export * from './PDFApi';
 import { PDFApi } from './PDFApi';
+//import { Client } from './Client';
 import * as http from 'http';
 
 export class HttpError extends Error {
@@ -11,4 +12,5 @@ export class HttpError extends Error {
 
 export { RequestFile } from '../model/models';
 
+//export const APIS = [Client, PDFApi];
 export const APIS = [PDFApi];

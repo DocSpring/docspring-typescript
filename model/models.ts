@@ -4,11 +4,13 @@ export * from './addFieldsData';
 export * from './addFieldsTemplateResponse';
 export * from './authenticationError';
 export * from './authenticationSuccessResponse';
+export * from './combinePdfsData';
 export * from './combinedSubmission';
 export * from './combinedSubmissionAction';
 export * from './combinedSubmissionData';
 export * from './copyTemplateData';
 export * from './createCombinedSubmissionResponse';
+export * from './createCustomFileData';
 export * from './createCustomFileResponse';
 export * from './createFolderData';
 export * from './createFolderDataFolder';
@@ -66,11 +68,13 @@ import { AddFieldsData } from './addFieldsData';
 import { AddFieldsTemplateResponse } from './addFieldsTemplateResponse';
 import { AuthenticationError } from './authenticationError';
 import { AuthenticationSuccessResponse } from './authenticationSuccessResponse';
+import { CombinePdfsData } from './combinePdfsData';
 import { CombinedSubmission } from './combinedSubmission';
 import { CombinedSubmissionAction } from './combinedSubmissionAction';
 import { CombinedSubmissionData } from './combinedSubmissionData';
 import { CopyTemplateData } from './copyTemplateData';
 import { CreateCombinedSubmissionResponse } from './createCombinedSubmissionResponse';
+import { CreateCustomFileData } from './createCustomFileData';
 import { CreateCustomFileResponse } from './createCustomFileResponse';
 import { CreateFolderData } from './createFolderData';
 import { CreateFolderDataFolder } from './createFolderDataFolder';
@@ -171,11 +175,13 @@ let typeMap: {[index: string]: any} = {
     "AddFieldsTemplateResponse": AddFieldsTemplateResponse,
     "AuthenticationError": AuthenticationError,
     "AuthenticationSuccessResponse": AuthenticationSuccessResponse,
+    "CombinePdfsData": CombinePdfsData,
     "CombinedSubmission": CombinedSubmission,
     "CombinedSubmissionAction": CombinedSubmissionAction,
     "CombinedSubmissionData": CombinedSubmissionData,
     "CopyTemplateData": CopyTemplateData,
     "CreateCombinedSubmissionResponse": CreateCombinedSubmissionResponse,
+    "CreateCustomFileData": CreateCustomFileData,
     "CreateCustomFileResponse": CreateCustomFileResponse,
     "CreateFolderData": CreateFolderData,
     "CreateFolderDataFolder": CreateFolderDataFolder,

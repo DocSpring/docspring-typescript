@@ -1,0 +1,1 @@
+{"version":3,"file":"moveFolderData.js","sourceRoot":"","sources":["../../model/moveFolderData.ts"],"names":[],"mappings":";;;AAcA;IAAA;IAeA,CAAC;IAHU,kCAAmB,GAA1B;QACI,OAAO,cAAc,CAAC,gBAAgB,CAAC;IAC3C,CAAC;IAXM,4BAAa,GAAuB,SAAS,CAAC;IAE9C,+BAAgB,GAA0D;QAC7E;YACI,MAAM,EAAE,gBAAgB;YACxB,UAAU,EAAE,kBAAkB;YAC9B,MAAM,EAAE,QAAQ;SACnB;KAAK,CAAC;IAKf,qBAAC;CAAA,AAfD,IAeC;AAfY,wCAAc"}

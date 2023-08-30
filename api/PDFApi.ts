@@ -19,10 +19,12 @@ import { AddFieldsData } from '../model/addFieldsData';
 import { AddFieldsTemplateResponse } from '../model/addFieldsTemplateResponse';
 import { AuthenticationError } from '../model/authenticationError';
 import { AuthenticationSuccessResponse } from '../model/authenticationSuccessResponse';
+import { CombinePdfsData } from '../model/combinePdfsData';
 import { CombinedSubmission } from '../model/combinedSubmission';
 import { CombinedSubmissionData } from '../model/combinedSubmissionData';
 import { CopyTemplateData } from '../model/copyTemplateData';
 import { CreateCombinedSubmissionResponse } from '../model/createCombinedSubmissionResponse';
+import { CreateCustomFileData } from '../model/createCustomFileData';
 import { CreateCustomFileResponse } from '../model/createCustomFileResponse';
 import { CreateFolderData } from '../model/createFolderData';
 import { CreateHtmlTemplateData } from '../model/createHtmlTemplateData';
@@ -366,9 +368,9 @@ export class PDFApi {
     /**
      * 
      * @summary Merge submission PDFs, template PDFs, or custom files
-     * @param UNKNOWN_PARAM_NAME 
+     * @param data 
      */
-    public async combinePdfs (UNKNOWN_PARAM_NAME: , options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CreateCombinedSubmissionResponse;  }> {
+    public async combinePdfs (data: CombinePdfsData, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CreateCombinedSubmissionResponse;  }> {
         const localVarPath = this.basePath + '/combined_submissions?v=2';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
@@ -381,9 +383,9 @@ export class PDFApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'UNKNOWN_PARAM_NAME' is not null or undefined
-        if (UNKNOWN_PARAM_NAME === null || UNKNOWN_PARAM_NAME === undefined) {
-            throw new Error('Required parameter UNKNOWN_PARAM_NAME was null or undefined when calling combinePdfs.');
+        // verify required parameter 'data' is not null or undefined
+        if (data === null || data === undefined) {
+            throw new Error('Required parameter data was null or undefined when calling combinePdfs.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -397,7 +399,7 @@ export class PDFApi {
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             json: true,
-            body: ObjectSerializer.serialize(UNKNOWN_PARAM_NAME, "")
+            body: ObjectSerializer.serialize(data, "CombinePdfsData")
         };
 
         let authenticationPromise = Promise.resolve();
@@ -584,9 +586,9 @@ export class PDFApi {
     /**
      * 
      * @summary Create a new custom file from a cached presign upload
-     * @param UNKNOWN_PARAM_NAME 
+     * @param data 
      */
-    public async createCustomFileFromUpload (UNKNOWN_PARAM_NAME: , options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CreateCustomFileResponse;  }> {
+    public async createCustomFileFromUpload (data: CreateCustomFileData, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: CreateCustomFileResponse;  }> {
         const localVarPath = this.basePath + '/custom_files';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
@@ -599,9 +601,9 @@ export class PDFApi {
         }
         let localVarFormParams: any = {};
 
-        // verify required parameter 'UNKNOWN_PARAM_NAME' is not null or undefined
-        if (UNKNOWN_PARAM_NAME === null || UNKNOWN_PARAM_NAME === undefined) {
-            throw new Error('Required parameter UNKNOWN_PARAM_NAME was null or undefined when calling createCustomFileFromUpload.');
+        // verify required parameter 'data' is not null or undefined
+        if (data === null || data === undefined) {
+            throw new Error('Required parameter data was null or undefined when calling createCustomFileFromUpload.');
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);
@@ -615,7 +617,7 @@ export class PDFApi {
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             json: true,
-            body: ObjectSerializer.serialize(UNKNOWN_PARAM_NAME, "")
+            body: ObjectSerializer.serialize(data, "CreateCustomFileData")
         };
 
         let authenticationPromise = Promise.resolve();
