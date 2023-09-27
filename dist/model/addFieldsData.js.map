@@ -1,1 +1,0 @@
-{"version":3,"file":"addFieldsData.js","sourceRoot":"","sources":["../../model/addFieldsData.ts"],"names":[],"mappings":";;;AAcA;IAAA;IAeA,CAAC;IAHU,iCAAmB,GAA1B;QACI,OAAO,aAAa,CAAC,gBAAgB,CAAC;IAC1C,CAAC;IAXM,2BAAa,GAAuB,SAAS,CAAC;IAE9C,8BAAgB,GAA0D;QAC7E;YACI,MAAM,EAAE,QAAQ;YAChB,UAAU,EAAE,QAAQ;YACpB,MAAM,EAAE,eAAe;SAC1B;KAAK,CAAC;IAKf,oBAAC;CAAA,AAfD,IAeC;AAfY,sCAAa"}
