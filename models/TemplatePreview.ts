@@ -47,8 +47,14 @@ export class TemplatePreview {
     'slackWebhookUrl': string | null;
     'templateType': TemplatePreviewTemplateTypeEnum;
     'updatedAt': string | null;
+    'versionPublishedAt': string | null;
+    'version': string | null;
     'webhookUrl': string | null;
     'demo': boolean;
+    'latestVersion': string | null;
+    'lastChangedAt': string | null;
+    'lastChangedByType': TemplatePreviewLastChangedByTypeEnum | null;
+    'lastChangedById': string | null;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -260,6 +266,18 @@ export class TemplatePreview {
             "format": ""
         },
         {
+            "name": "versionPublishedAt",
+            "baseName": "version_published_at",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "version",
+            "baseName": "version",
+            "type": "string",
+            "format": ""
+        },
+        {
             "name": "webhookUrl",
             "baseName": "webhook_url",
             "type": "string",
@@ -269,6 +287,30 @@ export class TemplatePreview {
             "name": "demo",
             "baseName": "demo",
             "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "latestVersion",
+            "baseName": "latest_version",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "lastChangedAt",
+            "baseName": "last_changed_at",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "lastChangedByType",
+            "baseName": "last_changed_by_type",
+            "type": "TemplatePreviewLastChangedByTypeEnum",
+            "format": ""
+        },
+        {
+            "name": "lastChangedById",
+            "baseName": "last_changed_by_id",
+            "type": "string",
             "format": ""
         }    ];
 
@@ -290,5 +332,9 @@ export enum TemplatePreviewDocumentStateEnum {
 export enum TemplatePreviewTemplateTypeEnum {
     Pdf = 'pdf',
     Html = 'html'
+}
+export enum TemplatePreviewLastChangedByTypeEnum {
+    User = 'user',
+    Api = 'api'
 }
 

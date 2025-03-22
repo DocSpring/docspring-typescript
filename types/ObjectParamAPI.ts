@@ -30,7 +30,9 @@ import { ListSubmissionsResponse } from '../models/ListSubmissionsResponse';
 import { MoveFolderData } from '../models/MoveFolderData';
 import { MoveTemplateData } from '../models/MoveTemplateData';
 import { MultipleErrorsResponse } from '../models/MultipleErrorsResponse';
+import { PublishVersionData } from '../models/PublishVersionData';
 import { RenameFolderData } from '../models/RenameFolderData';
+import { RestoreVersionData } from '../models/RestoreVersionData';
 import { Submission } from '../models/Submission';
 import { SubmissionAction } from '../models/SubmissionAction';
 import { SubmissionBatch } from '../models/SubmissionBatch';
@@ -45,7 +47,9 @@ import { SuccessErrorResponse } from '../models/SuccessErrorResponse';
 import { SuccessMultipleErrorsResponse } from '../models/SuccessMultipleErrorsResponse';
 import { Template } from '../models/Template';
 import { TemplateAddFieldsResponse } from '../models/TemplateAddFieldsResponse';
+import { TemplateDeleteResponse } from '../models/TemplateDeleteResponse';
 import { TemplatePreview } from '../models/TemplatePreview';
+import { TemplatePublishVersionResponse } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
 import { UpdateSubmissionDataRequestData } from '../models/UpdateSubmissionDataRequestData';
 import { UploadPresignResponse } from '../models/UploadPresignResponse';
@@ -251,6 +255,13 @@ export interface PDFApiDeleteTemplateRequest {
      * @memberof PDFApideleteTemplate
      */
     templateId: string
+    /**
+     * 
+     * Defaults to: undefined
+     * @type string
+     * @memberof PDFApideleteTemplate
+     */
+    version?: string
 }
 
 export interface PDFApiExpireCombinedSubmissionRequest {
@@ -609,6 +620,22 @@ export interface PDFApiMoveTemplateToFolderRequest {
     data: MoveTemplateData
 }
 
+export interface PDFApiPublishTemplateVersionRequest {
+    /**
+     * 
+     * Defaults to: undefined
+     * @type string
+     * @memberof PDFApipublishTemplateVersion
+     */
+    templateId: string
+    /**
+     * 
+     * @type PublishVersionData
+     * @memberof PDFApipublishTemplateVersion
+     */
+    data: PublishVersionData
+}
+
 export interface PDFApiRenameFolderRequest {
     /**
      * 
@@ -623,6 +650,22 @@ export interface PDFApiRenameFolderRequest {
      * @memberof PDFApirenameFolder
      */
     data: RenameFolderData
+}
+
+export interface PDFApiRestoreTemplateVersionRequest {
+    /**
+     * 
+     * Defaults to: undefined
+     * @type string
+     * @memberof PDFApirestoreTemplateVersion
+     */
+    templateId: string
+    /**
+     * 
+     * @type RestoreVersionData
+     * @memberof PDFApirestoreTemplateVersion
+     */
+    data: RestoreVersionData
 }
 
 export interface PDFApiTestAuthenticationRequest {
@@ -879,16 +922,16 @@ export class ObjectPDFApi {
      * Delete a template
      * @param param the request object
      */
-    public deleteTemplateWithHttpInfo(param: PDFApiDeleteTemplateRequest, options?: Configuration): Promise<HttpInfo<SuccessMultipleErrorsResponse>> {
-        return this.api.deleteTemplateWithHttpInfo(param.templateId,  options).toPromise();
+    public deleteTemplateWithHttpInfo(param: PDFApiDeleteTemplateRequest, options?: Configuration): Promise<HttpInfo<TemplateDeleteResponse>> {
+        return this.api.deleteTemplateWithHttpInfo(param.templateId, param.version,  options).toPromise();
     }
 
     /**
      * Delete a template
      * @param param the request object
      */
-    public deleteTemplate(param: PDFApiDeleteTemplateRequest, options?: Configuration): Promise<SuccessMultipleErrorsResponse> {
-        return this.api.deleteTemplate(param.templateId,  options).toPromise();
+    public deleteTemplate(param: PDFApiDeleteTemplateRequest, options?: Configuration): Promise<TemplateDeleteResponse> {
+        return this.api.deleteTemplate(param.templateId, param.version,  options).toPromise();
     }
 
     /**
@@ -1004,7 +1047,7 @@ export class ObjectPDFApi {
     }
 
     /**
-     * Fetch the full template attributes
+     * Fetch the full attributes for a PDF template
      * @param param the request object
      */
     public getFullTemplateWithHttpInfo(param: PDFApiGetFullTemplateRequest, options?: Configuration): Promise<HttpInfo<Template>> {
@@ -1012,7 +1055,7 @@ export class ObjectPDFApi {
     }
 
     /**
-     * Fetch the full template attributes
+     * Fetch the full attributes for a PDF template
      * @param param the request object
      */
     public getFullTemplate(param: PDFApiGetFullTemplateRequest, options?: Configuration): Promise<Template> {
@@ -1212,6 +1255,22 @@ export class ObjectPDFApi {
     }
 
     /**
+     * Publish a template version
+     * @param param the request object
+     */
+    public publishTemplateVersionWithHttpInfo(param: PDFApiPublishTemplateVersionRequest, options?: Configuration): Promise<HttpInfo<TemplatePublishVersionResponse>> {
+        return this.api.publishTemplateVersionWithHttpInfo(param.templateId, param.data,  options).toPromise();
+    }
+
+    /**
+     * Publish a template version
+     * @param param the request object
+     */
+    public publishTemplateVersion(param: PDFApiPublishTemplateVersionRequest, options?: Configuration): Promise<TemplatePublishVersionResponse> {
+        return this.api.publishTemplateVersion(param.templateId, param.data,  options).toPromise();
+    }
+
+    /**
      * Rename a folder
      * @param param the request object
      */
@@ -1225,6 +1284,22 @@ export class ObjectPDFApi {
      */
     public renameFolder(param: PDFApiRenameFolderRequest, options?: Configuration): Promise<Folder> {
         return this.api.renameFolder(param.folderId, param.data,  options).toPromise();
+    }
+
+    /**
+     * Restore a template version
+     * @param param the request object
+     */
+    public restoreTemplateVersionWithHttpInfo(param: PDFApiRestoreTemplateVersionRequest, options?: Configuration): Promise<HttpInfo<SuccessErrorResponse>> {
+        return this.api.restoreTemplateVersionWithHttpInfo(param.templateId, param.data,  options).toPromise();
+    }
+
+    /**
+     * Restore a template version
+     * @param param the request object
+     */
+    public restoreTemplateVersion(param: PDFApiRestoreTemplateVersionRequest, options?: Configuration): Promise<SuccessErrorResponse> {
+        return this.api.restoreTemplateVersion(param.templateId, param.data,  options).toPromise();
     }
 
     /**

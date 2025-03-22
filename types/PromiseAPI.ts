@@ -30,7 +30,9 @@ import { ListSubmissionsResponse } from '../models/ListSubmissionsResponse';
 import { MoveFolderData } from '../models/MoveFolderData';
 import { MoveTemplateData } from '../models/MoveTemplateData';
 import { MultipleErrorsResponse } from '../models/MultipleErrorsResponse';
+import { PublishVersionData } from '../models/PublishVersionData';
 import { RenameFolderData } from '../models/RenameFolderData';
+import { RestoreVersionData } from '../models/RestoreVersionData';
 import { Submission } from '../models/Submission';
 import { SubmissionAction } from '../models/SubmissionAction';
 import { SubmissionBatch } from '../models/SubmissionBatch';
@@ -45,7 +47,9 @@ import { SuccessErrorResponse } from '../models/SuccessErrorResponse';
 import { SuccessMultipleErrorsResponse } from '../models/SuccessMultipleErrorsResponse';
 import { Template } from '../models/Template';
 import { TemplateAddFieldsResponse } from '../models/TemplateAddFieldsResponse';
+import { TemplateDeleteResponse } from '../models/TemplateDeleteResponse';
 import { TemplatePreview } from '../models/TemplatePreview';
+import { TemplatePublishVersionResponse } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
 import { UpdateSubmissionDataRequestData } from '../models/UpdateSubmissionDataRequestData';
 import { UploadPresignResponse } from '../models/UploadPresignResponse';
@@ -320,18 +324,20 @@ export class PromisePDFApi {
     /**
      * Delete a template
      * @param templateId
+     * @param [version]
      */
-    public deleteTemplateWithHttpInfo(templateId: string, _options?: Configuration): Promise<HttpInfo<SuccessMultipleErrorsResponse>> {
-        const result = this.api.deleteTemplateWithHttpInfo(templateId, _options);
+    public deleteTemplateWithHttpInfo(templateId: string, version?: string, _options?: Configuration): Promise<HttpInfo<TemplateDeleteResponse>> {
+        const result = this.api.deleteTemplateWithHttpInfo(templateId, version, _options);
         return result.toPromise();
     }
 
     /**
      * Delete a template
      * @param templateId
+     * @param [version]
      */
-    public deleteTemplate(templateId: string, _options?: Configuration): Promise<SuccessMultipleErrorsResponse> {
-        const result = this.api.deleteTemplate(templateId, _options);
+    public deleteTemplate(templateId: string, version?: string, _options?: Configuration): Promise<TemplateDeleteResponse> {
+        const result = this.api.deleteTemplate(templateId, version, _options);
         return result.toPromise();
     }
 
@@ -470,7 +476,7 @@ export class PromisePDFApi {
     }
 
     /**
-     * Fetch the full template attributes
+     * Fetch the full attributes for a PDF template
      * @param templateId
      */
     public getFullTemplateWithHttpInfo(templateId: string, _options?: Configuration): Promise<HttpInfo<Template>> {
@@ -479,7 +485,7 @@ export class PromisePDFApi {
     }
 
     /**
-     * Fetch the full template attributes
+     * Fetch the full attributes for a PDF template
      * @param templateId
      */
     public getFullTemplate(templateId: string, _options?: Configuration): Promise<Template> {
@@ -740,6 +746,26 @@ export class PromisePDFApi {
     }
 
     /**
+     * Publish a template version
+     * @param templateId
+     * @param data
+     */
+    public publishTemplateVersionWithHttpInfo(templateId: string, data: PublishVersionData, _options?: Configuration): Promise<HttpInfo<TemplatePublishVersionResponse>> {
+        const result = this.api.publishTemplateVersionWithHttpInfo(templateId, data, _options);
+        return result.toPromise();
+    }
+
+    /**
+     * Publish a template version
+     * @param templateId
+     * @param data
+     */
+    public publishTemplateVersion(templateId: string, data: PublishVersionData, _options?: Configuration): Promise<TemplatePublishVersionResponse> {
+        const result = this.api.publishTemplateVersion(templateId, data, _options);
+        return result.toPromise();
+    }
+
+    /**
      * Rename a folder
      * @param folderId
      * @param data
@@ -756,6 +782,26 @@ export class PromisePDFApi {
      */
     public renameFolder(folderId: string, data: RenameFolderData, _options?: Configuration): Promise<Folder> {
         const result = this.api.renameFolder(folderId, data, _options);
+        return result.toPromise();
+    }
+
+    /**
+     * Restore a template version
+     * @param templateId
+     * @param data
+     */
+    public restoreTemplateVersionWithHttpInfo(templateId: string, data: RestoreVersionData, _options?: Configuration): Promise<HttpInfo<SuccessErrorResponse>> {
+        const result = this.api.restoreTemplateVersionWithHttpInfo(templateId, data, _options);
+        return result.toPromise();
+    }
+
+    /**
+     * Restore a template version
+     * @param templateId
+     * @param data
+     */
+    public restoreTemplateVersion(templateId: string, data: RestoreVersionData, _options?: Configuration): Promise<SuccessErrorResponse> {
+        const result = this.api.restoreTemplateVersion(templateId, data, _options);
         return result.toPromise();
     }
 

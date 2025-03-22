@@ -17,7 +17,7 @@ export class SubmissionDataRequestEvent {
     'submissionId': string | null;
     'submissionDataRequestId': string | null;
     'eventType': SubmissionDataRequestEventEventTypeEnum;
-    'messageType': SubmissionDataRequestEventMessageTypeEnum;
+    'messageType': SubmissionDataRequestEventMessageTypeEnum | null;
     'messageRecipient': string | null;
     'occurredAt': string | null;
 

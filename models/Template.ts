@@ -47,8 +47,14 @@ export class Template {
     'slackWebhookUrl': string | null;
     'templateType': TemplateTemplateTypeEnum;
     'updatedAt': string | null;
+    'versionPublishedAt': string | null;
+    'version': string | null;
     'webhookUrl': string | null;
     'demo': boolean;
+    'latestVersion': string | null;
+    'lastChangedAt': string | null;
+    'lastChangedByType': TemplateLastChangedByTypeEnum | null;
+    'lastChangedById': string | null;
     'defaults': any;
     'fieldOrder': Array<Array<number>>;
     'fields': any;
@@ -59,6 +65,7 @@ export class Template {
     'predefinedFields': Array<any>;
     'scss': string | null;
     'sharedFieldData': any;
+    'versions': Array<any>;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -270,6 +277,18 @@ export class Template {
             "format": ""
         },
         {
+            "name": "versionPublishedAt",
+            "baseName": "version_published_at",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "version",
+            "baseName": "version",
+            "type": "string",
+            "format": ""
+        },
+        {
             "name": "webhookUrl",
             "baseName": "webhook_url",
             "type": "string",
@@ -279,6 +298,30 @@ export class Template {
             "name": "demo",
             "baseName": "demo",
             "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "latestVersion",
+            "baseName": "latest_version",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "lastChangedAt",
+            "baseName": "last_changed_at",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "lastChangedByType",
+            "baseName": "last_changed_by_type",
+            "type": "TemplateLastChangedByTypeEnum",
+            "format": ""
+        },
+        {
+            "name": "lastChangedById",
+            "baseName": "last_changed_by_id",
+            "type": "string",
             "format": ""
         },
         {
@@ -340,6 +383,12 @@ export class Template {
             "baseName": "shared_field_data",
             "type": "any",
             "format": ""
+        },
+        {
+            "name": "versions",
+            "baseName": "versions",
+            "type": "Array<any>",
+            "format": ""
         }    ];
 
     static getAttributeTypeMap() {
@@ -360,5 +409,9 @@ export enum TemplateDocumentStateEnum {
 export enum TemplateTemplateTypeEnum {
     Pdf = 'pdf',
     Html = 'html'
+}
+export enum TemplateLastChangedByTypeEnum {
+    User = 'user',
+    Api = 'api'
 }
 

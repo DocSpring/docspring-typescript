@@ -25,7 +25,7 @@ Method | HTTP request | Description
 [**generatePreview**](PDFApi.md#generatePreview) | **POST** /submissions/{submission_id}/generate_preview | Generated a preview PDF for partially completed data requests
 [**getCombinedSubmission**](PDFApi.md#getCombinedSubmission) | **GET** /combined_submissions/{combined_submission_id} | Check the status of a combined submission (merged PDFs)
 [**getDataRequest**](PDFApi.md#getDataRequest) | **GET** /data_requests/{data_request_id} | Look up a submission data request
-[**getFullTemplate**](PDFApi.md#getFullTemplate) | **GET** /templates/{template_id}?full&#x3D;true | Fetch the full template attributes
+[**getFullTemplate**](PDFApi.md#getFullTemplate) | **GET** /templates/{template_id}?full&#x3D;true | Fetch the full attributes for a PDF template
 [**getPresignUrl**](PDFApi.md#getPresignUrl) | **GET** /uploads/presign | Get a presigned URL so that you can upload a file to our AWS S3 bucket
 [**getSubmission**](PDFApi.md#getSubmission) | **GET** /submissions/{submission_id} | Check the status of a PDF
 [**getSubmissionBatch**](PDFApi.md#getSubmissionBatch) | **GET** /submissions/batches/{submission_batch_id} | Check the status of a submission batch job
@@ -38,7 +38,9 @@ Method | HTTP request | Description
 [**listTemplates**](PDFApi.md#listTemplates) | **GET** /templates | Get a list of all templates
 [**moveFolderToFolder**](PDFApi.md#moveFolderToFolder) | **POST** /folders/{folder_id}/move | Move a folder
 [**moveTemplateToFolder**](PDFApi.md#moveTemplateToFolder) | **POST** /templates/{template_id}/move | Move Template to folder
+[**publishTemplateVersion**](PDFApi.md#publishTemplateVersion) | **POST** /templates/{template_id}/publish_version | Publish a template version
 [**renameFolder**](PDFApi.md#renameFolder) | **POST** /folders/{folder_id}/rename | Rename a folder
+[**restoreTemplateVersion**](PDFApi.md#restoreTemplateVersion) | **POST** /templates/{template_id}/restore_version | Restore a template version
 [**testAuthentication**](PDFApi.md#testAuthentication) | **GET** /authentication | Test Authentication
 [**updateDataRequest**](PDFApi.md#updateDataRequest) | **PUT** /data_requests/{data_request_id} | Update a submission data request
 [**updateTemplate**](PDFApi.md#updateTemplate) | **PUT** /templates/{template_id} | Update a Template
@@ -818,7 +820,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
 # **deleteTemplate**
-> SuccessMultipleErrorsResponse deleteTemplate()
+> TemplateDeleteResponse deleteTemplate()
 
 
 ### Example
@@ -834,6 +836,8 @@ const apiInstance = new PDFApi(configuration);
 const request: PDFApiDeleteTemplateRequest = {
   
   templateId: "tpl_1234567890abcdef01",
+  
+  version: "0.1.0",
 };
 
 const data = await apiInstance.deleteTemplate(request);
@@ -846,11 +850,12 @@ console.log('API called successfully. Returned data:', data);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **templateId** | [**string**] |  | defaults to undefined
+ **version** | [**string**] |  | (optional) defaults to undefined
 
 
 ### Return type
 
-**SuccessMultipleErrorsResponse**
+**TemplateDeleteResponse**
 
 ### Authorization
 
@@ -865,7 +870,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | template deleted |  -  |
+**200** | template version deleted successfully |  -  |
 **404** | template not found |  -  |
 **401** | authentication failed |  -  |
 
@@ -1018,6 +1023,7 @@ const request: PDFApiGeneratePdfRequest = {
     metadata: {},
     password: "password_example",
     test: true,
+    version: "version_example",
   },
     // Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) (optional)
   wait: true,
@@ -1088,6 +1094,7 @@ const request: PDFApiGeneratePdfForHtmlTemplateRequest = {
     metadata: {},
     password: "password_example",
     test: true,
+    version: "version_example",
   },
     // Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain) (optional)
   wait: true,
@@ -2041,6 +2048,67 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
+# **publishTemplateVersion**
+> TemplatePublishVersionResponse publishTemplateVersion(data)
+
+
+### Example
+
+
+```typescript
+import { createConfiguration, PDFApi } from '';
+import type { PDFApiPublishTemplateVersionRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new PDFApi(configuration);
+
+const request: PDFApiPublishTemplateVersionRequest = {
+  
+  templateId: "tpl_1234567890abcdef01",
+  
+  data: {
+    description: "description_example",
+    versionType: "versionType_example",
+  },
+};
+
+const data = await apiInstance.publishTemplateVersion(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **PublishVersionData**|  |
+ **templateId** | [**string**] |  | defaults to undefined
+
+
+### Return type
+
+**TemplatePublishVersionResponse**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | version published successfully |  -  |
+**422** | invalid version type |  -  |
+**404** | template not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
 # **renameFolder**
 > Folder renameFolder(data)
 
@@ -2097,6 +2165,66 @@ Name | Type | Description  | Notes
 **422** | name already exist |  -  |
 **404** | folder doesn\&#39;t belong to me |  -  |
 **200** | successful rename |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **restoreTemplateVersion**
+> SuccessErrorResponse restoreTemplateVersion(data)
+
+
+### Example
+
+
+```typescript
+import { createConfiguration, PDFApi } from '';
+import type { PDFApiRestoreTemplateVersionRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new PDFApi(configuration);
+
+const request: PDFApiRestoreTemplateVersionRequest = {
+  
+  templateId: "tpl_1234567890abcdef01",
+  
+  data: {
+    version: "version_example",
+  },
+};
+
+const data = await apiInstance.restoreTemplateVersion(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **RestoreVersionData**|  |
+ **templateId** | [**string**] |  | defaults to undefined
+
+
+### Return type
+
+**SuccessErrorResponse**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | version restored successfully |  -  |
+**422** | draft version not allowed |  -  |
+**404** | template version not found |  -  |
 **401** | authentication failed |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)

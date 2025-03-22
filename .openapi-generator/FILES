@@ -42,7 +42,9 @@ models/MoveFolderData.ts
 models/MoveTemplateData.ts
 models/MultipleErrorsResponse.ts
 models/ObjectSerializer.ts
+models/PublishVersionData.ts
 models/RenameFolderData.ts
+models/RestoreVersionData.ts
 models/Submission.ts
 models/SubmissionAction.ts
 models/SubmissionBatch.ts
@@ -57,7 +59,9 @@ models/SuccessErrorResponse.ts
 models/SuccessMultipleErrorsResponse.ts
 models/Template.ts
 models/TemplateAddFieldsResponse.ts
+models/TemplateDeleteResponse.ts
 models/TemplatePreview.ts
+models/TemplatePublishVersionResponse.ts
 models/UpdateHtmlTemplate.ts
 models/UpdateSubmissionDataRequestData.ts
 models/UploadPresignResponse.ts

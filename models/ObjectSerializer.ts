@@ -27,7 +27,9 @@ export * from '../models/ListSubmissionsResponse';
 export * from '../models/MoveFolderData';
 export * from '../models/MoveTemplateData';
 export * from '../models/MultipleErrorsResponse';
+export * from '../models/PublishVersionData';
 export * from '../models/RenameFolderData';
+export * from '../models/RestoreVersionData';
 export * from '../models/Submission';
 export * from '../models/SubmissionAction';
 export * from '../models/SubmissionBatch';
@@ -42,7 +44,9 @@ export * from '../models/SuccessErrorResponse';
 export * from '../models/SuccessMultipleErrorsResponse';
 export * from '../models/Template';
 export * from '../models/TemplateAddFieldsResponse';
+export * from '../models/TemplateDeleteResponse';
 export * from '../models/TemplatePreview';
+export * from '../models/TemplatePublishVersionResponse';
 export * from '../models/UpdateHtmlTemplate';
 export * from '../models/UpdateSubmissionDataRequestData';
 export * from '../models/UploadPresignResponse';
@@ -76,8 +80,10 @@ import { ListSubmissionsResponse } from '../models/ListSubmissionsResponse';
 import { MoveFolderData } from '../models/MoveFolderData';
 import { MoveTemplateData } from '../models/MoveTemplateData';
 import { MultipleErrorsResponse, MultipleErrorsResponseStatusEnum    } from '../models/MultipleErrorsResponse';
+import { PublishVersionData } from '../models/PublishVersionData';
 import { RenameFolderData } from '../models/RenameFolderData';
-import { Submission          , SubmissionStateEnum            , SubmissionSourceEnum     } from '../models/Submission';
+import { RestoreVersionData } from '../models/RestoreVersionData';
+import { Submission          , SubmissionStateEnum   , SubmissionTemplateTypeEnum            , SubmissionSourceEnum     } from '../models/Submission';
 import { SubmissionAction  , SubmissionActionStateEnum  , SubmissionActionActionTypeEnum  , SubmissionActionActionCategoryEnum    } from '../models/SubmissionAction';
 import { SubmissionBatch , SubmissionBatchStateEnum         } from '../models/SubmissionBatch';
 import { SubmissionBatchData } from '../models/SubmissionBatchData';
@@ -86,12 +92,14 @@ import { SubmissionDataRequest       , SubmissionDataRequestStateEnum     , Subm
 import { SubmissionDataRequestEvent   , SubmissionDataRequestEventEventTypeEnum  , SubmissionDataRequestEventMessageTypeEnum     } from '../models/SubmissionDataRequestEvent';
 import { SubmissionDataRequestShow       , SubmissionDataRequestShowStateEnum     , SubmissionDataRequestShowAuthTypeEnum  , SubmissionDataRequestShowAuthSecondFactorTypeEnum            } from '../models/SubmissionDataRequestShow';
 import { SubmissionDataRequestToken } from '../models/SubmissionDataRequestToken';
-import { SubmissionPreview          , SubmissionPreviewStateEnum             } from '../models/SubmissionPreview';
+import { SubmissionPreview          , SubmissionPreviewStateEnum   , SubmissionPreviewTemplateTypeEnum             } from '../models/SubmissionPreview';
 import { SuccessErrorResponse, SuccessErrorResponseStatusEnum    } from '../models/SuccessErrorResponse';
 import { SuccessMultipleErrorsResponse, SuccessMultipleErrorsResponseStatusEnum    } from '../models/SuccessMultipleErrorsResponse';
-import { Template       , TemplateDocumentStateEnum                          , TemplateTemplateTypeEnum                } from '../models/Template';
+import { Template       , TemplateDocumentStateEnum                          , TemplateTemplateTypeEnum         , TemplateLastChangedByTypeEnum               } from '../models/Template';
 import { TemplateAddFieldsResponse, TemplateAddFieldsResponseStatusEnum     } from '../models/TemplateAddFieldsResponse';
-import { TemplatePreview       , TemplatePreviewDocumentStateEnum                          , TemplatePreviewTemplateTypeEnum      } from '../models/TemplatePreview';
+import { TemplateDeleteResponse, TemplateDeleteResponseStatusEnum      } from '../models/TemplateDeleteResponse';
+import { TemplatePreview       , TemplatePreviewDocumentStateEnum                          , TemplatePreviewTemplateTypeEnum         , TemplatePreviewLastChangedByTypeEnum    } from '../models/TemplatePreview';
+import { TemplatePublishVersionResponse, TemplatePublishVersionResponseStatusEnum     } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
 import { UpdateSubmissionDataRequestData, UpdateSubmissionDataRequestDataAuthTypeEnum      } from '../models/UpdateSubmissionDataRequestData';
 import { UploadPresignResponse   , UploadPresignResponseMethodEnum   } from '../models/UploadPresignResponse';
@@ -127,6 +135,7 @@ let enumsMap: Set<string> = new Set<string>([
     "ErrorResponseStatusEnum",
     "MultipleErrorsResponseStatusEnum",
     "SubmissionStateEnum",
+    "SubmissionTemplateTypeEnum",
     "SubmissionSourceEnum",
     "SubmissionActionStateEnum",
     "SubmissionActionActionTypeEnum",
@@ -142,13 +151,18 @@ let enumsMap: Set<string> = new Set<string>([
     "SubmissionDataRequestShowAuthTypeEnum",
     "SubmissionDataRequestShowAuthSecondFactorTypeEnum",
     "SubmissionPreviewStateEnum",
+    "SubmissionPreviewTemplateTypeEnum",
     "SuccessErrorResponseStatusEnum",
     "SuccessMultipleErrorsResponseStatusEnum",
     "TemplateDocumentStateEnum",
     "TemplateTemplateTypeEnum",
+    "TemplateLastChangedByTypeEnum",
     "TemplateAddFieldsResponseStatusEnum",
+    "TemplateDeleteResponseStatusEnum",
     "TemplatePreviewDocumentStateEnum",
     "TemplatePreviewTemplateTypeEnum",
+    "TemplatePreviewLastChangedByTypeEnum",
+    "TemplatePublishVersionResponseStatusEnum",
     "UpdateSubmissionDataRequestDataAuthTypeEnum",
     "UploadPresignResponseMethodEnum",
 ]);
@@ -183,7 +197,9 @@ let typeMap: {[index: string]: any} = {
     "MoveFolderData": MoveFolderData,
     "MoveTemplateData": MoveTemplateData,
     "MultipleErrorsResponse": MultipleErrorsResponse,
+    "PublishVersionData": PublishVersionData,
     "RenameFolderData": RenameFolderData,
+    "RestoreVersionData": RestoreVersionData,
     "Submission": Submission,
     "SubmissionAction": SubmissionAction,
     "SubmissionBatch": SubmissionBatch,
@@ -198,7 +214,9 @@ let typeMap: {[index: string]: any} = {
     "SuccessMultipleErrorsResponse": SuccessMultipleErrorsResponse,
     "Template": Template,
     "TemplateAddFieldsResponse": TemplateAddFieldsResponse,
+    "TemplateDeleteResponse": TemplateDeleteResponse,
     "TemplatePreview": TemplatePreview,
+    "TemplatePublishVersionResponse": TemplatePublishVersionResponse,
     "UpdateHtmlTemplate": UpdateHtmlTemplate,
     "UpdateSubmissionDataRequestData": UpdateSubmissionDataRequestData,
     "UploadPresignResponse": UploadPresignResponse,

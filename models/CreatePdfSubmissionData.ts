@@ -22,6 +22,7 @@ export class CreatePdfSubmissionData {
     'metadata'?: any;
     'password'?: string;
     'test'?: boolean;
+    'version'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -74,6 +75,12 @@ export class CreatePdfSubmissionData {
             "name": "test",
             "baseName": "test",
             "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "version",
+            "baseName": "version",
+            "type": "string",
             "format": ""
         }    ];
 

@@ -22,6 +22,7 @@ export class CreateHtmlSubmissionData {
     'metadata'?: any;
     'password'?: string;
     'test'?: boolean;
+    'version'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -80,6 +81,12 @@ export class CreateHtmlSubmissionData {
             "name": "test",
             "baseName": "test",
             "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "version",
+            "baseName": "version",
+            "type": "string",
             "format": ""
         }    ];
 

@@ -16,7 +16,7 @@ export class CombinedSubmissionAction {
     'id': string | null;
     'integrationId': string | null;
     'state': CombinedSubmissionActionStateEnum;
-    'actionType': CombinedSubmissionActionActionTypeEnum;
+    'actionType': CombinedSubmissionActionActionTypeEnum | null;
     'actionCategory': CombinedSubmissionActionActionCategoryEnum;
     'resultData': any;
 

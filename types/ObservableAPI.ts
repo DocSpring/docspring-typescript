@@ -31,7 +31,9 @@ import { ListSubmissionsResponse } from '../models/ListSubmissionsResponse';
 import { MoveFolderData } from '../models/MoveFolderData';
 import { MoveTemplateData } from '../models/MoveTemplateData';
 import { MultipleErrorsResponse } from '../models/MultipleErrorsResponse';
+import { PublishVersionData } from '../models/PublishVersionData';
 import { RenameFolderData } from '../models/RenameFolderData';
+import { RestoreVersionData } from '../models/RestoreVersionData';
 import { Submission } from '../models/Submission';
 import { SubmissionAction } from '../models/SubmissionAction';
 import { SubmissionBatch } from '../models/SubmissionBatch';
@@ -46,7 +48,9 @@ import { SuccessErrorResponse } from '../models/SuccessErrorResponse';
 import { SuccessMultipleErrorsResponse } from '../models/SuccessMultipleErrorsResponse';
 import { Template } from '../models/Template';
 import { TemplateAddFieldsResponse } from '../models/TemplateAddFieldsResponse';
+import { TemplateDeleteResponse } from '../models/TemplateDeleteResponse';
 import { TemplatePreview } from '../models/TemplatePreview';
+import { TemplatePublishVersionResponse } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
 import { UpdateSubmissionDataRequestData } from '../models/UpdateSubmissionDataRequestData';
 import { UploadPresignResponse } from '../models/UploadPresignResponse';
@@ -493,9 +497,10 @@ export class ObservablePDFApi {
     /**
      * Delete a template
      * @param templateId
+     * @param [version]
      */
-    public deleteTemplateWithHttpInfo(templateId: string, _options?: Configuration): Observable<HttpInfo<SuccessMultipleErrorsResponse>> {
-        const requestContextPromise = this.requestFactory.deleteTemplate(templateId, _options);
+    public deleteTemplateWithHttpInfo(templateId: string, version?: string, _options?: Configuration): Observable<HttpInfo<TemplateDeleteResponse>> {
+        const requestContextPromise = this.requestFactory.deleteTemplate(templateId, version, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
@@ -516,9 +521,10 @@ export class ObservablePDFApi {
     /**
      * Delete a template
      * @param templateId
+     * @param [version]
      */
-    public deleteTemplate(templateId: string, _options?: Configuration): Observable<SuccessMultipleErrorsResponse> {
-        return this.deleteTemplateWithHttpInfo(templateId, _options).pipe(map((apiResponse: HttpInfo<SuccessMultipleErrorsResponse>) => apiResponse.data));
+    public deleteTemplate(templateId: string, version?: string, _options?: Configuration): Observable<TemplateDeleteResponse> {
+        return this.deleteTemplateWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<TemplateDeleteResponse>) => apiResponse.data));
     }
 
     /**
@@ -747,7 +753,7 @@ export class ObservablePDFApi {
     }
 
     /**
-     * Fetch the full template attributes
+     * Fetch the full attributes for a PDF template
      * @param templateId
      */
     public getFullTemplateWithHttpInfo(templateId: string, _options?: Configuration): Observable<HttpInfo<Template>> {
@@ -770,7 +776,7 @@ export class ObservablePDFApi {
     }
 
     /**
-     * Fetch the full template attributes
+     * Fetch the full attributes for a PDF template
      * @param templateId
      */
     public getFullTemplate(templateId: string, _options?: Configuration): Observable<Template> {
@@ -1186,6 +1192,39 @@ export class ObservablePDFApi {
     }
 
     /**
+     * Publish a template version
+     * @param templateId
+     * @param data
+     */
+    public publishTemplateVersionWithHttpInfo(templateId: string, data: PublishVersionData, _options?: Configuration): Observable<HttpInfo<TemplatePublishVersionResponse>> {
+        const requestContextPromise = this.requestFactory.publishTemplateVersion(templateId, data, _options);
+
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of this.configuration.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => this.configuration.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of this.configuration.middleware) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.publishTemplateVersionWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Publish a template version
+     * @param templateId
+     * @param data
+     */
+    public publishTemplateVersion(templateId: string, data: PublishVersionData, _options?: Configuration): Observable<TemplatePublishVersionResponse> {
+        return this.publishTemplateVersionWithHttpInfo(templateId, data, _options).pipe(map((apiResponse: HttpInfo<TemplatePublishVersionResponse>) => apiResponse.data));
+    }
+
+    /**
      * Rename a folder
      * @param folderId
      * @param data
@@ -1216,6 +1255,39 @@ export class ObservablePDFApi {
      */
     public renameFolder(folderId: string, data: RenameFolderData, _options?: Configuration): Observable<Folder> {
         return this.renameFolderWithHttpInfo(folderId, data, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
+    }
+
+    /**
+     * Restore a template version
+     * @param templateId
+     * @param data
+     */
+    public restoreTemplateVersionWithHttpInfo(templateId: string, data: RestoreVersionData, _options?: Configuration): Observable<HttpInfo<SuccessErrorResponse>> {
+        const requestContextPromise = this.requestFactory.restoreTemplateVersion(templateId, data, _options);
+
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of this.configuration.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => this.configuration.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of this.configuration.middleware) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.restoreTemplateVersionWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Restore a template version
+     * @param templateId
+     * @param data
+     */
+    public restoreTemplateVersion(templateId: string, data: RestoreVersionData, _options?: Configuration): Observable<SuccessErrorResponse> {
+        return this.restoreTemplateVersionWithHttpInfo(templateId, data, _options).pipe(map((apiResponse: HttpInfo<SuccessErrorResponse>) => apiResponse.data));
     }
 
     /**

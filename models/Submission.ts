@@ -27,6 +27,8 @@ export class Submission {
     'processedAt': string | null;
     'state': SubmissionStateEnum;
     'templateId': string | null;
+    'templateType': SubmissionTemplateTypeEnum;
+    'templateVersion': string | null;
     'test': boolean;
     'truncatedText': any | null;
     'pdfHash': string | null;
@@ -114,6 +116,18 @@ export class Submission {
         {
             "name": "templateId",
             "baseName": "template_id",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "templateType",
+            "baseName": "template_type",
+            "type": "SubmissionTemplateTypeEnum",
+            "format": ""
+        },
+        {
+            "name": "templateVersion",
+            "baseName": "template_version",
             "type": "string",
             "format": ""
         },
@@ -210,6 +224,10 @@ export enum SubmissionStateEnum {
     AccountSuspended = 'account_suspended',
     LicenseRevoked = 'license_revoked',
     Accidental = 'accidental'
+}
+export enum SubmissionTemplateTypeEnum {
+    Pdf = 'pdf',
+    Html = 'html'
 }
 export enum SubmissionSourceEnum {
     Api = 'api',

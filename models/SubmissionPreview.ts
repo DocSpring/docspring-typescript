@@ -27,6 +27,8 @@ export class SubmissionPreview {
     'processedAt': string | null;
     'state': SubmissionPreviewStateEnum;
     'templateId': string | null;
+    'templateType': SubmissionPreviewTemplateTypeEnum;
+    'templateVersion': string | null;
     'test': boolean;
     'truncatedText': any | null;
     'pdfHash': string | null;
@@ -115,6 +117,18 @@ export class SubmissionPreview {
             "format": ""
         },
         {
+            "name": "templateType",
+            "baseName": "template_type",
+            "type": "SubmissionPreviewTemplateTypeEnum",
+            "format": ""
+        },
+        {
+            "name": "templateVersion",
+            "baseName": "template_version",
+            "type": "string",
+            "format": ""
+        },
+        {
             "name": "test",
             "baseName": "test",
             "type": "boolean",
@@ -189,5 +203,9 @@ export enum SubmissionPreviewStateEnum {
     AccountSuspended = 'account_suspended',
     LicenseRevoked = 'license_revoked',
     Accidental = 'accidental'
+}
+export enum SubmissionPreviewTemplateTypeEnum {
+    Pdf = 'pdf',
+    Html = 'html'
 }
 
