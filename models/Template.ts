@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -13,58 +13,58 @@
 import { HttpFile } from '../http/http';
 
 export class Template {
-    'addDataRequestSubmissionIdFooters': boolean;
-    'allowAdditionalProperties': boolean;
+    'add_data_request_submission_id_footers': boolean;
+    'allow_additional_properties': boolean;
     'description': string | null;
-    'documentFilename': string | null;
-    'documentMd5': string | null;
-    'documentParseError': boolean;
-    'documentProcessed': boolean;
-    'documentState': TemplateDocumentStateEnum;
-    'documentUrl': string | null;
-    'editableSubmissions': boolean;
-    'embedDomains': string | null;
-    'encryptPdfsPassword': string | null;
-    'encryptPdfs': boolean;
-    'expirationInterval': string;
-    'expireAfter': number;
-    'expireSubmissions': boolean;
-    'externalPredefinedFieldsTemplateId': string | null;
-    'externalPredefinedFieldsTemplateName': string | null;
-    'firstTemplate': boolean;
+    'document_filename': string | null;
+    'document_md5': string | null;
+    'document_parse_error': boolean;
+    'document_processed': boolean;
+    'document_state': TemplateDocumentStateEnum;
+    'document_url': string | null;
+    'editable_submissions': boolean;
+    'embed_domains': string | null;
+    'encrypt_pdfs_password': string | null;
+    'encrypt_pdfs': boolean;
+    'expiration_interval': string;
+    'expire_after': number;
+    'expire_submissions': boolean;
+    'external_predefined_fields_template_id': string | null;
+    'external_predefined_fields_template_name': string | null;
+    'first_template': boolean;
     'id': string | null;
     'locked': boolean;
-    'mergeAuditTrailPdf': boolean;
+    'merge_audit_trail_pdf': boolean;
     'name': string | null;
-    'pageCount': number;
-    'pageDimensions': Array<Array<number>> | null;
-    'parentFolderId': string | null;
+    'page_count': number;
+    'page_dimensions': Array<Array<number>> | null;
+    'parent_folder_id': string | null;
     'path': string | null;
-    'permanentDocumentUrl': string | null;
-    'publicSubmissions': boolean;
-    'publicWebForm': boolean;
-    'redirectUrl': string | null;
-    'slackWebhookUrl': string | null;
-    'templateType': TemplateTemplateTypeEnum;
-    'updatedAt': string | null;
-    'versionPublishedAt': string | null;
+    'permanent_document_url': string | null;
+    'public_submissions': boolean;
+    'public_web_form': boolean;
+    'redirect_url': string | null;
+    'slack_webhook_url': string | null;
+    'template_type': TemplateTemplateTypeEnum;
+    'updated_at': string | null;
+    'version_published_at': string | null;
     'version': string | null;
-    'webhookUrl': string | null;
+    'webhook_url': string | null;
     'demo': boolean;
-    'latestVersion': string | null;
-    'lastChangedAt': string | null;
-    'lastChangedByType': TemplateLastChangedByTypeEnum | null;
-    'lastChangedById': string | null;
+    'latest_version': string | null;
+    'last_changed_at': string | null;
+    'last_changed_by_type': TemplateLastChangedByTypeEnum | null;
+    'last_changed_by_id': string | null;
     'defaults': any;
-    'fieldOrder': Array<Array<number>>;
+    'field_order': Array<Array<number>>;
     'fields': any;
-    'footerHtml': string | null;
-    'headerHtml': string | null;
-    'htmlEngineOptions': any;
+    'footer_html': string | null;
+    'header_html': string | null;
+    'html_engine_options': any;
     'html': string | null;
-    'predefinedFields': Array<any>;
+    'predefined_fields': Array<any>;
     'scss': string | null;
-    'sharedFieldData': any;
+    'shared_field_data': any;
     'versions': Array<any>;
 
     static readonly discriminator: string | undefined = undefined;
@@ -73,13 +73,13 @@ export class Template {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "addDataRequestSubmissionIdFooters",
+            "name": "add_data_request_submission_id_footers",
             "baseName": "add_data_request_submission_id_footers",
             "type": "boolean",
             "format": ""
         },
         {
-            "name": "allowAdditionalProperties",
+            "name": "allow_additional_properties",
             "baseName": "allow_additional_properties",
             "type": "boolean",
             "format": ""
@@ -91,97 +91,97 @@ export class Template {
             "format": ""
         },
         {
-            "name": "documentFilename",
+            "name": "document_filename",
             "baseName": "document_filename",
             "type": "string",
             "format": ""
         },
         {
-            "name": "documentMd5",
+            "name": "document_md5",
             "baseName": "document_md5",
             "type": "string",
             "format": ""
         },
         {
-            "name": "documentParseError",
+            "name": "document_parse_error",
             "baseName": "document_parse_error",
             "type": "boolean",
             "format": ""
         },
         {
-            "name": "documentProcessed",
+            "name": "document_processed",
             "baseName": "document_processed",
             "type": "boolean",
             "format": ""
         },
         {
-            "name": "documentState",
+            "name": "document_state",
             "baseName": "document_state",
             "type": "TemplateDocumentStateEnum",
             "format": ""
         },
         {
-            "name": "documentUrl",
+            "name": "document_url",
             "baseName": "document_url",
             "type": "string",
             "format": ""
         },
         {
-            "name": "editableSubmissions",
+            "name": "editable_submissions",
             "baseName": "editable_submissions",
             "type": "boolean",
             "format": ""
         },
         {
-            "name": "embedDomains",
+            "name": "embed_domains",
             "baseName": "embed_domains",
             "type": "string",
             "format": ""
         },
         {
-            "name": "encryptPdfsPassword",
+            "name": "encrypt_pdfs_password",
             "baseName": "encrypt_pdfs_password",
             "type": "string",
             "format": ""
         },
         {
-            "name": "encryptPdfs",
+            "name": "encrypt_pdfs",
             "baseName": "encrypt_pdfs",
             "type": "boolean",
             "format": ""
         },
         {
-            "name": "expirationInterval",
+            "name": "expiration_interval",
             "baseName": "expiration_interval",
             "type": "string",
             "format": ""
         },
         {
-            "name": "expireAfter",
+            "name": "expire_after",
             "baseName": "expire_after",
             "type": "number",
             "format": ""
         },
         {
-            "name": "expireSubmissions",
+            "name": "expire_submissions",
             "baseName": "expire_submissions",
             "type": "boolean",
             "format": ""
         },
         {
-            "name": "externalPredefinedFieldsTemplateId",
+            "name": "external_predefined_fields_template_id",
             "baseName": "external_predefined_fields_template_id",
             "type": "string",
             "format": ""
         },
         {
-            "name": "externalPredefinedFieldsTemplateName",
+            "name": "external_predefined_fields_template_name",
             "baseName": "external_predefined_fields_template_name",
             "type": "string",
             "format": ""
         },
         {
-            "name": "firstTemplate",
+            "name": "first_template",
             "baseName": "first_template",
             "type": "boolean",
             "format": ""
@@ -199,7 +199,7 @@ export class Template {
             "format": ""
         },
         {
-            "name": "mergeAuditTrailPdf",
+            "name": "merge_audit_trail_pdf",
             "baseName": "merge_audit_trail_pdf",
             "type": "boolean",
             "format": ""
@@ -211,19 +211,19 @@ export class Template {
             "format": ""
         },
         {
-            "name": "pageCount",
+            "name": "page_count",
             "baseName": "page_count",
             "type": "number",
             "format": ""
         },
         {
-            "name": "pageDimensions",
+            "name": "page_dimensions",
             "baseName": "page_dimensions",
             "type": "Array<Array<number>>",
             "format": ""
         },
         {
-            "name": "parentFolderId",
+            "name": "parent_folder_id",
             "baseName": "parent_folder_id",
             "type": "string",
             "format": ""
@@ -235,49 +235,49 @@ export class Template {
             "format": ""
         },
         {
-            "name": "permanentDocumentUrl",
+            "name": "permanent_document_url",
             "baseName": "permanent_document_url",
             "type": "string",
             "format": ""
         },
         {
-            "name": "publicSubmissions",
+            "name": "public_submissions",
             "baseName": "public_submissions",
             "type": "boolean",
             "format": ""
         },
         {
-            "name": "publicWebForm",
+            "name": "public_web_form",
             "baseName": "public_web_form",
             "type": "boolean",
             "format": ""
         },
         {
-            "name": "redirectUrl",
+            "name": "redirect_url",
             "baseName": "redirect_url",
             "type": "string",
             "format": ""
         },
         {
-            "name": "slackWebhookUrl",
+            "name": "slack_webhook_url",
             "baseName": "slack_webhook_url",
             "type": "string",
             "format": ""
         },
         {
-            "name": "templateType",
+            "name": "template_type",
             "baseName": "template_type",
             "type": "TemplateTemplateTypeEnum",
             "format": ""
         },
         {
-            "name": "updatedAt",
+            "name": "updated_at",
             "baseName": "updated_at",
             "type": "string",
             "format": ""
         },
         {
-            "name": "versionPublishedAt",
+            "name": "version_published_at",
             "baseName": "version_published_at",
             "type": "string",
             "format": ""
@@ -289,7 +289,7 @@ export class Template {
             "format": ""
         },
         {
-            "name": "webhookUrl",
+            "name": "webhook_url",
             "baseName": "webhook_url",
             "type": "string",
             "format": ""
@@ -301,25 +301,25 @@ export class Template {
             "format": ""
         },
         {
-            "name": "latestVersion",
+            "name": "latest_version",
             "baseName": "latest_version",
             "type": "string",
             "format": ""
         },
         {
-            "name": "lastChangedAt",
+            "name": "last_changed_at",
             "baseName": "last_changed_at",
             "type": "string",
             "format": ""
         },
         {
-            "name": "lastChangedByType",
+            "name": "last_changed_by_type",
             "baseName": "last_changed_by_type",
             "type": "TemplateLastChangedByTypeEnum",
             "format": ""
         },
         {
-            "name": "lastChangedById",
+            "name": "last_changed_by_id",
             "baseName": "last_changed_by_id",
             "type": "string",
             "format": ""
@@ -331,7 +331,7 @@ export class Template {
             "format": ""
         },
         {
-            "name": "fieldOrder",
+            "name": "field_order",
             "baseName": "field_order",
             "type": "Array<Array<number>>",
             "format": ""
@@ -343,19 +343,19 @@ export class Template {
             "format": ""
         },
         {
-            "name": "footerHtml",
+            "name": "footer_html",
             "baseName": "footer_html",
             "type": "string",
             "format": ""
         },
         {
-            "name": "headerHtml",
+            "name": "header_html",
             "baseName": "header_html",
             "type": "string",
             "format": ""
         },
         {
-            "name": "htmlEngineOptions",
+            "name": "html_engine_options",
             "baseName": "html_engine_options",
             "type": "any",
             "format": ""
@@ -367,7 +367,7 @@ export class Template {
             "format": ""
         },
         {
-            "name": "predefinedFields",
+            "name": "predefined_fields",
             "baseName": "predefined_fields",
             "type": "Array<any>",
             "format": ""
@@ -379,7 +379,7 @@ export class Template {
             "format": ""
         },
         {
-            "name": "sharedFieldData",
+            "name": "shared_field_data",
             "baseName": "shared_field_data",
             "type": "any",
             "format": ""

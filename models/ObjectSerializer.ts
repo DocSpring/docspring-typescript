@@ -3,13 +3,11 @@ export * from '../models/BatchGeneratePdfs201Response';
 export * from '../models/CombinePdfsData';
 export * from '../models/CombinedSubmission';
 export * from '../models/CombinedSubmissionAction';
-export * from '../models/CombinedSubmissionData';
 export * from '../models/CopyTemplateOptions';
 export * from '../models/CreateCombinedSubmissionResponse';
 export * from '../models/CreateCustomFileData';
 export * from '../models/CreateCustomFileResponse';
 export * from '../models/CreateFolderData';
-export * from '../models/CreateHtmlSubmissionData';
 export * from '../models/CreateHtmlTemplate';
 export * from '../models/CreatePdfSubmissionData';
 export * from '../models/CreatePdfTemplate';
@@ -20,6 +18,7 @@ export * from '../models/CreateSubmissionDataRequestResponse';
 export * from '../models/CreateSubmissionDataRequestTokenResponse';
 export * from '../models/CreateSubmissionResponse';
 export * from '../models/CustomFile';
+export * from '../models/ErrorOrMultipleErrorsResponse';
 export * from '../models/ErrorResponse';
 export * from '../models/Folder';
 export * from '../models/JsonSchema';
@@ -31,6 +30,7 @@ export * from '../models/PublishVersionData';
 export * from '../models/RenameFolderData';
 export * from '../models/RestoreVersionData';
 export * from '../models/Submission';
+export * from '../models/Submission422Response';
 export * from '../models/SubmissionAction';
 export * from '../models/SubmissionBatch';
 export * from '../models/SubmissionBatchData';
@@ -48,6 +48,7 @@ export * from '../models/TemplateDeleteResponse';
 export * from '../models/TemplatePreview';
 export * from '../models/TemplatePublishVersionResponse';
 export * from '../models/UpdateHtmlTemplate';
+export * from '../models/UpdatePdfTemplate';
 export * from '../models/UpdateSubmissionDataRequestData';
 export * from '../models/UploadPresignResponse';
 
@@ -56,23 +57,22 @@ import { BatchGeneratePdfs201Response, BatchGeneratePdfs201ResponseStatusEnum   
 import { CombinePdfsData } from '../models/CombinePdfsData';
 import { CombinedSubmission , CombinedSubmissionStateEnum               } from '../models/CombinedSubmission';
 import { CombinedSubmissionAction  , CombinedSubmissionActionStateEnum  , CombinedSubmissionActionActionTypeEnum  , CombinedSubmissionActionActionCategoryEnum    } from '../models/CombinedSubmissionAction';
-import { CombinedSubmissionData } from '../models/CombinedSubmissionData';
 import { CopyTemplateOptions } from '../models/CopyTemplateOptions';
 import { CreateCombinedSubmissionResponse, CreateCombinedSubmissionResponseStatusEnum     } from '../models/CreateCombinedSubmissionResponse';
 import { CreateCustomFileData } from '../models/CreateCustomFileData';
 import { CreateCustomFileResponse, CreateCustomFileResponseStatusEnum     } from '../models/CreateCustomFileResponse';
 import { CreateFolderData } from '../models/CreateFolderData';
-import { CreateHtmlSubmissionData } from '../models/CreateHtmlSubmissionData';
 import { CreateHtmlTemplate } from '../models/CreateHtmlTemplate';
 import { CreatePdfSubmissionData } from '../models/CreatePdfSubmissionData';
 import { CreatePdfTemplate } from '../models/CreatePdfTemplate';
-import { CreateSubmissionDataRequestData, CreateSubmissionDataRequestDataAuthSecondFactorTypeEnum  , CreateSubmissionDataRequestDataAuthTypeEnum      } from '../models/CreateSubmissionDataRequestData';
-import { CreateSubmissionDataRequestEventRequest, CreateSubmissionDataRequestEventRequestEventTypeEnum  , CreateSubmissionDataRequestEventRequestMessageTypeEnum   } from '../models/CreateSubmissionDataRequestEventRequest';
+import { CreateSubmissionDataRequestData  , CreateSubmissionDataRequestDataAuthSecondFactorTypeEnum    , CreateSubmissionDataRequestDataAuthTypeEnum           } from '../models/CreateSubmissionDataRequestData';
+import { CreateSubmissionDataRequestEventRequest, CreateSubmissionDataRequestEventRequestEventTypeEnum   , CreateSubmissionDataRequestEventRequestMessageTypeEnum    } from '../models/CreateSubmissionDataRequestEventRequest';
 import { CreateSubmissionDataRequestEventResponse, CreateSubmissionDataRequestEventResponseStatusEnum     } from '../models/CreateSubmissionDataRequestEventResponse';
 import { CreateSubmissionDataRequestResponse, CreateSubmissionDataRequestResponseStatusEnum     } from '../models/CreateSubmissionDataRequestResponse';
 import { CreateSubmissionDataRequestTokenResponse, CreateSubmissionDataRequestTokenResponseStatusEnum     } from '../models/CreateSubmissionDataRequestTokenResponse';
 import { CreateSubmissionResponse, CreateSubmissionResponseStatusEnum     } from '../models/CreateSubmissionResponse';
 import { CustomFile } from '../models/CustomFile';
+import { ErrorOrMultipleErrorsResponse, ErrorOrMultipleErrorsResponseStatusEnum     } from '../models/ErrorOrMultipleErrorsResponse';
 import { ErrorResponse, ErrorResponseStatusEnum    } from '../models/ErrorResponse';
 import { Folder } from '../models/Folder';
 import { JsonSchema } from '../models/JsonSchema';
@@ -84,6 +84,7 @@ import { PublishVersionData } from '../models/PublishVersionData';
 import { RenameFolderData } from '../models/RenameFolderData';
 import { RestoreVersionData } from '../models/RestoreVersionData';
 import { Submission          , SubmissionStateEnum   , SubmissionTemplateTypeEnum            , SubmissionSourceEnum     } from '../models/Submission';
+import { Submission422Response, Submission422ResponseStatusEnum      } from '../models/Submission422Response';
 import { SubmissionAction  , SubmissionActionStateEnum  , SubmissionActionActionTypeEnum  , SubmissionActionActionCategoryEnum    } from '../models/SubmissionAction';
 import { SubmissionBatch , SubmissionBatchStateEnum         } from '../models/SubmissionBatch';
 import { SubmissionBatchData } from '../models/SubmissionBatchData';
@@ -101,7 +102,8 @@ import { TemplateDeleteResponse, TemplateDeleteResponseStatusEnum      } from '.
 import { TemplatePreview       , TemplatePreviewDocumentStateEnum                          , TemplatePreviewTemplateTypeEnum         , TemplatePreviewLastChangedByTypeEnum    } from '../models/TemplatePreview';
 import { TemplatePublishVersionResponse, TemplatePublishVersionResponseStatusEnum     } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
-import { UpdateSubmissionDataRequestData, UpdateSubmissionDataRequestDataAuthTypeEnum      } from '../models/UpdateSubmissionDataRequestData';
+import { UpdatePdfTemplate } from '../models/UpdatePdfTemplate';
+import { UpdateSubmissionDataRequestData  , UpdateSubmissionDataRequestDataAuthSecondFactorTypeEnum    , UpdateSubmissionDataRequestDataAuthTypeEnum          } from '../models/UpdateSubmissionDataRequestData';
 import { UploadPresignResponse   , UploadPresignResponseMethodEnum   } from '../models/UploadPresignResponse';
 
 /* tslint:disable:no-unused-variable */
@@ -132,11 +134,13 @@ let enumsMap: Set<string> = new Set<string>([
     "CreateSubmissionDataRequestResponseStatusEnum",
     "CreateSubmissionDataRequestTokenResponseStatusEnum",
     "CreateSubmissionResponseStatusEnum",
+    "ErrorOrMultipleErrorsResponseStatusEnum",
     "ErrorResponseStatusEnum",
     "MultipleErrorsResponseStatusEnum",
     "SubmissionStateEnum",
     "SubmissionTemplateTypeEnum",
     "SubmissionSourceEnum",
+    "Submission422ResponseStatusEnum",
     "SubmissionActionStateEnum",
     "SubmissionActionActionTypeEnum",
     "SubmissionActionActionCategoryEnum",
@@ -163,6 +167,7 @@ let enumsMap: Set<string> = new Set<string>([
     "TemplatePreviewTemplateTypeEnum",
     "TemplatePreviewLastChangedByTypeEnum",
     "TemplatePublishVersionResponseStatusEnum",
+    "UpdateSubmissionDataRequestDataAuthSecondFactorTypeEnum",
     "UpdateSubmissionDataRequestDataAuthTypeEnum",
     "UploadPresignResponseMethodEnum",
 ]);
@@ -173,13 +178,11 @@ let typeMap: {[index: string]: any} = {
     "CombinePdfsData": CombinePdfsData,
     "CombinedSubmission": CombinedSubmission,
     "CombinedSubmissionAction": CombinedSubmissionAction,
-    "CombinedSubmissionData": CombinedSubmissionData,
     "CopyTemplateOptions": CopyTemplateOptions,
     "CreateCombinedSubmissionResponse": CreateCombinedSubmissionResponse,
     "CreateCustomFileData": CreateCustomFileData,
     "CreateCustomFileResponse": CreateCustomFileResponse,
     "CreateFolderData": CreateFolderData,
-    "CreateHtmlSubmissionData": CreateHtmlSubmissionData,
     "CreateHtmlTemplate": CreateHtmlTemplate,
     "CreatePdfSubmissionData": CreatePdfSubmissionData,
     "CreatePdfTemplate": CreatePdfTemplate,
@@ -190,6 +193,7 @@ let typeMap: {[index: string]: any} = {
     "CreateSubmissionDataRequestTokenResponse": CreateSubmissionDataRequestTokenResponse,
     "CreateSubmissionResponse": CreateSubmissionResponse,
     "CustomFile": CustomFile,
+    "ErrorOrMultipleErrorsResponse": ErrorOrMultipleErrorsResponse,
     "ErrorResponse": ErrorResponse,
     "Folder": Folder,
     "JsonSchema": JsonSchema,
@@ -201,6 +205,7 @@ let typeMap: {[index: string]: any} = {
     "RenameFolderData": RenameFolderData,
     "RestoreVersionData": RestoreVersionData,
     "Submission": Submission,
+    "Submission422Response": Submission422Response,
     "SubmissionAction": SubmissionAction,
     "SubmissionBatch": SubmissionBatch,
     "SubmissionBatchData": SubmissionBatchData,
@@ -218,6 +223,7 @@ let typeMap: {[index: string]: any} = {
     "TemplatePreview": TemplatePreview,
     "TemplatePublishVersionResponse": TemplatePublishVersionResponse,
     "UpdateHtmlTemplate": UpdateHtmlTemplate,
+    "UpdatePdfTemplate": UpdatePdfTemplate,
     "UpdateSubmissionDataRequestData": UpdateSubmissionDataRequestData,
     "UploadPresignResponse": UploadPresignResponse,
 }
@@ -350,13 +356,16 @@ export class ObjectSerializer {
             }
             return transformedData;
         } else if (type === "Date") {
+            if (!(data instanceof Date)) {
+                return data;
+            }
             if (format == "date") {
                 let month = data.getMonth()+1
-                month = month < 10 ? "0" + month.toString() : month.toString()
+                let monthStr = month < 10 ? "0" + month.toString() : month.toString()
                 let day = data.getDate();
-                day = day < 10 ? "0" + day.toString() : day.toString();
+                let dayStr = day < 10 ? "0" + day.toString() : day.toString();
 
-                return data.getFullYear() + "-" + month + "-" + day;
+                return data.getFullYear() + "-" + monthStr + "-" + dayStr;
             } else {
                 return data.toISOString();
             }

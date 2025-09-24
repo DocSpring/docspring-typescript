@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -17,24 +17,24 @@ export class SubmissionDataRequestShow {
     'email': string | null;
     'name': string | null;
     'order': number | null;
-    'sortOrder': number;
+    'sort_order': number;
     'fields': Array<string> | null;
     'metadata': any | null;
     'state': SubmissionDataRequestShowStateEnum;
-    'viewedAt': string | null;
-    'completedAt': string | null;
+    'viewed_at': string | null;
+    'completed_at': string | null;
     'data': any | null;
-    'authType': SubmissionDataRequestShowAuthTypeEnum;
-    'authSecondFactorType': SubmissionDataRequestShowAuthSecondFactorTypeEnum;
-    'authProvider': string | null;
-    'authSessionStartedAt': string | null;
-    'authSessionIdHash': string | null;
-    'authUserIdHash': string | null;
-    'authUsernameHash': string | null;
-    'authPhoneNumberHash': string | null;
-    'ipAddress': string | null;
-    'userAgent': string | null;
-    'submissionId': string | null;
+    'auth_type': SubmissionDataRequestShowAuthTypeEnum;
+    'auth_second_factor_type': SubmissionDataRequestShowAuthSecondFactorTypeEnum;
+    'auth_provider': string | null;
+    'auth_session_started_at': string | null;
+    'auth_session_id_hash': string | null;
+    'auth_user_id_hash': string | null;
+    'auth_username_hash': string | null;
+    'auth_phone_number_hash': string | null;
+    'ip_address': string | null;
+    'user_agent': string | null;
+    'submission_id': string | null;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -66,7 +66,7 @@ export class SubmissionDataRequestShow {
             "format": ""
         },
         {
-            "name": "sortOrder",
+            "name": "sort_order",
             "baseName": "sort_order",
             "type": "number",
             "format": ""
@@ -90,13 +90,13 @@ export class SubmissionDataRequestShow {
             "format": ""
         },
         {
-            "name": "viewedAt",
+            "name": "viewed_at",
             "baseName": "viewed_at",
             "type": "string",
             "format": ""
         },
         {
-            "name": "completedAt",
+            "name": "completed_at",
             "baseName": "completed_at",
             "type": "string",
             "format": ""
@@ -108,67 +108,67 @@ export class SubmissionDataRequestShow {
             "format": ""
         },
         {
-            "name": "authType",
+            "name": "auth_type",
             "baseName": "auth_type",
             "type": "SubmissionDataRequestShowAuthTypeEnum",
             "format": ""
         },
         {
-            "name": "authSecondFactorType",
+            "name": "auth_second_factor_type",
             "baseName": "auth_second_factor_type",
             "type": "SubmissionDataRequestShowAuthSecondFactorTypeEnum",
             "format": ""
         },
         {
-            "name": "authProvider",
+            "name": "auth_provider",
             "baseName": "auth_provider",
             "type": "string",
             "format": ""
         },
         {
-            "name": "authSessionStartedAt",
+            "name": "auth_session_started_at",
             "baseName": "auth_session_started_at",
             "type": "string",
             "format": ""
         },
         {
-            "name": "authSessionIdHash",
+            "name": "auth_session_id_hash",
             "baseName": "auth_session_id_hash",
             "type": "string",
             "format": ""
         },
         {
-            "name": "authUserIdHash",
+            "name": "auth_user_id_hash",
             "baseName": "auth_user_id_hash",
             "type": "string",
             "format": ""
         },
         {
-            "name": "authUsernameHash",
+            "name": "auth_username_hash",
             "baseName": "auth_username_hash",
             "type": "string",
             "format": ""
         },
         {
-            "name": "authPhoneNumberHash",
+            "name": "auth_phone_number_hash",
             "baseName": "auth_phone_number_hash",
             "type": "string",
             "format": ""
         },
         {
-            "name": "ipAddress",
+            "name": "ip_address",
             "baseName": "ip_address",
             "type": "string",
             "format": ""
         },
         {
-            "name": "userAgent",
+            "name": "user_agent",
             "baseName": "user_agent",
             "type": "string",
             "format": ""
         },
         {
-            "name": "submissionId",
+            "name": "submission_id",
             "baseName": "submission_id",
             "type": "string",
             "format": ""

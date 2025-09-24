@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -13,11 +13,11 @@
 import { HttpFile } from '../http/http';
 
 export class CombinePdfsData {
-    'deleteCustomFiles'?: boolean;
-    'expiresIn'?: number;
+    'delete_custom_files'?: boolean;
+    'expires_in'?: number;
     'metadata'?: any;
     'password'?: string;
-    'sourcePdfs': Array<any>;
+    'source_pdfs': Array<any>;
     'test'?: boolean;
 
     static readonly discriminator: string | undefined = undefined;
@@ -26,13 +26,13 @@ export class CombinePdfsData {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "deleteCustomFiles",
+            "name": "delete_custom_files",
             "baseName": "delete_custom_files",
             "type": "boolean",
             "format": ""
         },
         {
-            "name": "expiresIn",
+            "name": "expires_in",
             "baseName": "expires_in",
             "type": "number",
             "format": ""
@@ -50,7 +50,7 @@ export class CombinePdfsData {
             "format": ""
         },
         {
-            "name": "sourcePdfs",
+            "name": "source_pdfs",
             "baseName": "source_pdfs",
             "type": "Array<any>",
             "format": ""

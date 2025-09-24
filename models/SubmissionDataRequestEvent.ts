@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -14,12 +14,12 @@ import { HttpFile } from '../http/http';
 
 export class SubmissionDataRequestEvent {
     'id': string | null;
-    'submissionId': string | null;
-    'submissionDataRequestId': string | null;
-    'eventType': SubmissionDataRequestEventEventTypeEnum;
-    'messageType': SubmissionDataRequestEventMessageTypeEnum | null;
-    'messageRecipient': string | null;
-    'occurredAt': string | null;
+    'submission_id': string | null;
+    'submission_data_request_id': string | null;
+    'event_type': SubmissionDataRequestEventEventTypeEnum;
+    'message_type': SubmissionDataRequestEventMessageTypeEnum | null;
+    'message_recipient': string | null;
+    'occurred_at': string | null;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -33,37 +33,37 @@ export class SubmissionDataRequestEvent {
             "format": ""
         },
         {
-            "name": "submissionId",
+            "name": "submission_id",
             "baseName": "submission_id",
             "type": "string",
             "format": ""
         },
         {
-            "name": "submissionDataRequestId",
+            "name": "submission_data_request_id",
             "baseName": "submission_data_request_id",
             "type": "string",
             "format": ""
         },
         {
-            "name": "eventType",
+            "name": "event_type",
             "baseName": "event_type",
             "type": "SubmissionDataRequestEventEventTypeEnum",
             "format": ""
         },
         {
-            "name": "messageType",
+            "name": "message_type",
             "baseName": "message_type",
             "type": "SubmissionDataRequestEventMessageTypeEnum",
             "format": ""
         },
         {
-            "name": "messageRecipient",
+            "name": "message_recipient",
             "baseName": "message_recipient",
             "type": "string",
             "format": ""
         },
         {
-            "name": "occurredAt",
+            "name": "occurred_at",
             "baseName": "occurred_at",
             "type": "string",
             "format": ""

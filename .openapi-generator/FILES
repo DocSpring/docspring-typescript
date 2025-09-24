@@ -1,8 +1,8 @@
 .gitattributes
 .gitignore
-PDFApi.md
+Client.md
 README.md
-apis/PDFApi.ts
+apis/Client.ts
 apis/baseapi.ts
 apis/exception.ts
 auth/auth.ts
@@ -17,13 +17,11 @@ models/BatchGeneratePdfs201Response.ts
 models/CombinePdfsData.ts
 models/CombinedSubmission.ts
 models/CombinedSubmissionAction.ts
-models/CombinedSubmissionData.ts
 models/CopyTemplateOptions.ts
 models/CreateCombinedSubmissionResponse.ts
 models/CreateCustomFileData.ts
 models/CreateCustomFileResponse.ts
 models/CreateFolderData.ts
-models/CreateHtmlSubmissionData.ts
 models/CreateHtmlTemplate.ts
 models/CreatePdfSubmissionData.ts
 models/CreatePdfTemplate.ts
@@ -34,6 +32,7 @@ models/CreateSubmissionDataRequestResponse.ts
 models/CreateSubmissionDataRequestTokenResponse.ts
 models/CreateSubmissionResponse.ts
 models/CustomFile.ts
+models/ErrorOrMultipleErrorsResponse.ts
 models/ErrorResponse.ts
 models/Folder.ts
 models/JsonSchema.ts
@@ -46,6 +45,7 @@ models/PublishVersionData.ts
 models/RenameFolderData.ts
 models/RestoreVersionData.ts
 models/Submission.ts
+models/Submission422Response.ts
 models/SubmissionAction.ts
 models/SubmissionBatch.ts
 models/SubmissionBatchData.ts
@@ -63,6 +63,7 @@ models/TemplateDeleteResponse.ts
 models/TemplatePreview.ts
 models/TemplatePublishVersionResponse.ts
 models/UpdateHtmlTemplate.ts
+models/UpdatePdfTemplate.ts
 models/UpdateSubmissionDataRequestData.ts
 models/UploadPresignResponse.ts
 models/all.ts

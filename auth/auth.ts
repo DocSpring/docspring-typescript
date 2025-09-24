@@ -46,7 +46,6 @@ export class ApiTokenBasicAuthentication implements SecurityAuthentication {
     }
 }
 
-
 export type AuthMethods = {
     "default"?: SecurityAuthentication,
     "api_token_basic"?: SecurityAuthentication

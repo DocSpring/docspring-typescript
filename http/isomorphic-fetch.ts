@@ -11,7 +11,8 @@ export class IsomorphicFetchHttpLibrary implements HttpLibrary {
         const resultPromise = fetch(request.getUrl(), {
             method: method,
             body: body as any,
-            headers: { ...request.getHeaders(), "User-Agent": "docspring-typescript-2.1.0" },
+            headers: { ...request.getHeaders(), "User-Agent": "docspring-typescript-3.0.0" },
+            signal: request.getSignal(),
             credentials: "same-origin"
         }).then((resp: any) => {
             const headers: { [name: string]: string } = {};

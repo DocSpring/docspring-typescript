@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -15,28 +15,28 @@ import { SubmissionDataRequest } from '../models/SubmissionDataRequest';
 import { HttpFile } from '../http/http';
 
 export class Submission {
-    'batchId': string | null;
-    'dataRequests': Array<SubmissionDataRequest>;
+    'batch_id': string | null;
+    'data_requests': Array<SubmissionDataRequest>;
     'editable': boolean | null;
     'expired': boolean;
-    'expiresAt': string | null;
+    'expires_at': string | null;
     'id': string | null;
-    'jsonSchemaErrors': Array<string> | null;
+    'json_schema_errors': Array<string> | null;
     'metadata': any;
     'password': string | null;
-    'processedAt': string | null;
+    'processed_at': string | null;
     'state': SubmissionStateEnum;
-    'templateId': string | null;
-    'templateType': SubmissionTemplateTypeEnum;
-    'templateVersion': string | null;
+    'template_id': string | null;
+    'template_type': SubmissionTemplateTypeEnum;
+    'template_version': string | null;
     'test': boolean;
-    'truncatedText': any | null;
-    'pdfHash': string | null;
-    'downloadUrl': string | null;
-    'permanentDownloadUrl': string | null;
-    'previewDownloadUrl': string | null;
-    'previewGeneratedAt': string | null;
-    'auditTrailDownloadUrl': string | null;
+    'truncated_text': any | null;
+    'pdf_hash': string | null;
+    'download_url': string | null;
+    'permanent_download_url': string | null;
+    'preview_download_url': string | null;
+    'preview_generated_at': string | null;
+    'audit_trail_download_url': string | null;
     'actions': Array<SubmissionAction>;
     'source': SubmissionSourceEnum;
     'referrer': string | null;
@@ -48,13 +48,13 @@ export class Submission {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "batchId",
+            "name": "batch_id",
             "baseName": "batch_id",
             "type": "string",
             "format": ""
         },
         {
-            "name": "dataRequests",
+            "name": "data_requests",
             "baseName": "data_requests",
             "type": "Array<SubmissionDataRequest>",
             "format": ""
@@ -72,7 +72,7 @@ export class Submission {
             "format": ""
         },
         {
-            "name": "expiresAt",
+            "name": "expires_at",
             "baseName": "expires_at",
             "type": "string",
             "format": ""
@@ -84,7 +84,7 @@ export class Submission {
             "format": ""
         },
         {
-            "name": "jsonSchemaErrors",
+            "name": "json_schema_errors",
             "baseName": "json_schema_errors",
             "type": "Array<string>",
             "format": ""
@@ -102,7 +102,7 @@ export class Submission {
             "format": ""
         },
         {
-            "name": "processedAt",
+            "name": "processed_at",
             "baseName": "processed_at",
             "type": "string",
             "format": ""
@@ -114,19 +114,19 @@ export class Submission {
             "format": ""
         },
         {
-            "name": "templateId",
+            "name": "template_id",
             "baseName": "template_id",
             "type": "string",
             "format": ""
         },
         {
-            "name": "templateType",
+            "name": "template_type",
             "baseName": "template_type",
             "type": "SubmissionTemplateTypeEnum",
             "format": ""
         },
         {
-            "name": "templateVersion",
+            "name": "template_version",
             "baseName": "template_version",
             "type": "string",
             "format": ""
@@ -138,43 +138,43 @@ export class Submission {
             "format": ""
         },
         {
-            "name": "truncatedText",
+            "name": "truncated_text",
             "baseName": "truncated_text",
             "type": "any",
             "format": ""
         },
         {
-            "name": "pdfHash",
+            "name": "pdf_hash",
             "baseName": "pdf_hash",
             "type": "string",
             "format": ""
         },
         {
-            "name": "downloadUrl",
+            "name": "download_url",
             "baseName": "download_url",
             "type": "string",
             "format": ""
         },
         {
-            "name": "permanentDownloadUrl",
+            "name": "permanent_download_url",
             "baseName": "permanent_download_url",
             "type": "string",
             "format": ""
         },
         {
-            "name": "previewDownloadUrl",
+            "name": "preview_download_url",
             "baseName": "preview_download_url",
             "type": "string",
             "format": ""
         },
         {
-            "name": "previewGeneratedAt",
+            "name": "preview_generated_at",
             "baseName": "preview_generated_at",
             "type": "string",
             "format": ""
         },
         {
-            "name": "auditTrailDownloadUrl",
+            "name": "audit_trail_download_url",
             "baseName": "audit_trail_download_url",
             "type": "string",
             "format": ""

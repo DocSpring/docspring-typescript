@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -17,11 +17,11 @@ export class SubmissionBatchWithSubmissions {
     'id': string | null;
     'state': SubmissionBatchWithSubmissionsStateEnum;
     'metadata': any;
-    'processedAt': string | null;
-    'totalCount': number;
-    'pendingCount': number;
-    'errorCount': number;
-    'completionPercentage': number;
+    'processed_at': string | null;
+    'total_count': number;
+    'pending_count': number;
+    'error_count': number;
+    'completion_percentage': number;
     'submissions'?: Array<SubmissionPreview>;
 
     static readonly discriminator: string | undefined = undefined;
@@ -48,31 +48,31 @@ export class SubmissionBatchWithSubmissions {
             "format": ""
         },
         {
-            "name": "processedAt",
+            "name": "processed_at",
             "baseName": "processed_at",
             "type": "string",
             "format": ""
         },
         {
-            "name": "totalCount",
+            "name": "total_count",
             "baseName": "total_count",
             "type": "number",
             "format": ""
         },
         {
-            "name": "pendingCount",
+            "name": "pending_count",
             "baseName": "pending_count",
             "type": "number",
             "format": ""
         },
         {
-            "name": "errorCount",
+            "name": "error_count",
             "baseName": "error_count",
             "type": "number",
             "format": ""
         },
         {
-            "name": "completionPercentage",
+            "name": "completion_percentage",
             "baseName": "completion_percentage",
             "type": "number",
             "format": ""

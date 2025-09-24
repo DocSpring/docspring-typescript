@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -13,8 +13,10 @@
 import { HttpFile } from '../http/http';
 
 export class CreateSubmissionDataRequestEventRequest {
-    'eventType': CreateSubmissionDataRequestEventRequestEventTypeEnum;
-    'messageType'?: CreateSubmissionDataRequestEventRequestMessageTypeEnum | null;
+    'event_type': CreateSubmissionDataRequestEventRequestEventTypeEnum;
+    'message_recipient'?: string | null;
+    'message_type'?: CreateSubmissionDataRequestEventRequestMessageTypeEnum | null;
+    'occurred_at'?: string | null;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -22,15 +24,27 @@ export class CreateSubmissionDataRequestEventRequest {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "eventType",
+            "name": "event_type",
             "baseName": "event_type",
             "type": "CreateSubmissionDataRequestEventRequestEventTypeEnum",
             "format": ""
         },
         {
-            "name": "messageType",
+            "name": "message_recipient",
+            "baseName": "message_recipient",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "message_type",
             "baseName": "message_type",
             "type": "CreateSubmissionDataRequestEventRequestMessageTypeEnum",
+            "format": ""
+        },
+        {
+            "name": "occurred_at",
+            "baseName": "occurred_at",
+            "type": "string",
             "format": ""
         }    ];
 

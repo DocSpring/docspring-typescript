@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -13,11 +13,20 @@
 import { HttpFile } from '../http/http';
 
 export class CreateSubmissionDataRequestData {
-    'authSecondFactorType'?: CreateSubmissionDataRequestDataAuthSecondFactorTypeEnum;
-    'authType'?: CreateSubmissionDataRequestDataAuthTypeEnum;
-    'fields'?: Array<string>;
+    'auth_phone_number_hash'?: string | null;
+    'auth_provider'?: string | null;
+    'auth_second_factor_type'?: CreateSubmissionDataRequestDataAuthSecondFactorTypeEnum;
+    'auth_session_id_hash'?: string | null;
+    'auth_session_started_at'?: string | null;
+    'auth_type'?: CreateSubmissionDataRequestDataAuthTypeEnum;
+    'auth_user_id_hash'?: string | null;
+    'auth_username_hash'?: string | null;
+    'email'?: string | null;
+    'fields'?: Array<string | null>;
     'metadata'?: any;
+    'name'?: string | null;
     'order'?: number;
+    'skipped'?: boolean | null;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -25,21 +34,63 @@ export class CreateSubmissionDataRequestData {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "authSecondFactorType",
+            "name": "auth_phone_number_hash",
+            "baseName": "auth_phone_number_hash",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "auth_provider",
+            "baseName": "auth_provider",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "auth_second_factor_type",
             "baseName": "auth_second_factor_type",
             "type": "CreateSubmissionDataRequestDataAuthSecondFactorTypeEnum",
             "format": ""
         },
         {
-            "name": "authType",
+            "name": "auth_session_id_hash",
+            "baseName": "auth_session_id_hash",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "auth_session_started_at",
+            "baseName": "auth_session_started_at",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "auth_type",
             "baseName": "auth_type",
             "type": "CreateSubmissionDataRequestDataAuthTypeEnum",
             "format": ""
         },
         {
+            "name": "auth_user_id_hash",
+            "baseName": "auth_user_id_hash",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "auth_username_hash",
+            "baseName": "auth_username_hash",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "email",
+            "baseName": "email",
+            "type": "string",
+            "format": ""
+        },
+        {
             "name": "fields",
             "baseName": "fields",
-            "type": "Array<string>",
+            "type": "Array<string | null>",
             "format": ""
         },
         {
@@ -49,9 +100,21 @@ export class CreateSubmissionDataRequestData {
             "format": ""
         },
         {
+            "name": "name",
+            "baseName": "name",
+            "type": "string",
+            "format": ""
+        },
+        {
             "name": "order",
             "baseName": "order",
             "type": "number",
+            "format": ""
+        },
+        {
+            "name": "skipped",
+            "baseName": "skipped",
+            "type": "boolean",
             "format": ""
         }    ];
 

@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -14,11 +14,11 @@ import { HttpFile } from '../http/http';
 
 export class CombinedSubmissionAction {
     'id': string | null;
-    'integrationId': string | null;
+    'integration_id': string | null;
     'state': CombinedSubmissionActionStateEnum;
-    'actionType': CombinedSubmissionActionActionTypeEnum | null;
-    'actionCategory': CombinedSubmissionActionActionCategoryEnum;
-    'resultData': any;
+    'action_type': CombinedSubmissionActionActionTypeEnum | null;
+    'action_category': CombinedSubmissionActionActionCategoryEnum;
+    'result_data': any;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -32,7 +32,7 @@ export class CombinedSubmissionAction {
             "format": ""
         },
         {
-            "name": "integrationId",
+            "name": "integration_id",
             "baseName": "integration_id",
             "type": "string",
             "format": ""
@@ -44,19 +44,19 @@ export class CombinedSubmissionAction {
             "format": ""
         },
         {
-            "name": "actionType",
+            "name": "action_type",
             "baseName": "action_type",
             "type": "CombinedSubmissionActionActionTypeEnum",
             "format": ""
         },
         {
-            "name": "actionCategory",
+            "name": "action_category",
             "baseName": "action_category",
             "type": "CombinedSubmissionActionActionCategoryEnum",
             "format": ""
         },
         {
-            "name": "resultData",
+            "name": "result_data",
             "baseName": "result_data",
             "type": "any",
             "format": ""

@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -15,7 +15,7 @@ import { HttpFile } from '../http/http';
 
 export class CreateSubmissionDataRequestResponse {
     'status': CreateSubmissionDataRequestResponseStatusEnum;
-    'dataRequest': SubmissionDataRequestShow;
+    'data_request': SubmissionDataRequestShow;
     'errors'?: Array<string>;
 
     static readonly discriminator: string | undefined = undefined;
@@ -30,7 +30,7 @@ export class CreateSubmissionDataRequestResponse {
             "format": ""
         },
         {
-            "name": "dataRequest",
+            "name": "data_request",
             "baseName": "data_request",
             "type": "SubmissionDataRequestShow",
             "format": ""

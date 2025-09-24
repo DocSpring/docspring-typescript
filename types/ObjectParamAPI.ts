@@ -1,18 +1,17 @@
 import { ResponseContext, RequestContext, HttpFile, HttpInfo } from '../http/http';
-import { Configuration} from '../configuration'
+import { Configuration, ConfigurationOptions } from '../configuration'
+import type { Middleware } from '../middleware';
 
 import { AddFieldsData } from '../models/AddFieldsData';
 import { BatchGeneratePdfs201Response } from '../models/BatchGeneratePdfs201Response';
 import { CombinePdfsData } from '../models/CombinePdfsData';
 import { CombinedSubmission } from '../models/CombinedSubmission';
 import { CombinedSubmissionAction } from '../models/CombinedSubmissionAction';
-import { CombinedSubmissionData } from '../models/CombinedSubmissionData';
 import { CopyTemplateOptions } from '../models/CopyTemplateOptions';
 import { CreateCombinedSubmissionResponse } from '../models/CreateCombinedSubmissionResponse';
 import { CreateCustomFileData } from '../models/CreateCustomFileData';
 import { CreateCustomFileResponse } from '../models/CreateCustomFileResponse';
 import { CreateFolderData } from '../models/CreateFolderData';
-import { CreateHtmlSubmissionData } from '../models/CreateHtmlSubmissionData';
 import { CreateHtmlTemplate } from '../models/CreateHtmlTemplate';
 import { CreatePdfSubmissionData } from '../models/CreatePdfSubmissionData';
 import { CreatePdfTemplate } from '../models/CreatePdfTemplate';
@@ -23,6 +22,7 @@ import { CreateSubmissionDataRequestResponse } from '../models/CreateSubmissionD
 import { CreateSubmissionDataRequestTokenResponse } from '../models/CreateSubmissionDataRequestTokenResponse';
 import { CreateSubmissionResponse } from '../models/CreateSubmissionResponse';
 import { CustomFile } from '../models/CustomFile';
+import { ErrorOrMultipleErrorsResponse } from '../models/ErrorOrMultipleErrorsResponse';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { Folder } from '../models/Folder';
 import { JsonSchema } from '../models/JsonSchema';
@@ -34,6 +34,7 @@ import { PublishVersionData } from '../models/PublishVersionData';
 import { RenameFolderData } from '../models/RenameFolderData';
 import { RestoreVersionData } from '../models/RestoreVersionData';
 import { Submission } from '../models/Submission';
+import { Submission422Response } from '../models/Submission422Response';
 import { SubmissionAction } from '../models/SubmissionAction';
 import { SubmissionBatch } from '../models/SubmissionBatch';
 import { SubmissionBatchData } from '../models/SubmissionBatchData';
@@ -51,389 +52,351 @@ import { TemplateDeleteResponse } from '../models/TemplateDeleteResponse';
 import { TemplatePreview } from '../models/TemplatePreview';
 import { TemplatePublishVersionResponse } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
+import { UpdatePdfTemplate } from '../models/UpdatePdfTemplate';
 import { UpdateSubmissionDataRequestData } from '../models/UpdateSubmissionDataRequestData';
 import { UploadPresignResponse } from '../models/UploadPresignResponse';
 
-import { ObservablePDFApi } from "./ObservableAPI";
-import { PDFApiRequestFactory, PDFApiResponseProcessor} from "../apis/PDFApi";
+import { ObservableClient } from "./ObservableAPI";
+import { ClientRequestFactory, ClientResponseProcessor} from "../apis/Client";
 
-export interface PDFApiAddFieldsToTemplateRequest {
+export interface ClientAddFieldsToTemplateRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApiaddFieldsToTemplate
+     * @memberof ClientaddFieldsToTemplate
      */
     templateId: string
     /**
      * 
      * @type AddFieldsData
-     * @memberof PDFApiaddFieldsToTemplate
+     * @memberof ClientaddFieldsToTemplate
      */
     data: AddFieldsData
 }
 
-export interface PDFApiBatchGeneratePdfsRequest {
+export interface ClientBatchGeneratePdfsRequest {
     /**
      * 
      * @type SubmissionBatchData
-     * @memberof PDFApibatchGeneratePdfs
+     * @memberof ClientbatchGeneratePdfs
      */
     data: SubmissionBatchData
     /**
      * Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
      * Defaults to: true
      * @type boolean
-     * @memberof PDFApibatchGeneratePdfs
+     * @memberof ClientbatchGeneratePdfs
      */
     wait?: boolean
 }
 
-export interface PDFApiCombinePdfsRequest {
+export interface ClientCombinePdfsRequest {
     /**
      * 
      * @type CombinePdfsData
-     * @memberof PDFApicombinePdfs
+     * @memberof ClientcombinePdfs
      */
     data: CombinePdfsData
 }
 
-export interface PDFApiCombineSubmissionsRequest {
-    /**
-     * 
-     * @type CombinedSubmissionData
-     * @memberof PDFApicombineSubmissions
-     */
-    data: CombinedSubmissionData
-    /**
-     * Wait for combined submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     * Defaults to: true
-     * @type boolean
-     * @memberof PDFApicombineSubmissions
-     */
-    wait?: boolean
-}
-
-export interface PDFApiCopyTemplateRequest {
+export interface ClientCopyTemplateRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApicopyTemplate
+     * @memberof ClientcopyTemplate
      */
     templateId: string
     /**
      * 
      * @type CopyTemplateOptions
-     * @memberof PDFApicopyTemplate
+     * @memberof ClientcopyTemplate
      */
     options?: CopyTemplateOptions
 }
 
-export interface PDFApiCreateCustomFileFromUploadRequest {
+export interface ClientCreateCustomFileFromUploadRequest {
     /**
      * 
      * @type CreateCustomFileData
-     * @memberof PDFApicreateCustomFileFromUpload
+     * @memberof ClientcreateCustomFileFromUpload
      */
     data: CreateCustomFileData
 }
 
-export interface PDFApiCreateDataRequestEventRequest {
+export interface ClientCreateDataRequestEventRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApicreateDataRequestEvent
+     * @memberof ClientcreateDataRequestEvent
      */
     dataRequestId: string
     /**
      * 
      * @type CreateSubmissionDataRequestEventRequest
-     * @memberof PDFApicreateDataRequestEvent
+     * @memberof ClientcreateDataRequestEvent
      */
     event: CreateSubmissionDataRequestEventRequest
 }
 
-export interface PDFApiCreateDataRequestTokenRequest {
+export interface ClientCreateDataRequestTokenRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApicreateDataRequestToken
+     * @memberof ClientcreateDataRequestToken
      */
     dataRequestId: string
     /**
      * 
      * Defaults to: undefined
      * @type &#39;api&#39; | &#39;email&#39;
-     * @memberof PDFApicreateDataRequestToken
+     * @memberof ClientcreateDataRequestToken
      */
     type?: 'api' | 'email'
 }
 
-export interface PDFApiCreateFolderRequest {
+export interface ClientCreateFolderRequest {
     /**
      * 
      * @type CreateFolderData
-     * @memberof PDFApicreateFolder
+     * @memberof ClientcreateFolder
      */
     data: CreateFolderData
 }
 
-export interface PDFApiCreateHTMLTemplateRequest {
+export interface ClientCreateHtmlTemplateRequest {
     /**
      * 
      * @type CreateHtmlTemplate
-     * @memberof PDFApicreateHTMLTemplate
+     * @memberof ClientcreateHtmlTemplate
      */
     data: CreateHtmlTemplate
 }
 
-export interface PDFApiCreatePDFTemplateRequest {
+export interface ClientCreatePdfTemplateRequest {
     /**
      * 
      * Defaults to: undefined
      * @type HttpFile
-     * @memberof PDFApicreatePDFTemplate
+     * @memberof ClientcreatePdfTemplate
      */
     templateDocument: HttpFile
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApicreatePDFTemplate
+     * @memberof ClientcreatePdfTemplate
      */
     templateName: string
     /**
      * Wait for template document to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
      * Defaults to: true
      * @type boolean
-     * @memberof PDFApicreatePDFTemplate
+     * @memberof ClientcreatePdfTemplate
      */
     wait?: boolean
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApicreatePDFTemplate
+     * @memberof ClientcreatePdfTemplate
      */
     templateDescription?: string
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApicreatePDFTemplate
+     * @memberof ClientcreatePdfTemplate
      */
     templateParentFolderId?: string
 }
 
-export interface PDFApiCreatePDFTemplateFromUploadRequest {
+export interface ClientCreatePdfTemplateFromUploadRequest {
     /**
      * 
      * @type CreatePdfTemplate
-     * @memberof PDFApicreatePDFTemplateFromUpload
+     * @memberof ClientcreatePdfTemplateFromUpload
      */
     data: CreatePdfTemplate
 }
 
-export interface PDFApiDeleteFolderRequest {
+export interface ClientDeleteFolderRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApideleteFolder
+     * @memberof ClientdeleteFolder
      */
     folderId: string
 }
 
-export interface PDFApiDeleteTemplateRequest {
+export interface ClientDeleteTemplateRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApideleteTemplate
+     * @memberof ClientdeleteTemplate
      */
     templateId: string
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApideleteTemplate
+     * @memberof ClientdeleteTemplate
      */
     version?: string
 }
 
-export interface PDFApiExpireCombinedSubmissionRequest {
+export interface ClientExpireCombinedSubmissionRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApiexpireCombinedSubmission
+     * @memberof ClientexpireCombinedSubmission
      */
     combinedSubmissionId: string
 }
 
-export interface PDFApiExpireSubmissionRequest {
+export interface ClientExpireSubmissionRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApiexpireSubmission
+     * @memberof ClientexpireSubmission
      */
     submissionId: string
 }
 
-export interface PDFApiGeneratePdfRequest {
+export interface ClientGeneratePdfRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApigeneratePdf
+     * @memberof ClientgeneratePdf
      */
     templateId: string
     /**
      * 
      * @type CreatePdfSubmissionData
-     * @memberof PDFApigeneratePdf
+     * @memberof ClientgeneratePdf
      */
     submission: CreatePdfSubmissionData
     /**
      * Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
      * Defaults to: true
      * @type boolean
-     * @memberof PDFApigeneratePdf
+     * @memberof ClientgeneratePdf
      */
     wait?: boolean
 }
 
-export interface PDFApiGeneratePdfForHtmlTemplateRequest {
+export interface ClientGeneratePreviewRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApigeneratePdfForHtmlTemplate
-     */
-    templateId: string
-    /**
-     * 
-     * @type CreateHtmlSubmissionData
-     * @memberof PDFApigeneratePdfForHtmlTemplate
-     */
-    submission: CreateHtmlSubmissionData
-    /**
-     * Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     * Defaults to: true
-     * @type boolean
-     * @memberof PDFApigeneratePdfForHtmlTemplate
-     */
-    wait?: boolean
-}
-
-export interface PDFApiGeneratePreviewRequest {
-    /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof PDFApigeneratePreview
+     * @memberof ClientgeneratePreview
      */
     submissionId: string
 }
 
-export interface PDFApiGetCombinedSubmissionRequest {
+export interface ClientGetCombinedSubmissionRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApigetCombinedSubmission
+     * @memberof ClientgetCombinedSubmission
      */
     combinedSubmissionId: string
 }
 
-export interface PDFApiGetDataRequestRequest {
+export interface ClientGetDataRequestRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApigetDataRequest
+     * @memberof ClientgetDataRequest
      */
     dataRequestId: string
 }
 
-export interface PDFApiGetFullTemplateRequest {
+export interface ClientGetFullTemplateRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApigetFullTemplate
+     * @memberof ClientgetFullTemplate
      */
     templateId: string
 }
 
-export interface PDFApiGetPresignUrlRequest {
+export interface ClientGetPresignUrlRequest {
 }
 
-export interface PDFApiGetSubmissionRequest {
+export interface ClientGetSubmissionRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApigetSubmission
+     * @memberof ClientgetSubmission
      */
     submissionId: string
     /**
      * 
      * Defaults to: undefined
      * @type boolean
-     * @memberof PDFApigetSubmission
+     * @memberof ClientgetSubmission
      */
     includeData?: boolean
 }
 
-export interface PDFApiGetSubmissionBatchRequest {
+export interface ClientGetSubmissionBatchRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApigetSubmissionBatch
+     * @memberof ClientgetSubmissionBatch
      */
     submissionBatchId: string
     /**
      * 
      * Defaults to: undefined
      * @type boolean
-     * @memberof PDFApigetSubmissionBatch
+     * @memberof ClientgetSubmissionBatch
      */
     includeSubmissions?: boolean
 }
 
-export interface PDFApiGetTemplateRequest {
+export interface ClientGetTemplateRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApigetTemplate
+     * @memberof ClientgetTemplate
      */
     templateId: string
 }
 
-export interface PDFApiGetTemplateSchemaRequest {
+export interface ClientGetTemplateSchemaRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApigetTemplateSchema
+     * @memberof ClientgetTemplateSchema
      */
     templateId: string
 }
 
-export interface PDFApiListCombinedSubmissionsRequest {
+export interface ClientListCombinedSubmissionsRequest {
     /**
      * Default: 1
      * Minimum: 1
      * Defaults to: undefined
      * @type number
-     * @memberof PDFApilistCombinedSubmissions
+     * @memberof ClientlistCombinedSubmissions
      */
     page?: number
     /**
@@ -442,131 +405,131 @@ export interface PDFApiListCombinedSubmissionsRequest {
      * Maximum: 50
      * Defaults to: undefined
      * @type number
-     * @memberof PDFApilistCombinedSubmissions
+     * @memberof ClientlistCombinedSubmissions
      */
     perPage?: number
 }
 
-export interface PDFApiListFoldersRequest {
+export interface ClientListFoldersRequest {
     /**
      * Filter By Folder Id
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistFolders
+     * @memberof ClientlistFolders
      */
     parentFolderId?: string
 }
 
-export interface PDFApiListSubmissionsRequest {
+export interface ClientListSubmissionsRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistSubmissions
+     * @memberof ClientlistSubmissions
      */
     cursor?: string
     /**
      * 
      * Defaults to: undefined
      * @type number
-     * @memberof PDFApilistSubmissions
+     * @memberof ClientlistSubmissions
      */
     limit?: number
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistSubmissions
+     * @memberof ClientlistSubmissions
      */
     createdAfter?: string
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistSubmissions
+     * @memberof ClientlistSubmissions
      */
     createdBefore?: string
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistSubmissions
+     * @memberof ClientlistSubmissions
      */
     type?: string
     /**
      * 
      * Defaults to: undefined
      * @type boolean
-     * @memberof PDFApilistSubmissions
+     * @memberof ClientlistSubmissions
      */
     includeData?: boolean
 }
 
-export interface PDFApiListTemplateSubmissionsRequest {
+export interface ClientListTemplateSubmissionsRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistTemplateSubmissions
+     * @memberof ClientlistTemplateSubmissions
      */
     templateId: string
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistTemplateSubmissions
+     * @memberof ClientlistTemplateSubmissions
      */
     cursor?: string
     /**
      * 
      * Defaults to: undefined
      * @type number
-     * @memberof PDFApilistTemplateSubmissions
+     * @memberof ClientlistTemplateSubmissions
      */
     limit?: number
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistTemplateSubmissions
+     * @memberof ClientlistTemplateSubmissions
      */
     createdAfter?: string
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistTemplateSubmissions
+     * @memberof ClientlistTemplateSubmissions
      */
     createdBefore?: string
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistTemplateSubmissions
+     * @memberof ClientlistTemplateSubmissions
      */
     type?: string
     /**
      * 
      * Defaults to: undefined
      * @type boolean
-     * @memberof PDFApilistTemplateSubmissions
+     * @memberof ClientlistTemplateSubmissions
      */
     includeData?: boolean
 }
 
-export interface PDFApiListTemplatesRequest {
+export interface ClientListTemplatesRequest {
     /**
      * Search By Name
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistTemplates
+     * @memberof ClientlistTemplates
      */
     query?: string
     /**
      * Filter By Folder Id
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApilistTemplates
+     * @memberof ClientlistTemplates
      */
     parentFolderId?: string
     /**
@@ -574,7 +537,7 @@ export interface PDFApiListTemplatesRequest {
      * Minimum: 1
      * Defaults to: undefined
      * @type number
-     * @memberof PDFApilistTemplates
+     * @memberof ClientlistTemplates
      */
     page?: number
     /**
@@ -583,771 +546,891 @@ export interface PDFApiListTemplatesRequest {
      * Maximum: 50
      * Defaults to: undefined
      * @type number
-     * @memberof PDFApilistTemplates
+     * @memberof ClientlistTemplates
      */
     perPage?: number
 }
 
-export interface PDFApiMoveFolderToFolderRequest {
+export interface ClientMoveFolderToFolderRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApimoveFolderToFolder
+     * @memberof ClientmoveFolderToFolder
      */
     folderId: string
     /**
      * 
      * @type MoveFolderData
-     * @memberof PDFApimoveFolderToFolder
+     * @memberof ClientmoveFolderToFolder
      */
     data: MoveFolderData
 }
 
-export interface PDFApiMoveTemplateToFolderRequest {
+export interface ClientMoveTemplateToFolderRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApimoveTemplateToFolder
+     * @memberof ClientmoveTemplateToFolder
      */
     templateId: string
     /**
      * 
      * @type MoveTemplateData
-     * @memberof PDFApimoveTemplateToFolder
+     * @memberof ClientmoveTemplateToFolder
      */
     data: MoveTemplateData
 }
 
-export interface PDFApiPublishTemplateVersionRequest {
+export interface ClientPublishTemplateVersionRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApipublishTemplateVersion
+     * @memberof ClientpublishTemplateVersion
      */
     templateId: string
     /**
      * 
      * @type PublishVersionData
-     * @memberof PDFApipublishTemplateVersion
+     * @memberof ClientpublishTemplateVersion
      */
     data: PublishVersionData
 }
 
-export interface PDFApiRenameFolderRequest {
+export interface ClientRenameFolderRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApirenameFolder
+     * @memberof ClientrenameFolder
      */
     folderId: string
     /**
      * 
      * @type RenameFolderData
-     * @memberof PDFApirenameFolder
+     * @memberof ClientrenameFolder
      */
     data: RenameFolderData
 }
 
-export interface PDFApiRestoreTemplateVersionRequest {
+export interface ClientRestoreTemplateVersionRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApirestoreTemplateVersion
+     * @memberof ClientrestoreTemplateVersion
      */
     templateId: string
     /**
      * 
      * @type RestoreVersionData
-     * @memberof PDFApirestoreTemplateVersion
+     * @memberof ClientrestoreTemplateVersion
      */
     data: RestoreVersionData
 }
 
-export interface PDFApiTestAuthenticationRequest {
+export interface ClientTestAuthenticationRequest {
 }
 
-export interface PDFApiUpdateDataRequestRequest {
+export interface ClientUpdateDataRequestRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApiupdateDataRequest
+     * @memberof ClientupdateDataRequest
      */
     dataRequestId: string
     /**
      * 
      * @type UpdateSubmissionDataRequestData
-     * @memberof PDFApiupdateDataRequest
+     * @memberof ClientupdateDataRequest
      */
     data: UpdateSubmissionDataRequestData
 }
 
-export interface PDFApiUpdateTemplateRequest {
+export interface ClientUpdateTemplateRequest {
     /**
      * 
      * Defaults to: undefined
      * @type string
-     * @memberof PDFApiupdateTemplate
+     * @memberof ClientupdateTemplate
      */
     templateId: string
     /**
      * 
      * @type UpdateHtmlTemplate
-     * @memberof PDFApiupdateTemplate
+     * @memberof ClientupdateTemplate
      */
     data: UpdateHtmlTemplate
 }
 
-export class ObjectPDFApi {
-    private api: ObservablePDFApi
+export interface ClientUpdateTemplateDocumentRequest {
+    /**
+     * 
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateTemplateDocument
+     */
+    templateId: string
+    /**
+     * 
+     * Defaults to: undefined
+     * @type HttpFile
+     * @memberof ClientupdateTemplateDocument
+     */
+    templateDocument: HttpFile
+    /**
+     * 
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateTemplateDocument
+     */
+    templateName?: string
+}
 
-    public constructor(configuration: Configuration, requestFactory?: PDFApiRequestFactory, responseProcessor?: PDFApiResponseProcessor) {
-        this.api = new ObservablePDFApi(configuration, requestFactory, responseProcessor);
+export interface ClientUpdateTemplateDocumentFromUploadRequest {
+    /**
+     * 
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateTemplateDocumentFromUpload
+     */
+    templateId: string
+    /**
+     * 
+     * @type UpdatePdfTemplate
+     * @memberof ClientupdateTemplateDocumentFromUpload
+     */
+    data: UpdatePdfTemplate
+}
+
+export class ObjectClient {
+    private api: ObservableClient
+
+    public constructor(configuration: Configuration, requestFactory?: ClientRequestFactory, responseProcessor?: ClientResponseProcessor) {
+        this.api = new ObservableClient(configuration, requestFactory, responseProcessor);
     }
 
     /**
+     * Adds fields to a PDF template. Configure field types, positions, defaults, and formatting options. 
      * Add new fields to a Template
      * @param param the request object
      */
-    public addFieldsToTemplateWithHttpInfo(param: PDFApiAddFieldsToTemplateRequest, options?: Configuration): Promise<HttpInfo<TemplateAddFieldsResponse>> {
+    public addFieldsToTemplateWithHttpInfo(param: ClientAddFieldsToTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateAddFieldsResponse>> {
         return this.api.addFieldsToTemplateWithHttpInfo(param.templateId, param.data,  options).toPromise();
     }
 
     /**
+     * Adds fields to a PDF template. Configure field types, positions, defaults, and formatting options. 
      * Add new fields to a Template
      * @param param the request object
      */
-    public addFieldsToTemplate(param: PDFApiAddFieldsToTemplateRequest, options?: Configuration): Promise<TemplateAddFieldsResponse> {
+    public addFieldsToTemplate(param: ClientAddFieldsToTemplateRequest, options?: ConfigurationOptions): Promise<TemplateAddFieldsResponse> {
         return this.api.addFieldsToTemplate(param.templateId, param.data,  options).toPromise();
     }
 
     /**
-     * Generates multiple PDFs
+     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch and Combine PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Generate and merge PDFs in one request 
+     * Generate multiple PDFs
      * @param param the request object
      */
-    public batchGeneratePdfsWithHttpInfo(param: PDFApiBatchGeneratePdfsRequest, options?: Configuration): Promise<HttpInfo<BatchGeneratePdfs201Response>> {
+    public batchGeneratePdfsWithHttpInfo(param: ClientBatchGeneratePdfsRequest, options?: ConfigurationOptions): Promise<HttpInfo<BatchGeneratePdfs201Response>> {
         return this.api.batchGeneratePdfsWithHttpInfo(param.data, param.wait,  options).toPromise();
     }
 
     /**
-     * Generates multiple PDFs
+     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch and Combine PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Generate and merge PDFs in one request 
+     * Generate multiple PDFs
      * @param param the request object
      */
-    public batchGeneratePdfs(param: PDFApiBatchGeneratePdfsRequest, options?: Configuration): Promise<BatchGeneratePdfs201Response> {
+    public batchGeneratePdfs(param: ClientBatchGeneratePdfsRequest, options?: ConfigurationOptions): Promise<BatchGeneratePdfs201Response> {
         return this.api.batchGeneratePdfs(param.data, param.wait,  options).toPromise();
     }
 
     /**
+     * Combines multiple PDFs from various sources into a single PDF file. Supports merging submission PDFs, template PDFs, custom files, other merged PDFs, and PDFs from URLs. Merges the PDFs in the order provided. 
      * Merge submission PDFs, template PDFs, or custom files
      * @param param the request object
      */
-    public combinePdfsWithHttpInfo(param: PDFApiCombinePdfsRequest, options?: Configuration): Promise<HttpInfo<CreateCombinedSubmissionResponse>> {
+    public combinePdfsWithHttpInfo(param: ClientCombinePdfsRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateCombinedSubmissionResponse>> {
         return this.api.combinePdfsWithHttpInfo(param.data,  options).toPromise();
     }
 
     /**
+     * Combines multiple PDFs from various sources into a single PDF file. Supports merging submission PDFs, template PDFs, custom files, other merged PDFs, and PDFs from URLs. Merges the PDFs in the order provided. 
      * Merge submission PDFs, template PDFs, or custom files
      * @param param the request object
      */
-    public combinePdfs(param: PDFApiCombinePdfsRequest, options?: Configuration): Promise<CreateCombinedSubmissionResponse> {
+    public combinePdfs(param: ClientCombinePdfsRequest, options?: ConfigurationOptions): Promise<CreateCombinedSubmissionResponse> {
         return this.api.combinePdfs(param.data,  options).toPromise();
     }
 
     /**
-     * Merge generated PDFs together
+     * Creates a copy of an existing template with all its fields and configuration. Optionally specify a new name and target folder. The copied template starts as a new draft that can be modified independently of the original. 
+     * Copy a template
      * @param param the request object
      */
-    public combineSubmissionsWithHttpInfo(param: PDFApiCombineSubmissionsRequest, options?: Configuration): Promise<HttpInfo<CreateCombinedSubmissionResponse>> {
-        return this.api.combineSubmissionsWithHttpInfo(param.data, param.wait,  options).toPromise();
-    }
-
-    /**
-     * Merge generated PDFs together
-     * @param param the request object
-     */
-    public combineSubmissions(param: PDFApiCombineSubmissionsRequest, options?: Configuration): Promise<CreateCombinedSubmissionResponse> {
-        return this.api.combineSubmissions(param.data, param.wait,  options).toPromise();
-    }
-
-    /**
-     * Copy a Template
-     * @param param the request object
-     */
-    public copyTemplateWithHttpInfo(param: PDFApiCopyTemplateRequest, options?: Configuration): Promise<HttpInfo<TemplatePreview>> {
+    public copyTemplateWithHttpInfo(param: ClientCopyTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
         return this.api.copyTemplateWithHttpInfo(param.templateId, param.options,  options).toPromise();
     }
 
     /**
-     * Copy a Template
+     * Creates a copy of an existing template with all its fields and configuration. Optionally specify a new name and target folder. The copied template starts as a new draft that can be modified independently of the original. 
+     * Copy a template
      * @param param the request object
      */
-    public copyTemplate(param: PDFApiCopyTemplateRequest, options?: Configuration): Promise<TemplatePreview> {
+    public copyTemplate(param: ClientCopyTemplateRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
         return this.api.copyTemplate(param.templateId, param.options,  options).toPromise();
     }
 
     /**
-     * Create a new custom file from a cached presign upload
+     * The Custom Files API endpoint allows you to upload PDFs to DocSpring and then merge them with other PDFs. First upload your file using the presigned URL endpoint, then use the returned cache_id to create the custom file. 
+     * Create a new custom file from a cached S3 upload
      * @param param the request object
      */
-    public createCustomFileFromUploadWithHttpInfo(param: PDFApiCreateCustomFileFromUploadRequest, options?: Configuration): Promise<HttpInfo<CreateCustomFileResponse>> {
+    public createCustomFileFromUploadWithHttpInfo(param: ClientCreateCustomFileFromUploadRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateCustomFileResponse>> {
         return this.api.createCustomFileFromUploadWithHttpInfo(param.data,  options).toPromise();
     }
 
     /**
-     * Create a new custom file from a cached presign upload
+     * The Custom Files API endpoint allows you to upload PDFs to DocSpring and then merge them with other PDFs. First upload your file using the presigned URL endpoint, then use the returned cache_id to create the custom file. 
+     * Create a new custom file from a cached S3 upload
      * @param param the request object
      */
-    public createCustomFileFromUpload(param: PDFApiCreateCustomFileFromUploadRequest, options?: Configuration): Promise<CreateCustomFileResponse> {
+    public createCustomFileFromUpload(param: ClientCreateCustomFileFromUploadRequest, options?: ConfigurationOptions): Promise<CreateCustomFileResponse> {
         return this.api.createCustomFileFromUpload(param.data,  options).toPromise();
     }
 
     /**
-     * Creates a new event for emailing a signee a request for signature
+     * Records user notification events for data requests. Use this to create an audit trail showing when and how users were notified about data request forms. Supports email, SMS, and other notification types. Records the notification time for compliance tracking.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - User notification workflow 
+     * Create a new event for emailing a signee a request for signature
      * @param param the request object
      */
-    public createDataRequestEventWithHttpInfo(param: PDFApiCreateDataRequestEventRequest, options?: Configuration): Promise<HttpInfo<CreateSubmissionDataRequestEventResponse>> {
+    public createDataRequestEventWithHttpInfo(param: ClientCreateDataRequestEventRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateSubmissionDataRequestEventResponse>> {
         return this.api.createDataRequestEventWithHttpInfo(param.dataRequestId, param.event,  options).toPromise();
     }
 
     /**
-     * Creates a new event for emailing a signee a request for signature
+     * Records user notification events for data requests. Use this to create an audit trail showing when and how users were notified about data request forms. Supports email, SMS, and other notification types. Records the notification time for compliance tracking.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - User notification workflow 
+     * Create a new event for emailing a signee a request for signature
      * @param param the request object
      */
-    public createDataRequestEvent(param: PDFApiCreateDataRequestEventRequest, options?: Configuration): Promise<CreateSubmissionDataRequestEventResponse> {
+    public createDataRequestEvent(param: ClientCreateDataRequestEventRequest, options?: ConfigurationOptions): Promise<CreateSubmissionDataRequestEventResponse> {
         return this.api.createDataRequestEvent(param.dataRequestId, param.event,  options).toPromise();
     }
 
     /**
-     * Creates a new data request token for form authentication
+     * Creates an authentication token for accessing a data request form. Tokens can be created for API access (1 hour expiration) or email links (30 day expiration). Returns a token and a pre-authenticated URL for the data request form.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
+     * Create a new data request token for form authentication
      * @param param the request object
      */
-    public createDataRequestTokenWithHttpInfo(param: PDFApiCreateDataRequestTokenRequest, options?: Configuration): Promise<HttpInfo<CreateSubmissionDataRequestTokenResponse>> {
+    public createDataRequestTokenWithHttpInfo(param: ClientCreateDataRequestTokenRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateSubmissionDataRequestTokenResponse>> {
         return this.api.createDataRequestTokenWithHttpInfo(param.dataRequestId, param.type,  options).toPromise();
     }
 
     /**
-     * Creates a new data request token for form authentication
+     * Creates an authentication token for accessing a data request form. Tokens can be created for API access (1 hour expiration) or email links (30 day expiration). Returns a token and a pre-authenticated URL for the data request form.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
+     * Create a new data request token for form authentication
      * @param param the request object
      */
-    public createDataRequestToken(param: PDFApiCreateDataRequestTokenRequest, options?: Configuration): Promise<CreateSubmissionDataRequestTokenResponse> {
+    public createDataRequestToken(param: ClientCreateDataRequestTokenRequest, options?: ConfigurationOptions): Promise<CreateSubmissionDataRequestTokenResponse> {
         return this.api.createDataRequestToken(param.dataRequestId, param.type,  options).toPromise();
     }
 
     /**
+     * Creates a new folder for organizing templates. Folders can be nested within other folders by providing a `parent_folder_id`. Folder names must be unique within the same parent. 
      * Create a folder
      * @param param the request object
      */
-    public createFolderWithHttpInfo(param: PDFApiCreateFolderRequest, options?: Configuration): Promise<HttpInfo<Folder>> {
+    public createFolderWithHttpInfo(param: ClientCreateFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
         return this.api.createFolderWithHttpInfo(param.data,  options).toPromise();
     }
 
     /**
+     * Creates a new folder for organizing templates. Folders can be nested within other folders by providing a `parent_folder_id`. Folder names must be unique within the same parent. 
      * Create a folder
      * @param param the request object
      */
-    public createFolder(param: PDFApiCreateFolderRequest, options?: Configuration): Promise<Folder> {
+    public createFolder(param: ClientCreateFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
         return this.api.createFolder(param.data,  options).toPromise();
     }
 
     /**
+     * Creates a new HTML template using HTML, CSS/SCSS, and Liquid templating. Allows complete control over PDF layout and styling. Supports headers, footers, and dynamic content using Liquid syntax for field values, conditions, loops, and filters. 
      * Create a new HTML template
      * @param param the request object
      */
-    public createHTMLTemplateWithHttpInfo(param: PDFApiCreateHTMLTemplateRequest, options?: Configuration): Promise<HttpInfo<TemplatePreview>> {
-        return this.api.createHTMLTemplateWithHttpInfo(param.data,  options).toPromise();
+    public createHtmlTemplateWithHttpInfo(param: ClientCreateHtmlTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
+        return this.api.createHtmlTemplateWithHttpInfo(param.data,  options).toPromise();
     }
 
     /**
+     * Creates a new HTML template using HTML, CSS/SCSS, and Liquid templating. Allows complete control over PDF layout and styling. Supports headers, footers, and dynamic content using Liquid syntax for field values, conditions, loops, and filters. 
      * Create a new HTML template
      * @param param the request object
      */
-    public createHTMLTemplate(param: PDFApiCreateHTMLTemplateRequest, options?: Configuration): Promise<TemplatePreview> {
-        return this.api.createHTMLTemplate(param.data,  options).toPromise();
+    public createHtmlTemplate(param: ClientCreateHtmlTemplateRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
+        return this.api.createHtmlTemplate(param.data,  options).toPromise();
     }
 
     /**
+     * Creates a new PDF template by uploading a PDF file. The uploaded PDF becomes the foundation for your template, and you can then add fillable fields using the template editor. Use the wait parameter to control whether the request waits for document processing to complete. 
      * Create a new PDF template with a form POST file upload
      * @param param the request object
      */
-    public createPDFTemplateWithHttpInfo(param: PDFApiCreatePDFTemplateRequest, options?: Configuration): Promise<HttpInfo<TemplatePreview>> {
-        return this.api.createPDFTemplateWithHttpInfo(param.templateDocument, param.templateName, param.wait, param.templateDescription, param.templateParentFolderId,  options).toPromise();
+    public createPdfTemplateWithHttpInfo(param: ClientCreatePdfTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
+        return this.api.createPdfTemplateWithHttpInfo(param.templateDocument, param.templateName, param.wait, param.templateDescription, param.templateParentFolderId,  options).toPromise();
     }
 
     /**
+     * Creates a new PDF template by uploading a PDF file. The uploaded PDF becomes the foundation for your template, and you can then add fillable fields using the template editor. Use the wait parameter to control whether the request waits for document processing to complete. 
      * Create a new PDF template with a form POST file upload
      * @param param the request object
      */
-    public createPDFTemplate(param: PDFApiCreatePDFTemplateRequest, options?: Configuration): Promise<TemplatePreview> {
-        return this.api.createPDFTemplate(param.templateDocument, param.templateName, param.wait, param.templateDescription, param.templateParentFolderId,  options).toPromise();
+    public createPdfTemplate(param: ClientCreatePdfTemplateRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
+        return this.api.createPdfTemplate(param.templateDocument, param.templateName, param.wait, param.templateDescription, param.templateParentFolderId,  options).toPromise();
     }
 
     /**
-     * Create a new PDF template from a cached presign upload
+     * Creates a new PDF template from a file previously uploaded to S3 using a presigned URL. This two-step process allows for more reliable large file uploads by first uploading the file to S3, then creating the template using the cached upload ID. 
+     * Create a new PDF template from a cached S3 file upload
      * @param param the request object
      */
-    public createPDFTemplateFromUploadWithHttpInfo(param: PDFApiCreatePDFTemplateFromUploadRequest, options?: Configuration): Promise<HttpInfo<TemplatePreview>> {
-        return this.api.createPDFTemplateFromUploadWithHttpInfo(param.data,  options).toPromise();
+    public createPdfTemplateFromUploadWithHttpInfo(param: ClientCreatePdfTemplateFromUploadRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
+        return this.api.createPdfTemplateFromUploadWithHttpInfo(param.data,  options).toPromise();
     }
 
     /**
-     * Create a new PDF template from a cached presign upload
+     * Creates a new PDF template from a file previously uploaded to S3 using a presigned URL. This two-step process allows for more reliable large file uploads by first uploading the file to S3, then creating the template using the cached upload ID. 
+     * Create a new PDF template from a cached S3 file upload
      * @param param the request object
      */
-    public createPDFTemplateFromUpload(param: PDFApiCreatePDFTemplateFromUploadRequest, options?: Configuration): Promise<TemplatePreview> {
-        return this.api.createPDFTemplateFromUpload(param.data,  options).toPromise();
+    public createPdfTemplateFromUpload(param: ClientCreatePdfTemplateFromUploadRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
+        return this.api.createPdfTemplateFromUpload(param.data,  options).toPromise();
     }
 
     /**
+     * Deletes an empty folder. The folder must not contain any templates or subfolders. Move or delete all contents before attempting to delete the folder. 
      * Delete a folder
      * @param param the request object
      */
-    public deleteFolderWithHttpInfo(param: PDFApiDeleteFolderRequest, options?: Configuration): Promise<HttpInfo<Folder>> {
+    public deleteFolderWithHttpInfo(param: ClientDeleteFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
         return this.api.deleteFolderWithHttpInfo(param.folderId,  options).toPromise();
     }
 
     /**
+     * Deletes an empty folder. The folder must not contain any templates or subfolders. Move or delete all contents before attempting to delete the folder. 
      * Delete a folder
      * @param param the request object
      */
-    public deleteFolder(param: PDFApiDeleteFolderRequest, options?: Configuration): Promise<Folder> {
+    public deleteFolder(param: ClientDeleteFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
         return this.api.deleteFolder(param.folderId,  options).toPromise();
     }
 
     /**
+     * Deletes a template or a specific template version. When no version is specified, deletes the entire template including all versions. When a version is specified, deletes only that version while preserving others. Returns remaining version information. 
      * Delete a template
      * @param param the request object
      */
-    public deleteTemplateWithHttpInfo(param: PDFApiDeleteTemplateRequest, options?: Configuration): Promise<HttpInfo<TemplateDeleteResponse>> {
+    public deleteTemplateWithHttpInfo(param: ClientDeleteTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateDeleteResponse>> {
         return this.api.deleteTemplateWithHttpInfo(param.templateId, param.version,  options).toPromise();
     }
 
     /**
+     * Deletes a template or a specific template version. When no version is specified, deletes the entire template including all versions. When a version is specified, deletes only that version while preserving others. Returns remaining version information. 
      * Delete a template
      * @param param the request object
      */
-    public deleteTemplate(param: PDFApiDeleteTemplateRequest, options?: Configuration): Promise<TemplateDeleteResponse> {
+    public deleteTemplate(param: ClientDeleteTemplateRequest, options?: ConfigurationOptions): Promise<TemplateDeleteResponse> {
         return this.api.deleteTemplate(param.templateId, param.version,  options).toPromise();
     }
 
     /**
+     * Expiring a combined submission deletes the PDF from our system. This is useful for invalidating sensitive documents. 
      * Expire a combined submission
      * @param param the request object
      */
-    public expireCombinedSubmissionWithHttpInfo(param: PDFApiExpireCombinedSubmissionRequest, options?: Configuration): Promise<HttpInfo<CombinedSubmission>> {
+    public expireCombinedSubmissionWithHttpInfo(param: ClientExpireCombinedSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<CombinedSubmission>> {
         return this.api.expireCombinedSubmissionWithHttpInfo(param.combinedSubmissionId,  options).toPromise();
     }
 
     /**
+     * Expiring a combined submission deletes the PDF from our system. This is useful for invalidating sensitive documents. 
      * Expire a combined submission
      * @param param the request object
      */
-    public expireCombinedSubmission(param: PDFApiExpireCombinedSubmissionRequest, options?: Configuration): Promise<CombinedSubmission> {
+    public expireCombinedSubmission(param: ClientExpireCombinedSubmissionRequest, options?: ConfigurationOptions): Promise<CombinedSubmission> {
         return this.api.expireCombinedSubmission(param.combinedSubmissionId,  options).toPromise();
     }
 
     /**
+     * Expiring a PDF submission deletes the PDF and removes the data from our database. This is useful for invalidating sensitive documents after they\'ve been downloaded. You can also [configure a data retention policy for your submissions](https://docspring.com/docs/template-editor/settings/#expire-submissions) so that they automatically expire. 
      * Expire a PDF submission
      * @param param the request object
      */
-    public expireSubmissionWithHttpInfo(param: PDFApiExpireSubmissionRequest, options?: Configuration): Promise<HttpInfo<SubmissionPreview>> {
+    public expireSubmissionWithHttpInfo(param: ClientExpireSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionPreview>> {
         return this.api.expireSubmissionWithHttpInfo(param.submissionId,  options).toPromise();
     }
 
     /**
+     * Expiring a PDF submission deletes the PDF and removes the data from our database. This is useful for invalidating sensitive documents after they\'ve been downloaded. You can also [configure a data retention policy for your submissions](https://docspring.com/docs/template-editor/settings/#expire-submissions) so that they automatically expire. 
      * Expire a PDF submission
      * @param param the request object
      */
-    public expireSubmission(param: PDFApiExpireSubmissionRequest, options?: Configuration): Promise<SubmissionPreview> {
+    public expireSubmission(param: ClientExpireSubmissionRequest, options?: ConfigurationOptions): Promise<SubmissionPreview> {
         return this.api.expireSubmission(param.submissionId,  options).toPromise();
     }
 
     /**
-     * Generates a new PDF
+     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Set `wait: false` to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
+     * Generate a PDF
      * @param param the request object
      */
-    public generatePdfWithHttpInfo(param: PDFApiGeneratePdfRequest, options?: Configuration): Promise<HttpInfo<CreateSubmissionResponse>> {
+    public generatePdfWithHttpInfo(param: ClientGeneratePdfRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateSubmissionResponse>> {
         return this.api.generatePdfWithHttpInfo(param.templateId, param.submission, param.wait,  options).toPromise();
     }
 
     /**
-     * Generates a new PDF
+     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Set `wait: false` to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
+     * Generate a PDF
      * @param param the request object
      */
-    public generatePdf(param: PDFApiGeneratePdfRequest, options?: Configuration): Promise<CreateSubmissionResponse> {
+    public generatePdf(param: ClientGeneratePdfRequest, options?: ConfigurationOptions): Promise<CreateSubmissionResponse> {
         return this.api.generatePdf(param.templateId, param.submission, param.wait,  options).toPromise();
     }
 
     /**
-     * Generates a new PDF for an HTML template
+     * Generates a preview PDF for a submission with partially completed data requests. Useful for showing users what the final document will look like before all signatures or data have been collected. The preview includes any data collected so far. 
+     * Generate a preview PDF for partially completed data requests
      * @param param the request object
      */
-    public generatePdfForHtmlTemplateWithHttpInfo(param: PDFApiGeneratePdfForHtmlTemplateRequest, options?: Configuration): Promise<HttpInfo<CreateSubmissionResponse>> {
-        return this.api.generatePdfForHtmlTemplateWithHttpInfo(param.templateId, param.submission, param.wait,  options).toPromise();
-    }
-
-    /**
-     * Generates a new PDF for an HTML template
-     * @param param the request object
-     */
-    public generatePdfForHtmlTemplate(param: PDFApiGeneratePdfForHtmlTemplateRequest, options?: Configuration): Promise<CreateSubmissionResponse> {
-        return this.api.generatePdfForHtmlTemplate(param.templateId, param.submission, param.wait,  options).toPromise();
-    }
-
-    /**
-     * Generated a preview PDF for partially completed data requests
-     * @param param the request object
-     */
-    public generatePreviewWithHttpInfo(param: PDFApiGeneratePreviewRequest, options?: Configuration): Promise<HttpInfo<SuccessErrorResponse>> {
+    public generatePreviewWithHttpInfo(param: ClientGeneratePreviewRequest, options?: ConfigurationOptions): Promise<HttpInfo<SuccessErrorResponse>> {
         return this.api.generatePreviewWithHttpInfo(param.submissionId,  options).toPromise();
     }
 
     /**
-     * Generated a preview PDF for partially completed data requests
+     * Generates a preview PDF for a submission with partially completed data requests. Useful for showing users what the final document will look like before all signatures or data have been collected. The preview includes any data collected so far. 
+     * Generate a preview PDF for partially completed data requests
      * @param param the request object
      */
-    public generatePreview(param: PDFApiGeneratePreviewRequest, options?: Configuration): Promise<SuccessErrorResponse> {
+    public generatePreview(param: ClientGeneratePreviewRequest, options?: ConfigurationOptions): Promise<SuccessErrorResponse> {
         return this.api.generatePreview(param.submissionId,  options).toPromise();
     }
 
     /**
+     * Retrieves the details and status of a combined submission. Returns processing state, download URL (if processed), metadata, and information about any integrated actions (e.g., S3 uploads). 
      * Check the status of a combined submission (merged PDFs)
      * @param param the request object
      */
-    public getCombinedSubmissionWithHttpInfo(param: PDFApiGetCombinedSubmissionRequest, options?: Configuration): Promise<HttpInfo<CombinedSubmission>> {
+    public getCombinedSubmissionWithHttpInfo(param: ClientGetCombinedSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<CombinedSubmission>> {
         return this.api.getCombinedSubmissionWithHttpInfo(param.combinedSubmissionId,  options).toPromise();
     }
 
     /**
+     * Retrieves the details and status of a combined submission. Returns processing state, download URL (if processed), metadata, and information about any integrated actions (e.g., S3 uploads). 
      * Check the status of a combined submission (merged PDFs)
      * @param param the request object
      */
-    public getCombinedSubmission(param: PDFApiGetCombinedSubmissionRequest, options?: Configuration): Promise<CombinedSubmission> {
+    public getCombinedSubmission(param: ClientGetCombinedSubmissionRequest, options?: ConfigurationOptions): Promise<CombinedSubmission> {
         return this.api.getCombinedSubmission(param.combinedSubmissionId,  options).toPromise();
     }
 
     /**
+     * Retrieves the details and status of a data request. Returns information about the request state (pending, viewed, completed), authentication details, and metadata. Includes audit information like IP address, browseruser agent, and timestamps.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - Complete guide to data request workflow 
      * Look up a submission data request
      * @param param the request object
      */
-    public getDataRequestWithHttpInfo(param: PDFApiGetDataRequestRequest, options?: Configuration): Promise<HttpInfo<SubmissionDataRequestShow>> {
+    public getDataRequestWithHttpInfo(param: ClientGetDataRequestRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionDataRequestShow>> {
         return this.api.getDataRequestWithHttpInfo(param.dataRequestId,  options).toPromise();
     }
 
     /**
+     * Retrieves the details and status of a data request. Returns information about the request state (pending, viewed, completed), authentication details, and metadata. Includes audit information like IP address, browseruser agent, and timestamps.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - Complete guide to data request workflow 
      * Look up a submission data request
      * @param param the request object
      */
-    public getDataRequest(param: PDFApiGetDataRequestRequest, options?: Configuration): Promise<SubmissionDataRequestShow> {
+    public getDataRequest(param: ClientGetDataRequestRequest, options?: ConfigurationOptions): Promise<SubmissionDataRequestShow> {
         return this.api.getDataRequest(param.dataRequestId,  options).toPromise();
     }
 
     /**
+     * Retrieves complete template information including fields, defaults, settings, and HTML/SCSS content. Use this to get all template data needed for automated updates or analysis. Returns more detailed information than the basic `getTemplate` endpoint. 
      * Fetch the full attributes for a PDF template
      * @param param the request object
      */
-    public getFullTemplateWithHttpInfo(param: PDFApiGetFullTemplateRequest, options?: Configuration): Promise<HttpInfo<Template>> {
+    public getFullTemplateWithHttpInfo(param: ClientGetFullTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
         return this.api.getFullTemplateWithHttpInfo(param.templateId,  options).toPromise();
     }
 
     /**
+     * Retrieves complete template information including fields, defaults, settings, and HTML/SCSS content. Use this to get all template data needed for automated updates or analysis. Returns more detailed information than the basic `getTemplate` endpoint. 
      * Fetch the full attributes for a PDF template
      * @param param the request object
      */
-    public getFullTemplate(param: PDFApiGetFullTemplateRequest, options?: Configuration): Promise<Template> {
+    public getFullTemplate(param: ClientGetFullTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
         return this.api.getFullTemplate(param.templateId,  options).toPromise();
     }
 
     /**
-     * Get a presigned URL so that you can upload a file to our AWS S3 bucket
+     * Returns a presigned S3 URL for uploading files directly to our S3 bucket. Use this endpoint to upload large files before creating templates or custom files. S3 will respond with a JSON object that you can include in your DocSpring API request.  Uploaded files can be used to: - [Create templates](https://docspring.com/docs/api/#tag/templates/post/templates?endpoint_variant=create_template_from_cached_upload) - [Update templates](https://docspring.com/docs/api/#tag/templates/put/templates/{template_id}?endpoint_variant=update_template_pdf_with_cached_upload) - [Create custom files](https://docspring.com/docs/api/#tag/custom-files/post/custom_files) and then [merge them with other PDFs](https://docspring.com/docs/api/#tag/combine-pdfs/post/combined_submissions) 
+     * Get a presigned S3 URL for direct file upload
      * @param param the request object
      */
-    public getPresignUrlWithHttpInfo(param: PDFApiGetPresignUrlRequest = {}, options?: Configuration): Promise<HttpInfo<UploadPresignResponse>> {
+    public getPresignUrlWithHttpInfo(param: ClientGetPresignUrlRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<UploadPresignResponse>> {
         return this.api.getPresignUrlWithHttpInfo( options).toPromise();
     }
 
     /**
-     * Get a presigned URL so that you can upload a file to our AWS S3 bucket
+     * Returns a presigned S3 URL for uploading files directly to our S3 bucket. Use this endpoint to upload large files before creating templates or custom files. S3 will respond with a JSON object that you can include in your DocSpring API request.  Uploaded files can be used to: - [Create templates](https://docspring.com/docs/api/#tag/templates/post/templates?endpoint_variant=create_template_from_cached_upload) - [Update templates](https://docspring.com/docs/api/#tag/templates/put/templates/{template_id}?endpoint_variant=update_template_pdf_with_cached_upload) - [Create custom files](https://docspring.com/docs/api/#tag/custom-files/post/custom_files) and then [merge them with other PDFs](https://docspring.com/docs/api/#tag/combine-pdfs/post/combined_submissions) 
+     * Get a presigned S3 URL for direct file upload
      * @param param the request object
      */
-    public getPresignUrl(param: PDFApiGetPresignUrlRequest = {}, options?: Configuration): Promise<UploadPresignResponse> {
+    public getPresignUrl(param: ClientGetPresignUrlRequest = {}, options?: ConfigurationOptions): Promise<UploadPresignResponse> {
         return this.api.getPresignUrl( options).toPromise();
     }
 
     /**
+     * Retrieves the details and status of a PDF submission. Returns processing state, download URL (if processed), metadata, submission data (optional), and information about any integrated actions. Use this to poll for completion when using asynchronous processing. 
      * Check the status of a PDF
      * @param param the request object
      */
-    public getSubmissionWithHttpInfo(param: PDFApiGetSubmissionRequest, options?: Configuration): Promise<HttpInfo<Submission>> {
+    public getSubmissionWithHttpInfo(param: ClientGetSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<Submission>> {
         return this.api.getSubmissionWithHttpInfo(param.submissionId, param.includeData,  options).toPromise();
     }
 
     /**
+     * Retrieves the details and status of a PDF submission. Returns processing state, download URL (if processed), metadata, submission data (optional), and information about any integrated actions. Use this to poll for completion when using asynchronous processing. 
      * Check the status of a PDF
      * @param param the request object
      */
-    public getSubmission(param: PDFApiGetSubmissionRequest, options?: Configuration): Promise<Submission> {
+    public getSubmission(param: ClientGetSubmissionRequest, options?: ConfigurationOptions): Promise<Submission> {
         return this.api.getSubmission(param.submissionId, param.includeData,  options).toPromise();
     }
 
     /**
+     * Retrieves the status and results of a batch PDF generation job. Returns processing state, completion statistics, and optionally includes all individual submission details. Use this to poll for completion when using asynchronous batch processing. 
      * Check the status of a submission batch job
      * @param param the request object
      */
-    public getSubmissionBatchWithHttpInfo(param: PDFApiGetSubmissionBatchRequest, options?: Configuration): Promise<HttpInfo<SubmissionBatchWithSubmissions>> {
+    public getSubmissionBatchWithHttpInfo(param: ClientGetSubmissionBatchRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionBatchWithSubmissions>> {
         return this.api.getSubmissionBatchWithHttpInfo(param.submissionBatchId, param.includeSubmissions,  options).toPromise();
     }
 
     /**
+     * Retrieves the status and results of a batch PDF generation job. Returns processing state, completion statistics, and optionally includes all individual submission details. Use this to poll for completion when using asynchronous batch processing. 
      * Check the status of a submission batch job
      * @param param the request object
      */
-    public getSubmissionBatch(param: PDFApiGetSubmissionBatchRequest, options?: Configuration): Promise<SubmissionBatchWithSubmissions> {
+    public getSubmissionBatch(param: ClientGetSubmissionBatchRequest, options?: ConfigurationOptions): Promise<SubmissionBatchWithSubmissions> {
         return this.api.getSubmissionBatch(param.submissionBatchId, param.includeSubmissions,  options).toPromise();
     }
 
     /**
+     * Retrieves information about a template including processing status and document URL. Use this to check if template is ready to view in the template editor or generate PDFs. 
      * Check the status of an uploaded template
      * @param param the request object
      */
-    public getTemplateWithHttpInfo(param: PDFApiGetTemplateRequest, options?: Configuration): Promise<HttpInfo<TemplatePreview>> {
+    public getTemplateWithHttpInfo(param: ClientGetTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
         return this.api.getTemplateWithHttpInfo(param.templateId,  options).toPromise();
     }
 
     /**
+     * Retrieves information about a template including processing status and document URL. Use this to check if template is ready to view in the template editor or generate PDFs. 
      * Check the status of an uploaded template
      * @param param the request object
      */
-    public getTemplate(param: PDFApiGetTemplateRequest, options?: Configuration): Promise<TemplatePreview> {
+    public getTemplate(param: ClientGetTemplateRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
         return this.api.getTemplate(param.templateId,  options).toPromise();
     }
 
     /**
+     * Retrieves the JSON Schema definition for a template\'s fields. Use this to validate data before submitting it for PDF generation, or to build dynamic forms that match the template\'s field structure and validation requirements.  See also: - [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data 
      * Fetch the JSON schema for a template
      * @param param the request object
      */
-    public getTemplateSchemaWithHttpInfo(param: PDFApiGetTemplateSchemaRequest, options?: Configuration): Promise<HttpInfo<JsonSchema>> {
+    public getTemplateSchemaWithHttpInfo(param: ClientGetTemplateSchemaRequest, options?: ConfigurationOptions): Promise<HttpInfo<JsonSchema>> {
         return this.api.getTemplateSchemaWithHttpInfo(param.templateId,  options).toPromise();
     }
 
     /**
+     * Retrieves the JSON Schema definition for a template\'s fields. Use this to validate data before submitting it for PDF generation, or to build dynamic forms that match the template\'s field structure and validation requirements.  See also: - [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data 
      * Fetch the JSON schema for a template
      * @param param the request object
      */
-    public getTemplateSchema(param: PDFApiGetTemplateSchemaRequest, options?: Configuration): Promise<JsonSchema> {
+    public getTemplateSchema(param: ClientGetTemplateSchemaRequest, options?: ConfigurationOptions): Promise<JsonSchema> {
         return this.api.getTemplateSchema(param.templateId,  options).toPromise();
     }
 
     /**
+     * Returns a paginated list of combined submissions (merged PDFs) for your account. Includes processing status, expiration details, and download URLs for processed PDFs. 
      * Get a list of all combined submissions
      * @param param the request object
      */
-    public listCombinedSubmissionsWithHttpInfo(param: PDFApiListCombinedSubmissionsRequest = {}, options?: Configuration): Promise<HttpInfo<Array<CombinedSubmission>>> {
+    public listCombinedSubmissionsWithHttpInfo(param: ClientListCombinedSubmissionsRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<Array<CombinedSubmission>>> {
         return this.api.listCombinedSubmissionsWithHttpInfo(param.page, param.perPage,  options).toPromise();
     }
 
     /**
+     * Returns a paginated list of combined submissions (merged PDFs) for your account. Includes processing status, expiration details, and download URLs for processed PDFs. 
      * Get a list of all combined submissions
      * @param param the request object
      */
-    public listCombinedSubmissions(param: PDFApiListCombinedSubmissionsRequest = {}, options?: Configuration): Promise<Array<CombinedSubmission>> {
+    public listCombinedSubmissions(param: ClientListCombinedSubmissionsRequest = {}, options?: ConfigurationOptions): Promise<Array<CombinedSubmission>> {
         return this.api.listCombinedSubmissions(param.page, param.perPage,  options).toPromise();
     }
 
     /**
+     * Returns a list of folders in your account. Can be filtered by parent folder ID to retrieve subfolders. Folders help organize templates and maintain a hierarchical structure. 
      * Get a list of all folders
      * @param param the request object
      */
-    public listFoldersWithHttpInfo(param: PDFApiListFoldersRequest = {}, options?: Configuration): Promise<HttpInfo<Array<Folder>>> {
+    public listFoldersWithHttpInfo(param: ClientListFoldersRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<Array<Folder>>> {
         return this.api.listFoldersWithHttpInfo(param.parentFolderId,  options).toPromise();
     }
 
     /**
+     * Returns a list of folders in your account. Can be filtered by parent folder ID to retrieve subfolders. Folders help organize templates and maintain a hierarchical structure. 
      * Get a list of all folders
      * @param param the request object
      */
-    public listFolders(param: PDFApiListFoldersRequest = {}, options?: Configuration): Promise<Array<Folder>> {
+    public listFolders(param: ClientListFoldersRequest = {}, options?: ConfigurationOptions): Promise<Array<Folder>> {
         return this.api.listFolders(param.parentFolderId,  options).toPromise();
     }
 
     /**
+     * Returns a paginated list of all PDF submissions across all templates in your account. Can be filtered by date range and submission type (test/live). Supports cursor-based pagination and optionally includes submission data for each result. 
      * List all submissions
      * @param param the request object
      */
-    public listSubmissionsWithHttpInfo(param: PDFApiListSubmissionsRequest = {}, options?: Configuration): Promise<HttpInfo<ListSubmissionsResponse>> {
+    public listSubmissionsWithHttpInfo(param: ClientListSubmissionsRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<ListSubmissionsResponse>> {
         return this.api.listSubmissionsWithHttpInfo(param.cursor, param.limit, param.createdAfter, param.createdBefore, param.type, param.includeData,  options).toPromise();
     }
 
     /**
+     * Returns a paginated list of all PDF submissions across all templates in your account. Can be filtered by date range and submission type (test/live). Supports cursor-based pagination and optionally includes submission data for each result. 
      * List all submissions
      * @param param the request object
      */
-    public listSubmissions(param: PDFApiListSubmissionsRequest = {}, options?: Configuration): Promise<ListSubmissionsResponse> {
+    public listSubmissions(param: ClientListSubmissionsRequest = {}, options?: ConfigurationOptions): Promise<ListSubmissionsResponse> {
         return this.api.listSubmissions(param.cursor, param.limit, param.createdAfter, param.createdBefore, param.type, param.includeData,  options).toPromise();
     }
 
     /**
+     * Returns a paginated list of all submissions for a specific template. Can be filtered by date range, submission type (test/live), and optionally include submission data. Supports cursor-based pagination for efficient retrieval of large result sets. 
      * List all submissions for a given template
      * @param param the request object
      */
-    public listTemplateSubmissionsWithHttpInfo(param: PDFApiListTemplateSubmissionsRequest, options?: Configuration): Promise<HttpInfo<ListSubmissionsResponse>> {
+    public listTemplateSubmissionsWithHttpInfo(param: ClientListTemplateSubmissionsRequest, options?: ConfigurationOptions): Promise<HttpInfo<ListSubmissionsResponse>> {
         return this.api.listTemplateSubmissionsWithHttpInfo(param.templateId, param.cursor, param.limit, param.createdAfter, param.createdBefore, param.type, param.includeData,  options).toPromise();
     }
 
     /**
+     * Returns a paginated list of all submissions for a specific template. Can be filtered by date range, submission type (test/live), and optionally include submission data. Supports cursor-based pagination for efficient retrieval of large result sets. 
      * List all submissions for a given template
      * @param param the request object
      */
-    public listTemplateSubmissions(param: PDFApiListTemplateSubmissionsRequest, options?: Configuration): Promise<ListSubmissionsResponse> {
+    public listTemplateSubmissions(param: ClientListTemplateSubmissionsRequest, options?: ConfigurationOptions): Promise<ListSubmissionsResponse> {
         return this.api.listTemplateSubmissions(param.templateId, param.cursor, param.limit, param.createdAfter, param.createdBefore, param.type, param.includeData,  options).toPromise();
     }
 
     /**
+     * Retrieves a list of your templates with search, filtering, and pagination options. Returns basic template information including ID, name, type (PDF or HTML), and folder location. Supports text search by name and filtering by parent folder. 
      * Get a list of all templates
      * @param param the request object
      */
-    public listTemplatesWithHttpInfo(param: PDFApiListTemplatesRequest = {}, options?: Configuration): Promise<HttpInfo<Array<TemplatePreview>>> {
+    public listTemplatesWithHttpInfo(param: ClientListTemplatesRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<Array<TemplatePreview>>> {
         return this.api.listTemplatesWithHttpInfo(param.query, param.parentFolderId, param.page, param.perPage,  options).toPromise();
     }
 
     /**
+     * Retrieves a list of your templates with search, filtering, and pagination options. Returns basic template information including ID, name, type (PDF or HTML), and folder location. Supports text search by name and filtering by parent folder. 
      * Get a list of all templates
      * @param param the request object
      */
-    public listTemplates(param: PDFApiListTemplatesRequest = {}, options?: Configuration): Promise<Array<TemplatePreview>> {
+    public listTemplates(param: ClientListTemplatesRequest = {}, options?: ConfigurationOptions): Promise<Array<TemplatePreview>> {
         return this.api.listTemplates(param.query, param.parentFolderId, param.page, param.perPage,  options).toPromise();
     }
 
     /**
+     * Moves a folder to a new parent folder or to the root level. All templates and subfolders within the folder are moved together. Cannot move a folder into one of its own subfolders. 
      * Move a folder
      * @param param the request object
      */
-    public moveFolderToFolderWithHttpInfo(param: PDFApiMoveFolderToFolderRequest, options?: Configuration): Promise<HttpInfo<Folder>> {
+    public moveFolderToFolderWithHttpInfo(param: ClientMoveFolderToFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
         return this.api.moveFolderToFolderWithHttpInfo(param.folderId, param.data,  options).toPromise();
     }
 
     /**
+     * Moves a folder to a new parent folder or to the root level. All templates and subfolders within the folder are moved together. Cannot move a folder into one of its own subfolders. 
      * Move a folder
      * @param param the request object
      */
-    public moveFolderToFolder(param: PDFApiMoveFolderToFolderRequest, options?: Configuration): Promise<Folder> {
+    public moveFolderToFolder(param: ClientMoveFolderToFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
         return this.api.moveFolderToFolder(param.folderId, param.data,  options).toPromise();
     }
 
     /**
+     * Moves a template to a different folder or to the root level. Use this to organize templates within your folders. Provide a folder ID to move to a specific folder, or `null` to move to the root level. 
      * Move Template to folder
      * @param param the request object
      */
-    public moveTemplateToFolderWithHttpInfo(param: PDFApiMoveTemplateToFolderRequest, options?: Configuration): Promise<HttpInfo<TemplatePreview>> {
+    public moveTemplateToFolderWithHttpInfo(param: ClientMoveTemplateToFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
         return this.api.moveTemplateToFolderWithHttpInfo(param.templateId, param.data,  options).toPromise();
     }
 
     /**
+     * Moves a template to a different folder or to the root level. Use this to organize templates within your folders. Provide a folder ID to move to a specific folder, or `null` to move to the root level. 
      * Move Template to folder
      * @param param the request object
      */
-    public moveTemplateToFolder(param: PDFApiMoveTemplateToFolderRequest, options?: Configuration): Promise<TemplatePreview> {
+    public moveTemplateToFolder(param: ClientMoveTemplateToFolderRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
         return this.api.moveTemplateToFolder(param.templateId, param.data,  options).toPromise();
     }
 
     /**
+     * Publishes the current draft version of a template and creates a new immutable version with semantic versioning (major.minor.patch). 
      * Publish a template version
      * @param param the request object
      */
-    public publishTemplateVersionWithHttpInfo(param: PDFApiPublishTemplateVersionRequest, options?: Configuration): Promise<HttpInfo<TemplatePublishVersionResponse>> {
+    public publishTemplateVersionWithHttpInfo(param: ClientPublishTemplateVersionRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePublishVersionResponse>> {
         return this.api.publishTemplateVersionWithHttpInfo(param.templateId, param.data,  options).toPromise();
     }
 
     /**
+     * Publishes the current draft version of a template and creates a new immutable version with semantic versioning (major.minor.patch). 
      * Publish a template version
      * @param param the request object
      */
-    public publishTemplateVersion(param: PDFApiPublishTemplateVersionRequest, options?: Configuration): Promise<TemplatePublishVersionResponse> {
+    public publishTemplateVersion(param: ClientPublishTemplateVersionRequest, options?: ConfigurationOptions): Promise<TemplatePublishVersionResponse> {
         return this.api.publishTemplateVersion(param.templateId, param.data,  options).toPromise();
     }
 
     /**
+     * Renames an existing folder. The new name must be unique within the same parent folder. This operation only changes the folder name, not its location or contents. 
      * Rename a folder
      * @param param the request object
      */
-    public renameFolderWithHttpInfo(param: PDFApiRenameFolderRequest, options?: Configuration): Promise<HttpInfo<Folder>> {
+    public renameFolderWithHttpInfo(param: ClientRenameFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
         return this.api.renameFolderWithHttpInfo(param.folderId, param.data,  options).toPromise();
     }
 
     /**
+     * Renames an existing folder. The new name must be unique within the same parent folder. This operation only changes the folder name, not its location or contents. 
      * Rename a folder
      * @param param the request object
      */
-    public renameFolder(param: PDFApiRenameFolderRequest, options?: Configuration): Promise<Folder> {
+    public renameFolder(param: ClientRenameFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
         return this.api.renameFolder(param.folderId, param.data,  options).toPromise();
     }
 
     /**
+     * Restores your template to a previously published version, copying that version\'s content and configuration to the current draft. Use this to revert changes or recover from an unwanted modification. 
      * Restore a template version
      * @param param the request object
      */
-    public restoreTemplateVersionWithHttpInfo(param: PDFApiRestoreTemplateVersionRequest, options?: Configuration): Promise<HttpInfo<SuccessErrorResponse>> {
+    public restoreTemplateVersionWithHttpInfo(param: ClientRestoreTemplateVersionRequest, options?: ConfigurationOptions): Promise<HttpInfo<SuccessErrorResponse>> {
         return this.api.restoreTemplateVersionWithHttpInfo(param.templateId, param.data,  options).toPromise();
     }
 
     /**
+     * Restores your template to a previously published version, copying that version\'s content and configuration to the current draft. Use this to revert changes or recover from an unwanted modification. 
      * Restore a template version
      * @param param the request object
      */
-    public restoreTemplateVersion(param: PDFApiRestoreTemplateVersionRequest, options?: Configuration): Promise<SuccessErrorResponse> {
+    public restoreTemplateVersion(param: ClientRestoreTemplateVersionRequest, options?: ConfigurationOptions): Promise<SuccessErrorResponse> {
         return this.api.restoreTemplateVersion(param.templateId, param.data,  options).toPromise();
     }
 
     /**
-     * Test Authentication
+     * Checks whether your API token is valid by making an authenticated request. Returns a success response if authentication passes. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
+     * Test authentication
      * @param param the request object
      */
-    public testAuthenticationWithHttpInfo(param: PDFApiTestAuthenticationRequest = {}, options?: Configuration): Promise<HttpInfo<SuccessErrorResponse>> {
+    public testAuthenticationWithHttpInfo(param: ClientTestAuthenticationRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<SuccessErrorResponse>> {
         return this.api.testAuthenticationWithHttpInfo( options).toPromise();
     }
 
     /**
-     * Test Authentication
+     * Checks whether your API token is valid by making an authenticated request. Returns a success response if authentication passes. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
+     * Test authentication
      * @param param the request object
      */
-    public testAuthentication(param: PDFApiTestAuthenticationRequest = {}, options?: Configuration): Promise<SuccessErrorResponse> {
+    public testAuthentication(param: ClientTestAuthenticationRequest = {}, options?: ConfigurationOptions): Promise<SuccessErrorResponse> {
         return this.api.testAuthentication( options).toPromise();
     }
 
     /**
+     * Updates authentication details for a data request. Use this when a user logs in to record their authentication method, provider, session information, and hashed identifiers. Updates metadata and tracks authentication state changes for auditing and compliance. 
      * Update a submission data request
      * @param param the request object
      */
-    public updateDataRequestWithHttpInfo(param: PDFApiUpdateDataRequestRequest, options?: Configuration): Promise<HttpInfo<CreateSubmissionDataRequestResponse>> {
+    public updateDataRequestWithHttpInfo(param: ClientUpdateDataRequestRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateSubmissionDataRequestResponse>> {
         return this.api.updateDataRequestWithHttpInfo(param.dataRequestId, param.data,  options).toPromise();
     }
 
     /**
+     * Updates authentication details for a data request. Use this when a user logs in to record their authentication method, provider, session information, and hashed identifiers. Updates metadata and tracks authentication state changes for auditing and compliance. 
      * Update a submission data request
      * @param param the request object
      */
-    public updateDataRequest(param: PDFApiUpdateDataRequestRequest, options?: Configuration): Promise<CreateSubmissionDataRequestResponse> {
+    public updateDataRequest(param: ClientUpdateDataRequestRequest, options?: ConfigurationOptions): Promise<CreateSubmissionDataRequestResponse> {
         return this.api.updateDataRequest(param.dataRequestId, param.data,  options).toPromise();
     }
 
     /**
+     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. 
      * Update a Template
      * @param param the request object
      */
-    public updateTemplateWithHttpInfo(param: PDFApiUpdateTemplateRequest, options?: Configuration): Promise<HttpInfo<SuccessMultipleErrorsResponse>> {
+    public updateTemplateWithHttpInfo(param: ClientUpdateTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<SuccessMultipleErrorsResponse>> {
         return this.api.updateTemplateWithHttpInfo(param.templateId, param.data,  options).toPromise();
     }
 
     /**
+     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. 
      * Update a Template
      * @param param the request object
      */
-    public updateTemplate(param: PDFApiUpdateTemplateRequest, options?: Configuration): Promise<SuccessMultipleErrorsResponse> {
+    public updateTemplate(param: ClientUpdateTemplateRequest, options?: ConfigurationOptions): Promise<SuccessMultipleErrorsResponse> {
         return this.api.updateTemplate(param.templateId, param.data,  options).toPromise();
+    }
+
+    /**
+     * Upload a new PDF file to update a PDF template\'s document. This replaces the template\'s PDF while preserving all of the existing fields. If you upload a PDF with fewer pages than the current document, any fields on the removed pages will be deleted. 
+     * Update a template\'s document with a form POST file upload
+     * @param param the request object
+     */
+    public updateTemplateDocumentWithHttpInfo(param: ClientUpdateTemplateDocumentRequest, options?: ConfigurationOptions): Promise<HttpInfo<SuccessMultipleErrorsResponse>> {
+        return this.api.updateTemplateDocumentWithHttpInfo(param.templateId, param.templateDocument, param.templateName,  options).toPromise();
+    }
+
+    /**
+     * Upload a new PDF file to update a PDF template\'s document. This replaces the template\'s PDF while preserving all of the existing fields. If you upload a PDF with fewer pages than the current document, any fields on the removed pages will be deleted. 
+     * Update a template\'s document with a form POST file upload
+     * @param param the request object
+     */
+    public updateTemplateDocument(param: ClientUpdateTemplateDocumentRequest, options?: ConfigurationOptions): Promise<SuccessMultipleErrorsResponse> {
+        return this.api.updateTemplateDocument(param.templateId, param.templateDocument, param.templateName,  options).toPromise();
+    }
+
+    /**
+     * Updates a PDF template\'s document using a cached file upload. This is a three-step process: First, request a presigned URL to upload your PDF file to our S3 bucket. Then, use that URL to upload your PDF file. Finally, submit the ID of the uploaded file to replace the template\'s document. 
+     * Update a template\'s document with a cached S3 file upload
+     * @param param the request object
+     */
+    public updateTemplateDocumentFromUploadWithHttpInfo(param: ClientUpdateTemplateDocumentFromUploadRequest, options?: ConfigurationOptions): Promise<HttpInfo<SuccessMultipleErrorsResponse>> {
+        return this.api.updateTemplateDocumentFromUploadWithHttpInfo(param.templateId, param.data,  options).toPromise();
+    }
+
+    /**
+     * Updates a PDF template\'s document using a cached file upload. This is a three-step process: First, request a presigned URL to upload your PDF file to our S3 bucket. Then, use that URL to upload your PDF file. Finally, submit the ID of the uploaded file to replace the template\'s document. 
+     * Update a template\'s document with a cached S3 file upload
+     * @param param the request object
+     */
+    public updateTemplateDocumentFromUpload(param: ClientUpdateTemplateDocumentFromUploadRequest, options?: ConfigurationOptions): Promise<SuccessMultipleErrorsResponse> {
+        return this.api.updateTemplateDocumentFromUpload(param.templateId, param.data,  options).toPromise();
     }
 
 }

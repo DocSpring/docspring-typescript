@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -13,9 +13,18 @@
 import { HttpFile } from '../http/http';
 
 export class UpdateSubmissionDataRequestData {
-    'authType'?: UpdateSubmissionDataRequestDataAuthTypeEnum;
+    'auth_phone_number_hash'?: string | null;
+    'auth_provider'?: string | null;
+    'auth_second_factor_type'?: UpdateSubmissionDataRequestDataAuthSecondFactorTypeEnum | null;
+    'auth_session_id_hash'?: string | null;
+    'auth_session_started_at'?: string | null;
+    'auth_type'?: UpdateSubmissionDataRequestDataAuthTypeEnum;
+    'auth_user_id_hash'?: string | null;
+    'auth_username_hash'?: string | null;
+    'email'?: string | null;
     'fields'?: Array<string>;
     'metadata'?: any;
+    'name'?: string | null;
     'order'?: number;
 
     static readonly discriminator: string | undefined = undefined;
@@ -24,9 +33,57 @@ export class UpdateSubmissionDataRequestData {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "authType",
+            "name": "auth_phone_number_hash",
+            "baseName": "auth_phone_number_hash",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "auth_provider",
+            "baseName": "auth_provider",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "auth_second_factor_type",
+            "baseName": "auth_second_factor_type",
+            "type": "UpdateSubmissionDataRequestDataAuthSecondFactorTypeEnum",
+            "format": ""
+        },
+        {
+            "name": "auth_session_id_hash",
+            "baseName": "auth_session_id_hash",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "auth_session_started_at",
+            "baseName": "auth_session_started_at",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "auth_type",
             "baseName": "auth_type",
             "type": "UpdateSubmissionDataRequestDataAuthTypeEnum",
+            "format": ""
+        },
+        {
+            "name": "auth_user_id_hash",
+            "baseName": "auth_user_id_hash",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "auth_username_hash",
+            "baseName": "auth_username_hash",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "email",
+            "baseName": "email",
+            "type": "string",
             "format": ""
         },
         {
@@ -39,6 +96,12 @@ export class UpdateSubmissionDataRequestData {
             "name": "metadata",
             "baseName": "metadata",
             "type": "any",
+            "format": ""
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string",
             "format": ""
         },
         {
@@ -56,6 +119,15 @@ export class UpdateSubmissionDataRequestData {
     }
 }
 
+export enum UpdateSubmissionDataRequestDataAuthSecondFactorTypeEnum {
+    None = 'none',
+    PhoneNumber = 'phone_number',
+    Totp = 'totp',
+    MobilePush = 'mobile_push',
+    SecurityKey = 'security_key',
+    Fingerprint = 'fingerprint',
+    Empty = ''
+}
 export enum UpdateSubmissionDataRequestDataAuthTypeEnum {
     None = 'none',
     Password = 'password',

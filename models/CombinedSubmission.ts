@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * DocSpring provides an API that helps you fill out and sign PDF templates.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
  *
  * OpenAPI spec version: v1
  * 
@@ -17,16 +17,16 @@ export class CombinedSubmission {
     'id': string | null;
     'state': CombinedSubmissionStateEnum;
     'expired': boolean;
-    'expiresIn': number | null;
-    'expiresAt': string | null;
-    'processedAt': string | null;
-    'errorMessage': string | null;
-    'submissionIds': Array<string>;
-    'sourcePdfs': Array<any>;
+    'expires_in': number | null;
+    'expires_at': string | null;
+    'processed_at': string | null;
+    'error_message': string | null;
+    'submission_ids': Array<string>;
+    'source_pdfs': Array<any>;
     'metadata': any;
     'password': string | null;
-    'pdfHash': string | null;
-    'downloadUrl': string | null;
+    'pdf_hash': string | null;
+    'download_url': string | null;
     'actions': Array<CombinedSubmissionAction>;
 
     static readonly discriminator: string | undefined = undefined;
@@ -53,37 +53,37 @@ export class CombinedSubmission {
             "format": ""
         },
         {
-            "name": "expiresIn",
+            "name": "expires_in",
             "baseName": "expires_in",
             "type": "number",
             "format": ""
         },
         {
-            "name": "expiresAt",
+            "name": "expires_at",
             "baseName": "expires_at",
             "type": "string",
             "format": ""
         },
         {
-            "name": "processedAt",
+            "name": "processed_at",
             "baseName": "processed_at",
             "type": "string",
             "format": ""
         },
         {
-            "name": "errorMessage",
+            "name": "error_message",
             "baseName": "error_message",
             "type": "string",
             "format": ""
         },
         {
-            "name": "submissionIds",
+            "name": "submission_ids",
             "baseName": "submission_ids",
             "type": "Array<string>",
             "format": ""
         },
         {
-            "name": "sourcePdfs",
+            "name": "source_pdfs",
             "baseName": "source_pdfs",
             "type": "Array<any>",
             "format": ""
@@ -101,13 +101,13 @@ export class CombinedSubmission {
             "format": ""
         },
         {
-            "name": "pdfHash",
+            "name": "pdf_hash",
             "baseName": "pdf_hash",
             "type": "string",
             "format": ""
         },
         {
-            "name": "downloadUrl",
+            "name": "download_url",
             "baseName": "download_url",
             "type": "string",
             "format": ""
