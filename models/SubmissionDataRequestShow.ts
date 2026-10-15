@@ -23,6 +23,7 @@ export class SubmissionDataRequestShow {
     'state': SubmissionDataRequestShowStateEnum;
     'viewed_at': string | null;
     'completed_at': string | null;
+    'declined_at': string | null;
     'data': any | null;
     'auth_type': SubmissionDataRequestShowAuthTypeEnum;
     'auth_second_factor_type': SubmissionDataRequestShowAuthSecondFactorTypeEnum;
@@ -98,6 +99,12 @@ export class SubmissionDataRequestShow {
         {
             "name": "completed_at",
             "baseName": "completed_at",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "declined_at",
+            "baseName": "declined_at",
             "type": "string",
             "format": ""
         },
@@ -184,7 +191,8 @@ export class SubmissionDataRequestShow {
 
 export enum SubmissionDataRequestShowStateEnum {
     Pending = 'pending',
-    Completed = 'completed'
+    Completed = 'completed',
+    Declined = 'declined'
 }
 export enum SubmissionDataRequestShowAuthTypeEnum {
     None = 'none',

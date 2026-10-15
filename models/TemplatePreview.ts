@@ -24,6 +24,9 @@ export class TemplatePreview {
     'document_url': string | null;
     'editable_submissions': boolean;
     'embed_domains': string | null;
+    'embed_edit_allow_settings': boolean;
+    'embed_edit_allow_versioning': boolean;
+    'embed_edit_allow_document_replacement': boolean;
     'encrypt_pdfs_password': string | null;
     'encrypt_pdfs': boolean;
     'expiration_interval': string;
@@ -39,7 +42,7 @@ export class TemplatePreview {
     'page_count': number;
     'page_dimensions': Array<Array<number>> | null;
     'parent_folder_id': string | null;
-    'path': string | null;
+    'path': string;
     'permanent_document_url': string | null;
     'public_submissions': boolean;
     'public_web_form': boolean;
@@ -50,11 +53,15 @@ export class TemplatePreview {
     'version_published_at': string | null;
     'version': string | null;
     'webhook_url': string | null;
+    'embed_edit_token'?: string | null;
     'demo': boolean;
     'latest_version': string | null;
     'last_changed_at': string | null;
     'last_changed_by_type': TemplatePreviewLastChangedByTypeEnum | null;
     'last_changed_by_id': string | null;
+    'last_changed_by_external_name': string | null;
+    'last_changed_by_external_email': string | null;
+    'last_changed_by_external_id': string | null;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -125,6 +132,24 @@ export class TemplatePreview {
             "name": "embed_domains",
             "baseName": "embed_domains",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "embed_edit_allow_settings",
+            "baseName": "embed_edit_allow_settings",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "embed_edit_allow_versioning",
+            "baseName": "embed_edit_allow_versioning",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "embed_edit_allow_document_replacement",
+            "baseName": "embed_edit_allow_document_replacement",
+            "type": "boolean",
             "format": ""
         },
         {
@@ -284,6 +309,12 @@ export class TemplatePreview {
             "format": ""
         },
         {
+            "name": "embed_edit_token",
+            "baseName": "embed_edit_token",
+            "type": "string",
+            "format": ""
+        },
+        {
             "name": "demo",
             "baseName": "demo",
             "type": "boolean",
@@ -312,6 +343,24 @@ export class TemplatePreview {
             "baseName": "last_changed_by_id",
             "type": "string",
             "format": ""
+        },
+        {
+            "name": "last_changed_by_external_name",
+            "baseName": "last_changed_by_external_name",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "last_changed_by_external_email",
+            "baseName": "last_changed_by_external_email",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "last_changed_by_external_id",
+            "baseName": "last_changed_by_external_id",
+            "type": "string",
+            "format": ""
         }    ];
 
     static getAttributeTypeMap() {
@@ -335,6 +384,7 @@ export enum TemplatePreviewTemplateTypeEnum {
 }
 export enum TemplatePreviewLastChangedByTypeEnum {
     User = 'user',
-    Api = 'api'
+    Api = 'api',
+    ExternalUser = 'external_user'
 }
 

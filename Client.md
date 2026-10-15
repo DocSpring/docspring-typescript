@@ -15,8 +15,10 @@ Method | HTTP request | Description
 [**createHtmlTemplate**](Client.md#createHtmlTemplate) | **POST** /templates?endpoint_variant&#x3D;create_html_template | Create a new HTML template
 [**createPdfTemplate**](Client.md#createPdfTemplate) | **POST** /templates | Create a new PDF template with a form POST file upload
 [**createPdfTemplateFromUpload**](Client.md#createPdfTemplateFromUpload) | **POST** /templates?endpoint_variant&#x3D;create_template_from_cached_upload | Create a new PDF template from a cached S3 file upload
+[**createWebhook**](Client.md#createWebhook) | **POST** /webhooks | Create a webhook
 [**deleteFolder**](Client.md#deleteFolder) | **DELETE** /folders/{folder_id} | Delete a folder
 [**deleteTemplate**](Client.md#deleteTemplate) | **DELETE** /templates/{template_id} | Delete a template
+[**deleteWebhook**](Client.md#deleteWebhook) | **DELETE** /webhooks/{webhook_id} | Delete a webhook
 [**expireCombinedSubmission**](Client.md#expireCombinedSubmission) | **DELETE** /combined_submissions/{combined_submission_id} | Expire a combined submission
 [**expireSubmission**](Client.md#expireSubmission) | **DELETE** /submissions/{submission_id} | Expire a PDF submission
 [**generatePdf**](Client.md#generatePdf) | **POST** /templates/{template_id}/submissions | Generate a PDF
@@ -28,12 +30,15 @@ Method | HTTP request | Description
 [**getSubmission**](Client.md#getSubmission) | **GET** /submissions/{submission_id} | Check the status of a PDF
 [**getSubmissionBatch**](Client.md#getSubmissionBatch) | **GET** /submissions/batches/{submission_batch_id} | Check the status of a submission batch job
 [**getTemplate**](Client.md#getTemplate) | **GET** /templates/{template_id} | Check the status of an uploaded template
+[**getTemplateModelCode**](Client.md#getTemplateModelCode) | **GET** /templates/{template_id}/model_code | Generate typed model code for a template
 [**getTemplateSchema**](Client.md#getTemplateSchema) | **GET** /templates/{template_id}/schema | Fetch the JSON schema for a template
+[**getWebhook**](Client.md#getWebhook) | **GET** /webhooks/{webhook_id} | Get a webhook
 [**listCombinedSubmissions**](Client.md#listCombinedSubmissions) | **GET** /combined_submissions | Get a list of all combined submissions
 [**listFolders**](Client.md#listFolders) | **GET** /folders/ | Get a list of all folders
 [**listSubmissions**](Client.md#listSubmissions) | **GET** /submissions | List all submissions
 [**listTemplateSubmissions**](Client.md#listTemplateSubmissions) | **GET** /templates/{template_id}/submissions | List all submissions for a given template
 [**listTemplates**](Client.md#listTemplates) | **GET** /templates | Get a list of all templates
+[**listWebhooks**](Client.md#listWebhooks) | **GET** /webhooks | Get a list of all webhooks
 [**moveFolderToFolder**](Client.md#moveFolderToFolder) | **POST** /folders/{folder_id}/move | Move a folder
 [**moveTemplateToFolder**](Client.md#moveTemplateToFolder) | **POST** /templates/{template_id}/move | Move Template to folder
 [**publishTemplateVersion**](Client.md#publishTemplateVersion) | **POST** /templates/{template_id}/publish_version | Publish a template version
@@ -44,6 +49,7 @@ Method | HTTP request | Description
 [**updateTemplate**](Client.md#updateTemplate) | **PUT** /templates/{template_id} | Update a Template
 [**updateTemplateDocument**](Client.md#updateTemplateDocument) | **PUT** /templates/{template_id}?endpoint_variant&#x3D;update_template_pdf_with_form_post | Update a template\&#39;s document with a form POST file upload
 [**updateTemplateDocumentFromUpload**](Client.md#updateTemplateDocumentFromUpload) | **PUT** /templates/{template_id}?endpoint_variant&#x3D;update_template_pdf_with_cached_upload | Update a template\&#39;s document with a cached S3 file upload
+[**updateWebhook**](Client.md#updateWebhook) | **PUT** /webhooks/{webhook_id} | Update a webhook
 
 
 # **addFieldsToTemplate**
@@ -110,7 +116,7 @@ Name | Type | Description  | Notes
 # **batchGeneratePdfs**
 > BatchGeneratePdfs201Response batchGeneratePdfs(data)
 
-Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch and Combine PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Generate and merge PDFs in one request 
+Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
 
 ### Example
 
@@ -235,6 +241,7 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **201** | combined submission created |  -  |
 **422** | invalid request |  -  |
+**403** | test API token used to delete custom files |  -  |
 **400** | invalid JSON |  -  |
 **401** | authentication failed |  -  |
 
@@ -262,6 +269,7 @@ const request: ClientCopyTemplateRequest = {
   options: {
     name: "name_example",
     parent_folder_id: "parent_folder_id_example",
+    version: "version_example",
   },
 };
 
@@ -422,7 +430,7 @@ Name | Type | Description  | Notes
 # **createDataRequestToken**
 > CreateSubmissionDataRequestTokenResponse createDataRequestToken()
 
-Creates an authentication token for accessing a data request form. Tokens can be created for API access (1 hour expiration) or email links (30 day expiration). Returns a token and a pre-authenticated URL for the data request form.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
+Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
 
 ### Example
 
@@ -713,6 +721,63 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
+# **createWebhook**
+> Webhook createWebhook(data)
+
+Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientCreateWebhookRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientCreateWebhookRequest = {
+  
+  data: {
+    webhook: {},
+  },
+};
+
+const data = await apiInstance.createWebhook(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **CreateWebhookData**|  |
+
+
+### Return type
+
+**Webhook**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**201** | webhook created |  -  |
+**422** | invalid parameters |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
 # **deleteFolder**
 > Folder deleteFolder()
 
@@ -823,6 +888,61 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | template version deleted successfully |  -  |
 **404** | template not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **deleteWebhook**
+> Webhook deleteWebhook()
+
+Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientDeleteWebhookRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientDeleteWebhookRequest = {
+  
+  webhookId: "whk_1234567890abcdef01",
+};
+
+const data = await apiInstance.deleteWebhook(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **webhookId** | [**string**] |  | defaults to undefined
+
+
+### Return type
+
+**Webhook**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | webhook deleted |  -  |
+**404** | webhook not found |  -  |
 **401** | authentication failed |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
@@ -942,7 +1062,7 @@ Name | Type | Description  | Notes
 # **generatePdf**
 > CreateSubmissionResponse generatePdf(submission)
 
-Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Set `wait: false` to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
+Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
 
 ### Example
 
@@ -1467,6 +1587,65 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
+# **getTemplateModelCode**
+> TemplateModelCodeResponse getTemplateModelCode()
+
+Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientGetTemplateModelCodeRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientGetTemplateModelCodeRequest = {
+  
+  templateId: "tpl_1234567890abcdef01",
+    // The language to generate code for
+  lang: "typescript",
+};
+
+const data = await apiInstance.getTemplateModelCode(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **templateId** | [**string**] |  | defaults to undefined
+ **lang** | [**&#39;typescript&#39; | &#39;javascript&#39; | &#39;ruby&#39; | &#39;python&#39; | &#39;php&#39; | &#39;java&#39; | &#39;csharp&#39; | &#39;elixir&#39; | &#39;go&#39;**]**Array<&#39;typescript&#39; &#124; &#39;javascript&#39; &#124; &#39;ruby&#39; &#124; &#39;python&#39; &#124; &#39;php&#39; &#124; &#39;java&#39; &#124; &#39;csharp&#39; &#124; &#39;elixir&#39; &#124; &#39;go&#39;>** | The language to generate code for | defaults to undefined
+
+
+### Return type
+
+**TemplateModelCodeResponse**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | model code generated |  -  |
+**404** | template not found |  -  |
+**422** | unknown language |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
 # **getTemplateSchema**
 > JsonSchema getTemplateSchema()
 
@@ -1518,6 +1697,61 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | template found |  -  |
 **404** | template not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **getWebhook**
+> Webhook getWebhook()
+
+Retrieves a single webhook by its ID.
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientGetWebhookRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientGetWebhookRequest = {
+  
+  webhookId: "whk_1234567890abcdef01",
+};
+
+const data = await apiInstance.getWebhook(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **webhookId** | [**string**] |  | defaults to undefined
+
+
+### Return type
+
+**Webhook**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | webhook found |  -  |
+**404** | webhook not found |  -  |
 **401** | authentication failed |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
@@ -1839,6 +2073,78 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
+# **listWebhooks**
+> Array<Webhook> listWebhooks()
+
+Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientListWebhooksRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientListWebhooksRequest = {
+    // Default: 1 (optional)
+  page: 1,
+    // Default: 50 (optional)
+  perPage: 1,
+    // Filter by a subscribed event type (optional)
+  eventType: "submission.processed",
+    // Filter by mode (test or live) (optional)
+  mode: "live",
+    // Filter by a scoped template ID (optional)
+  templateId: "tpl_1234567890abcdef01",
+    // Filter by a scoped folder ID (optional)
+  folderId: "folder_id_example",
+    // Filter by a scoped API token ID (optional)
+  apiTokenId: "api_token_id_example",
+};
+
+const data = await apiInstance.listWebhooks(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | [**number**] | Default: 1 | (optional) defaults to undefined
+ **perPage** | [**number**] | Default: 50 | (optional) defaults to undefined
+ **eventType** | [**string**] | Filter by a subscribed event type | (optional) defaults to undefined
+ **mode** | [**string**] | Filter by mode (test or live) | (optional) defaults to undefined
+ **templateId** | [**string**] | Filter by a scoped template ID | (optional) defaults to undefined
+ **folderId** | [**string**] | Filter by a scoped folder ID | (optional) defaults to undefined
+ **apiTokenId** | [**string**] | Filter by a scoped API token ID | (optional) defaults to undefined
+
+
+### Return type
+
+**Array<Webhook>**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | filter webhooks by scope and event type |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
 # **moveFolderToFolder**
 > Folder moveFolderToFolder(data)
 
@@ -1920,6 +2226,7 @@ const request: ClientMoveTemplateToFolderRequest = {
   
   data: {
     parent_folder_id: "parent_folder_id_example",
+    version: "version_example",
   },
 };
 
@@ -2267,7 +2574,7 @@ Name | Type | Description  | Notes
 # **updateTemplate**
 > SuccessMultipleErrorsResponse updateTemplate(data)
 
-Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. 
+Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
 
 ### Example
 
@@ -2319,6 +2626,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | update template success |  -  |
+**404** | folder not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
@@ -2437,6 +2745,66 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | returns a template with updated document |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **updateWebhook**
+> Webhook updateWebhook(data)
+
+Updates the configuration of an existing webhook.
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientUpdateWebhookRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientUpdateWebhookRequest = {
+  
+  webhookId: "whk_1234567890abcdef01",
+  
+  data: {
+    webhook: {},
+  },
+};
+
+const data = await apiInstance.updateWebhook(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **UpdateWebhookData**|  |
+ **webhookId** | [**string**] |  | defaults to undefined
+
+
+### Return type
+
+**Webhook**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | webhook updated |  -  |
+**404** | webhook not found |  -  |
 **401** | authentication failed |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)

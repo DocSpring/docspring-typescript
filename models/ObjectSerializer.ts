@@ -17,6 +17,7 @@ export * from '../models/CreateSubmissionDataRequestEventResponse';
 export * from '../models/CreateSubmissionDataRequestResponse';
 export * from '../models/CreateSubmissionDataRequestTokenResponse';
 export * from '../models/CreateSubmissionResponse';
+export * from '../models/CreateWebhookData';
 export * from '../models/CustomFile';
 export * from '../models/ErrorOrMultipleErrorsResponse';
 export * from '../models/ErrorResponse';
@@ -45,18 +46,21 @@ export * from '../models/SuccessMultipleErrorsResponse';
 export * from '../models/Template';
 export * from '../models/TemplateAddFieldsResponse';
 export * from '../models/TemplateDeleteResponse';
+export * from '../models/TemplateModelCodeResponse';
 export * from '../models/TemplatePreview';
 export * from '../models/TemplatePublishVersionResponse';
 export * from '../models/UpdateHtmlTemplate';
 export * from '../models/UpdatePdfTemplate';
 export * from '../models/UpdateSubmissionDataRequestData';
+export * from '../models/UpdateWebhookData';
 export * from '../models/UploadPresignResponse';
+export * from '../models/Webhook';
 
 import { AddFieldsData } from '../models/AddFieldsData';
 import { BatchGeneratePdfs201Response, BatchGeneratePdfs201ResponseStatusEnum       } from '../models/BatchGeneratePdfs201Response';
 import { CombinePdfsData } from '../models/CombinePdfsData';
 import { CombinedSubmission , CombinedSubmissionStateEnum               } from '../models/CombinedSubmission';
-import { CombinedSubmissionAction  , CombinedSubmissionActionStateEnum  , CombinedSubmissionActionActionTypeEnum  , CombinedSubmissionActionActionCategoryEnum    } from '../models/CombinedSubmissionAction';
+import { CombinedSubmissionAction  , CombinedSubmissionActionStateEnum  , CombinedSubmissionActionActionTypeEnum  , CombinedSubmissionActionActionCategoryEnum     } from '../models/CombinedSubmissionAction';
 import { CopyTemplateOptions } from '../models/CopyTemplateOptions';
 import { CreateCombinedSubmissionResponse, CreateCombinedSubmissionResponseStatusEnum     } from '../models/CreateCombinedSubmissionResponse';
 import { CreateCustomFileData } from '../models/CreateCustomFileData';
@@ -71,6 +75,7 @@ import { CreateSubmissionDataRequestEventResponse, CreateSubmissionDataRequestEv
 import { CreateSubmissionDataRequestResponse, CreateSubmissionDataRequestResponseStatusEnum     } from '../models/CreateSubmissionDataRequestResponse';
 import { CreateSubmissionDataRequestTokenResponse, CreateSubmissionDataRequestTokenResponseStatusEnum     } from '../models/CreateSubmissionDataRequestTokenResponse';
 import { CreateSubmissionResponse, CreateSubmissionResponseStatusEnum     } from '../models/CreateSubmissionResponse';
+import { CreateWebhookData } from '../models/CreateWebhookData';
 import { CustomFile } from '../models/CustomFile';
 import { ErrorOrMultipleErrorsResponse, ErrorOrMultipleErrorsResponseStatusEnum     } from '../models/ErrorOrMultipleErrorsResponse';
 import { ErrorResponse, ErrorResponseStatusEnum    } from '../models/ErrorResponse';
@@ -83,28 +88,31 @@ import { MultipleErrorsResponse, MultipleErrorsResponseStatusEnum    } from '../
 import { PublishVersionData } from '../models/PublishVersionData';
 import { RenameFolderData } from '../models/RenameFolderData';
 import { RestoreVersionData } from '../models/RestoreVersionData';
-import { Submission          , SubmissionStateEnum   , SubmissionTemplateTypeEnum            , SubmissionSourceEnum     } from '../models/Submission';
+import { Submission           , SubmissionStateEnum   , SubmissionTemplateTypeEnum            , SubmissionSourceEnum     } from '../models/Submission';
 import { Submission422Response, Submission422ResponseStatusEnum      } from '../models/Submission422Response';
-import { SubmissionAction  , SubmissionActionStateEnum  , SubmissionActionActionTypeEnum  , SubmissionActionActionCategoryEnum    } from '../models/SubmissionAction';
+import { SubmissionAction  , SubmissionActionStateEnum  , SubmissionActionActionTypeEnum  , SubmissionActionActionCategoryEnum     } from '../models/SubmissionAction';
 import { SubmissionBatch , SubmissionBatchStateEnum         } from '../models/SubmissionBatch';
 import { SubmissionBatchData } from '../models/SubmissionBatchData';
 import { SubmissionBatchWithSubmissions , SubmissionBatchWithSubmissionsStateEnum          } from '../models/SubmissionBatchWithSubmissions';
-import { SubmissionDataRequest       , SubmissionDataRequestStateEnum     , SubmissionDataRequestAuthTypeEnum  , SubmissionDataRequestAuthSecondFactorTypeEnum           } from '../models/SubmissionDataRequest';
+import { SubmissionDataRequest       , SubmissionDataRequestStateEnum      , SubmissionDataRequestAuthTypeEnum  , SubmissionDataRequestAuthSecondFactorTypeEnum           } from '../models/SubmissionDataRequest';
 import { SubmissionDataRequestEvent   , SubmissionDataRequestEventEventTypeEnum  , SubmissionDataRequestEventMessageTypeEnum     } from '../models/SubmissionDataRequestEvent';
-import { SubmissionDataRequestShow       , SubmissionDataRequestShowStateEnum     , SubmissionDataRequestShowAuthTypeEnum  , SubmissionDataRequestShowAuthSecondFactorTypeEnum            } from '../models/SubmissionDataRequestShow';
+import { SubmissionDataRequestShow       , SubmissionDataRequestShowStateEnum      , SubmissionDataRequestShowAuthTypeEnum  , SubmissionDataRequestShowAuthSecondFactorTypeEnum            } from '../models/SubmissionDataRequestShow';
 import { SubmissionDataRequestToken } from '../models/SubmissionDataRequestToken';
-import { SubmissionPreview          , SubmissionPreviewStateEnum   , SubmissionPreviewTemplateTypeEnum             } from '../models/SubmissionPreview';
+import { SubmissionPreview           , SubmissionPreviewStateEnum   , SubmissionPreviewTemplateTypeEnum             } from '../models/SubmissionPreview';
 import { SuccessErrorResponse, SuccessErrorResponseStatusEnum    } from '../models/SuccessErrorResponse';
 import { SuccessMultipleErrorsResponse, SuccessMultipleErrorsResponseStatusEnum    } from '../models/SuccessMultipleErrorsResponse';
-import { Template       , TemplateDocumentStateEnum                          , TemplateTemplateTypeEnum         , TemplateLastChangedByTypeEnum               } from '../models/Template';
+import { Template       , TemplateDocumentStateEnum                             , TemplateTemplateTypeEnum          , TemplateLastChangedByTypeEnum                    } from '../models/Template';
 import { TemplateAddFieldsResponse, TemplateAddFieldsResponseStatusEnum     } from '../models/TemplateAddFieldsResponse';
 import { TemplateDeleteResponse, TemplateDeleteResponseStatusEnum      } from '../models/TemplateDeleteResponse';
-import { TemplatePreview       , TemplatePreviewDocumentStateEnum                          , TemplatePreviewTemplateTypeEnum         , TemplatePreviewLastChangedByTypeEnum    } from '../models/TemplatePreview';
+import { TemplateModelCodeResponse, TemplateModelCodeResponseLangEnum     } from '../models/TemplateModelCodeResponse';
+import { TemplatePreview       , TemplatePreviewDocumentStateEnum                             , TemplatePreviewTemplateTypeEnum          , TemplatePreviewLastChangedByTypeEnum       } from '../models/TemplatePreview';
 import { TemplatePublishVersionResponse, TemplatePublishVersionResponseStatusEnum     } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
 import { UpdatePdfTemplate } from '../models/UpdatePdfTemplate';
 import { UpdateSubmissionDataRequestData  , UpdateSubmissionDataRequestDataAuthSecondFactorTypeEnum    , UpdateSubmissionDataRequestDataAuthTypeEnum          } from '../models/UpdateSubmissionDataRequestData';
+import { UpdateWebhookData } from '../models/UpdateWebhookData';
 import { UploadPresignResponse   , UploadPresignResponseMethodEnum   } from '../models/UploadPresignResponse';
+import { Webhook     , WebhookModeEnum                 } from '../models/Webhook';
 
 /* tslint:disable:no-unused-variable */
 let primitives = [
@@ -163,6 +171,7 @@ let enumsMap: Set<string> = new Set<string>([
     "TemplateLastChangedByTypeEnum",
     "TemplateAddFieldsResponseStatusEnum",
     "TemplateDeleteResponseStatusEnum",
+    "TemplateModelCodeResponseLangEnum",
     "TemplatePreviewDocumentStateEnum",
     "TemplatePreviewTemplateTypeEnum",
     "TemplatePreviewLastChangedByTypeEnum",
@@ -170,6 +179,7 @@ let enumsMap: Set<string> = new Set<string>([
     "UpdateSubmissionDataRequestDataAuthSecondFactorTypeEnum",
     "UpdateSubmissionDataRequestDataAuthTypeEnum",
     "UploadPresignResponseMethodEnum",
+    "WebhookModeEnum",
 ]);
 
 let typeMap: {[index: string]: any} = {
@@ -192,6 +202,7 @@ let typeMap: {[index: string]: any} = {
     "CreateSubmissionDataRequestResponse": CreateSubmissionDataRequestResponse,
     "CreateSubmissionDataRequestTokenResponse": CreateSubmissionDataRequestTokenResponse,
     "CreateSubmissionResponse": CreateSubmissionResponse,
+    "CreateWebhookData": CreateWebhookData,
     "CustomFile": CustomFile,
     "ErrorOrMultipleErrorsResponse": ErrorOrMultipleErrorsResponse,
     "ErrorResponse": ErrorResponse,
@@ -220,12 +231,15 @@ let typeMap: {[index: string]: any} = {
     "Template": Template,
     "TemplateAddFieldsResponse": TemplateAddFieldsResponse,
     "TemplateDeleteResponse": TemplateDeleteResponse,
+    "TemplateModelCodeResponse": TemplateModelCodeResponse,
     "TemplatePreview": TemplatePreview,
     "TemplatePublishVersionResponse": TemplatePublishVersionResponse,
     "UpdateHtmlTemplate": UpdateHtmlTemplate,
     "UpdatePdfTemplate": UpdatePdfTemplate,
     "UpdateSubmissionDataRequestData": UpdateSubmissionDataRequestData,
+    "UpdateWebhookData": UpdateWebhookData,
     "UploadPresignResponse": UploadPresignResponse,
+    "Webhook": Webhook,
 }
 
 type MimeTypeDescriptor = {

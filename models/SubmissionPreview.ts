@@ -18,6 +18,7 @@ export class SubmissionPreview {
     'batch_id': string | null;
     'data_requests': Array<SubmissionDataRequest>;
     'editable': boolean | null;
+    'error_message': string | null;
     'expired': boolean;
     'expires_at': string | null;
     'id': string | null;
@@ -60,6 +61,12 @@ export class SubmissionPreview {
             "name": "editable",
             "baseName": "editable",
             "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "error_message",
+            "baseName": "error_message",
+            "type": "string",
             "format": ""
         },
         {
@@ -202,7 +209,8 @@ export enum SubmissionPreviewStateEnum {
     SyntaxError = 'syntax_error',
     AccountSuspended = 'account_suspended',
     LicenseRevoked = 'license_revoked',
-    Accidental = 'accidental'
+    Accidental = 'accidental',
+    Declined = 'declined'
 }
 export enum SubmissionPreviewTemplateTypeEnum {
     Pdf = 'pdf',

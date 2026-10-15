@@ -22,6 +22,7 @@ import { CreateSubmissionDataRequestEventResponse } from '../models/CreateSubmis
 import { CreateSubmissionDataRequestResponse } from '../models/CreateSubmissionDataRequestResponse';
 import { CreateSubmissionDataRequestTokenResponse } from '../models/CreateSubmissionDataRequestTokenResponse';
 import { CreateSubmissionResponse } from '../models/CreateSubmissionResponse';
+import { CreateWebhookData } from '../models/CreateWebhookData';
 import { CustomFile } from '../models/CustomFile';
 import { ErrorOrMultipleErrorsResponse } from '../models/ErrorOrMultipleErrorsResponse';
 import { ErrorResponse } from '../models/ErrorResponse';
@@ -50,12 +51,15 @@ import { SuccessMultipleErrorsResponse } from '../models/SuccessMultipleErrorsRe
 import { Template } from '../models/Template';
 import { TemplateAddFieldsResponse } from '../models/TemplateAddFieldsResponse';
 import { TemplateDeleteResponse } from '../models/TemplateDeleteResponse';
+import { TemplateModelCodeResponse } from '../models/TemplateModelCodeResponse';
 import { TemplatePreview } from '../models/TemplatePreview';
 import { TemplatePublishVersionResponse } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
 import { UpdatePdfTemplate } from '../models/UpdatePdfTemplate';
 import { UpdateSubmissionDataRequestData } from '../models/UpdateSubmissionDataRequestData';
+import { UpdateWebhookData } from '../models/UpdateWebhookData';
 import { UploadPresignResponse } from '../models/UploadPresignResponse';
+import { Webhook } from '../models/Webhook';
 
 import { ClientRequestFactory, ClientResponseProcessor} from "../apis/Client";
 export class ObservableClient {
@@ -110,7 +114,7 @@ export class ObservableClient {
     }
 
     /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch and Combine PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Generate and merge PDFs in one request 
+     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
      * Generate multiple PDFs
      * @param data
      * @param [wait] Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
@@ -136,7 +140,7 @@ export class ObservableClient {
     }
 
     /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch and Combine PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Generate and merge PDFs in one request 
+     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
      * Generate multiple PDFs
      * @param data
      * @param [wait] Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
@@ -286,7 +290,7 @@ export class ObservableClient {
     }
 
     /**
-     * Creates an authentication token for accessing a data request form. Tokens can be created for API access (1 hour expiration) or email links (30 day expiration). Returns a token and a pre-authenticated URL for the data request form.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
+     * Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
      * Create a new data request token for form authentication
      * @param dataRequestId
      * @param [type]
@@ -312,7 +316,7 @@ export class ObservableClient {
     }
 
     /**
-     * Creates an authentication token for accessing a data request form. Tokens can be created for API access (1 hour expiration) or email links (30 day expiration). Returns a token and a pre-authenticated URL for the data request form.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
+     * Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
      * Create a new data request token for form authentication
      * @param dataRequestId
      * @param [type]
@@ -466,6 +470,40 @@ export class ObservableClient {
     }
 
     /**
+     * Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+     * Create a webhook
+     * @param data
+     */
+    public createWebhookWithHttpInfo(data: CreateWebhookData, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.createWebhook(data, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createWebhookWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+     * Create a webhook
+     * @param data
+     */
+    public createWebhook(data: CreateWebhookData, _options?: ConfigurationOptions): Observable<Webhook> {
+        return this.createWebhookWithHttpInfo(data, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
+    }
+
+    /**
      * Deletes an empty folder. The folder must not contain any templates or subfolders. Move or delete all contents before attempting to delete the folder. 
      * Delete a folder
      * @param folderId
@@ -533,6 +571,40 @@ export class ObservableClient {
      */
     public deleteTemplate(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<TemplateDeleteResponse> {
         return this.deleteTemplateWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<TemplateDeleteResponse>) => apiResponse.data));
+    }
+
+    /**
+     * Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+     * Delete a webhook
+     * @param webhookId
+     */
+    public deleteWebhookWithHttpInfo(webhookId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.deleteWebhook(webhookId, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteWebhookWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+     * Delete a webhook
+     * @param webhookId
+     */
+    public deleteWebhook(webhookId: string, _options?: ConfigurationOptions): Observable<Webhook> {
+        return this.deleteWebhookWithHttpInfo(webhookId, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
     }
 
     /**
@@ -604,7 +676,7 @@ export class ObservableClient {
     }
 
     /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Set `wait: false` to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
+     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
      * Generate a PDF
      * @param templateId
      * @param submission
@@ -631,7 +703,7 @@ export class ObservableClient {
     }
 
     /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Set `wait: false` to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
+     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
      * Generate a PDF
      * @param templateId
      * @param submission
@@ -916,6 +988,42 @@ export class ObservableClient {
     }
 
     /**
+     * Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
+     * Generate typed model code for a template
+     * @param templateId
+     * @param lang The language to generate code for
+     */
+    public getTemplateModelCodeWithHttpInfo(templateId: string, lang: 'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go', _options?: ConfigurationOptions): Observable<HttpInfo<TemplateModelCodeResponse>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.getTemplateModelCode(templateId, lang, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getTemplateModelCodeWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
+     * Generate typed model code for a template
+     * @param templateId
+     * @param lang The language to generate code for
+     */
+    public getTemplateModelCode(templateId: string, lang: 'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go', _options?: ConfigurationOptions): Observable<TemplateModelCodeResponse> {
+        return this.getTemplateModelCodeWithHttpInfo(templateId, lang, _options).pipe(map((apiResponse: HttpInfo<TemplateModelCodeResponse>) => apiResponse.data));
+    }
+
+    /**
      * Retrieves the JSON Schema definition for a template\'s fields. Use this to validate data before submitting it for PDF generation, or to build dynamic forms that match the template\'s field structure and validation requirements.  See also: - [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data 
      * Fetch the JSON schema for a template
      * @param templateId
@@ -947,6 +1055,40 @@ export class ObservableClient {
      */
     public getTemplateSchema(templateId: string, _options?: ConfigurationOptions): Observable<JsonSchema> {
         return this.getTemplateSchemaWithHttpInfo(templateId, _options).pipe(map((apiResponse: HttpInfo<JsonSchema>) => apiResponse.data));
+    }
+
+    /**
+     * Retrieves a single webhook by its ID.
+     * Get a webhook
+     * @param webhookId
+     */
+    public getWebhookWithHttpInfo(webhookId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.getWebhook(webhookId, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getWebhookWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Retrieves a single webhook by its ID.
+     * Get a webhook
+     * @param webhookId
+     */
+    public getWebhook(webhookId: string, _options?: ConfigurationOptions): Observable<Webhook> {
+        return this.getWebhookWithHttpInfo(webhookId, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
     }
 
     /**
@@ -1147,6 +1289,52 @@ export class ObservableClient {
      */
     public listTemplates(query?: string, parentFolderId?: string, page?: number, perPage?: number, _options?: ConfigurationOptions): Observable<Array<TemplatePreview>> {
         return this.listTemplatesWithHttpInfo(query, parentFolderId, page, perPage, _options).pipe(map((apiResponse: HttpInfo<Array<TemplatePreview>>) => apiResponse.data));
+    }
+
+    /**
+     * Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
+     * Get a list of all webhooks
+     * @param [page] Default: 1
+     * @param [perPage] Default: 50
+     * @param [eventType] Filter by a subscribed event type
+     * @param [mode] Filter by mode (test or live)
+     * @param [templateId] Filter by a scoped template ID
+     * @param [folderId] Filter by a scoped folder ID
+     * @param [apiTokenId] Filter by a scoped API token ID
+     */
+    public listWebhooksWithHttpInfo(page?: number, perPage?: number, eventType?: string, mode?: string, templateId?: string, folderId?: string, apiTokenId?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Array<Webhook>>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.listWebhooks(page, perPage, eventType, mode, templateId, folderId, apiTokenId, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.listWebhooksWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
+     * Get a list of all webhooks
+     * @param [page] Default: 1
+     * @param [perPage] Default: 50
+     * @param [eventType] Filter by a subscribed event type
+     * @param [mode] Filter by mode (test or live)
+     * @param [templateId] Filter by a scoped template ID
+     * @param [folderId] Filter by a scoped folder ID
+     * @param [apiTokenId] Filter by a scoped API token ID
+     */
+    public listWebhooks(page?: number, perPage?: number, eventType?: string, mode?: string, templateId?: string, folderId?: string, apiTokenId?: string, _options?: ConfigurationOptions): Observable<Array<Webhook>> {
+        return this.listWebhooksWithHttpInfo(page, perPage, eventType, mode, templateId, folderId, apiTokenId, _options).pipe(map((apiResponse: HttpInfo<Array<Webhook>>) => apiResponse.data));
     }
 
     /**
@@ -1398,7 +1586,7 @@ export class ObservableClient {
     }
 
     /**
-     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. 
+     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
      * Update a Template
      * @param templateId
      * @param data
@@ -1424,7 +1612,7 @@ export class ObservableClient {
     }
 
     /**
-     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. 
+     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
      * Update a Template
      * @param templateId
      * @param data
@@ -1505,6 +1693,42 @@ export class ObservableClient {
      */
     public updateTemplateDocumentFromUpload(templateId: string, data: UpdatePdfTemplate, _options?: ConfigurationOptions): Observable<SuccessMultipleErrorsResponse> {
         return this.updateTemplateDocumentFromUploadWithHttpInfo(templateId, data, _options).pipe(map((apiResponse: HttpInfo<SuccessMultipleErrorsResponse>) => apiResponse.data));
+    }
+
+    /**
+     * Updates the configuration of an existing webhook.
+     * Update a webhook
+     * @param webhookId
+     * @param data
+     */
+    public updateWebhookWithHttpInfo(webhookId: string, data: UpdateWebhookData, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.updateWebhook(webhookId, data, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.updateWebhookWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Updates the configuration of an existing webhook.
+     * Update a webhook
+     * @param webhookId
+     * @param data
+     */
+    public updateWebhook(webhookId: string, data: UpdateWebhookData, _options?: ConfigurationOptions): Observable<Webhook> {
+        return this.updateWebhookWithHttpInfo(webhookId, data, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
     }
 
 }

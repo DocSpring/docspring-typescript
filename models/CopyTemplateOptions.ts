@@ -14,7 +14,8 @@ import { HttpFile } from '../http/http';
 
 export class CopyTemplateOptions {
     'name'?: string;
-    'parent_folder_id': string;
+    'parent_folder_id'?: string;
+    'version'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -30,6 +31,12 @@ export class CopyTemplateOptions {
         {
             "name": "parent_folder_id",
             "baseName": "parent_folder_id",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "version",
+            "baseName": "version",
             "type": "string",
             "format": ""
         }    ];

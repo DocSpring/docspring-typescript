@@ -18,6 +18,7 @@ export class Submission {
     'batch_id': string | null;
     'data_requests': Array<SubmissionDataRequest>;
     'editable': boolean | null;
+    'error_message': string | null;
     'expired': boolean;
     'expires_at': string | null;
     'id': string | null;
@@ -38,9 +39,9 @@ export class Submission {
     'preview_generated_at': string | null;
     'audit_trail_download_url': string | null;
     'actions': Array<SubmissionAction>;
-    'source': SubmissionSourceEnum;
-    'referrer': string | null;
-    'data': any | null;
+    'source'?: SubmissionSourceEnum;
+    'referrer'?: string | null;
+    'data'?: any | null;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -63,6 +64,12 @@ export class Submission {
             "name": "editable",
             "baseName": "editable",
             "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "error_message",
+            "baseName": "error_message",
+            "type": "string",
             "format": ""
         },
         {
@@ -223,7 +230,8 @@ export enum SubmissionStateEnum {
     SyntaxError = 'syntax_error',
     AccountSuspended = 'account_suspended',
     LicenseRevoked = 'license_revoked',
-    Accidental = 'accidental'
+    Accidental = 'accidental',
+    Declined = 'declined'
 }
 export enum SubmissionTemplateTypeEnum {
     Pdf = 'pdf',

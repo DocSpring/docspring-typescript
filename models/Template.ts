@@ -24,6 +24,9 @@ export class Template {
     'document_url': string | null;
     'editable_submissions': boolean;
     'embed_domains': string | null;
+    'embed_edit_allow_settings': boolean;
+    'embed_edit_allow_versioning': boolean;
+    'embed_edit_allow_document_replacement': boolean;
     'encrypt_pdfs_password': string | null;
     'encrypt_pdfs': boolean;
     'expiration_interval': string;
@@ -39,7 +42,7 @@ export class Template {
     'page_count': number;
     'page_dimensions': Array<Array<number>> | null;
     'parent_folder_id': string | null;
-    'path': string | null;
+    'path': string;
     'permanent_document_url': string | null;
     'public_submissions': boolean;
     'public_web_form': boolean;
@@ -50,12 +53,17 @@ export class Template {
     'version_published_at': string | null;
     'version': string | null;
     'webhook_url': string | null;
+    'embed_edit_token'?: string | null;
     'demo': boolean;
     'latest_version': string | null;
     'last_changed_at': string | null;
     'last_changed_by_type': TemplateLastChangedByTypeEnum | null;
     'last_changed_by_id': string | null;
+    'last_changed_by_external_name': string | null;
+    'last_changed_by_external_email': string | null;
+    'last_changed_by_external_id': string | null;
     'defaults': any;
+    'field_dependencies': Array<any>;
     'field_order': Array<Array<number>>;
     'fields': any;
     'footer_html': string | null;
@@ -65,6 +73,7 @@ export class Template {
     'predefined_fields': Array<any>;
     'scss': string | null;
     'shared_field_data': any;
+    'template_schema_version': number;
     'versions': Array<any>;
 
     static readonly discriminator: string | undefined = undefined;
@@ -136,6 +145,24 @@ export class Template {
             "name": "embed_domains",
             "baseName": "embed_domains",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "embed_edit_allow_settings",
+            "baseName": "embed_edit_allow_settings",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "embed_edit_allow_versioning",
+            "baseName": "embed_edit_allow_versioning",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "embed_edit_allow_document_replacement",
+            "baseName": "embed_edit_allow_document_replacement",
+            "type": "boolean",
             "format": ""
         },
         {
@@ -295,6 +322,12 @@ export class Template {
             "format": ""
         },
         {
+            "name": "embed_edit_token",
+            "baseName": "embed_edit_token",
+            "type": "string",
+            "format": ""
+        },
+        {
             "name": "demo",
             "baseName": "demo",
             "type": "boolean",
@@ -325,9 +358,33 @@ export class Template {
             "format": ""
         },
         {
+            "name": "last_changed_by_external_name",
+            "baseName": "last_changed_by_external_name",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "last_changed_by_external_email",
+            "baseName": "last_changed_by_external_email",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "last_changed_by_external_id",
+            "baseName": "last_changed_by_external_id",
+            "type": "string",
+            "format": ""
+        },
+        {
             "name": "defaults",
             "baseName": "defaults",
             "type": "any",
+            "format": ""
+        },
+        {
+            "name": "field_dependencies",
+            "baseName": "field_dependencies",
+            "type": "Array<any>",
             "format": ""
         },
         {
@@ -385,6 +442,12 @@ export class Template {
             "format": ""
         },
         {
+            "name": "template_schema_version",
+            "baseName": "template_schema_version",
+            "type": "number",
+            "format": ""
+        },
+        {
             "name": "versions",
             "baseName": "versions",
             "type": "Array<any>",
@@ -412,6 +475,7 @@ export enum TemplateTemplateTypeEnum {
 }
 export enum TemplateLastChangedByTypeEnum {
     User = 'user',
-    Api = 'api'
+    Api = 'api',
+    ExternalUser = 'external_user'
 }
 

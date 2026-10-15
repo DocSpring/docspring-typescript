@@ -1,5 +1,6 @@
 import { ResponseContext, RequestContext, HttpFile, HttpInfo } from '../http/http';
 import { Configuration, PromiseConfigurationOptions, wrapOptions } from '../configuration'
+import { ServerConfiguration } from '../servers'
 import { createConfiguration } from '../configuration'
 import { PromiseMiddleware, Middleware, PromiseMiddlewareWrapper } from '../middleware';
 
@@ -22,6 +23,7 @@ import { CreateSubmissionDataRequestEventResponse } from '../models/CreateSubmis
 import { CreateSubmissionDataRequestResponse } from '../models/CreateSubmissionDataRequestResponse';
 import { CreateSubmissionDataRequestTokenResponse } from '../models/CreateSubmissionDataRequestTokenResponse';
 import { CreateSubmissionResponse } from '../models/CreateSubmissionResponse';
+import { CreateWebhookData } from '../models/CreateWebhookData';
 import { CustomFile } from '../models/CustomFile';
 import { ErrorOrMultipleErrorsResponse } from '../models/ErrorOrMultipleErrorsResponse';
 import { ErrorResponse } from '../models/ErrorResponse';
@@ -50,12 +52,15 @@ import { SuccessMultipleErrorsResponse } from '../models/SuccessMultipleErrorsRe
 import { Template } from '../models/Template';
 import { TemplateAddFieldsResponse } from '../models/TemplateAddFieldsResponse';
 import { TemplateDeleteResponse } from '../models/TemplateDeleteResponse';
+import { TemplateModelCodeResponse } from '../models/TemplateModelCodeResponse';
 import { TemplatePreview } from '../models/TemplatePreview';
 import { TemplatePublishVersionResponse } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
 import { UpdatePdfTemplate } from '../models/UpdatePdfTemplate';
 import { UpdateSubmissionDataRequestData } from '../models/UpdateSubmissionDataRequestData';
+import { UpdateWebhookData } from '../models/UpdateWebhookData';
 import { UploadPresignResponse } from '../models/UploadPresignResponse';
+import { Webhook } from '../models/Webhook';
 import { ObservableClient } from './ObservableAPI';
 
 import { ClientRequestFactory, ClientResponseProcessor} from "../apis/Client";
@@ -63,18 +68,18 @@ export class PromiseClient {
     private api: ObservableClient
 
         public constructor(
-        configuration?: Configuration | { apiTokenId?: string; apiTokenSecret?: string; baseServer?: any },
+        configuration?: Configuration | { apiTokenId?: string; apiTokenSecret?: string; host?: string; region?: string; baseServer?: any },
         requestFactory?: ClientRequestFactory,
         responseProcessor?: ClientResponseProcessor
     ) {
-        // Support environment variables for authentication
+        // Support environment variables for authentication and host/region
         if (!configuration || (configuration && !('authMethods' in configuration))) {
-            const options = configuration as { apiTokenId?: string; apiTokenSecret?: string; baseServer?: any } || {};
+            const options = configuration as { apiTokenId?: string; apiTokenSecret?: string; host?: string; region?: string; baseServer?: any } || {};
+            const env: { [key: string]: string | undefined } =
+                (typeof process !== 'undefined' && process.env) ? process.env : {};
 
-            const apiTokenId = options.apiTokenId ||
-                (typeof process !== 'undefined' && process.env ? process.env['DOCSPRING_TOKEN_ID'] : undefined);
-            const apiTokenSecret = options.apiTokenSecret ||
-                (typeof process !== 'undefined' && process.env ? process.env['DOCSPRING_TOKEN_SECRET'] : undefined);
+            const apiTokenId = options.apiTokenId || env['DOCSPRING_TOKEN_ID'];
+            const apiTokenSecret = options.apiTokenSecret || env['DOCSPRING_TOKEN_SECRET'];
 
             const configParams: any = {};
 
@@ -89,6 +94,23 @@ export class PromiseClient {
 
             if (options.baseServer) {
                 configParams.baseServer = options.baseServer;
+            } else {
+                // Resolve host from options.host, DOCSPRING_HOST, or region (options.region/DOCSPRING_REGION)
+                let host = options.host || env['DOCSPRING_HOST'];
+                const region = options.region || env['DOCSPRING_REGION'];
+                if (!host && region) {
+                    const r = region.trim().toUpperCase();
+                    if (r === 'US') host = 'sync.api.docspring.com';
+                    else if (r === 'EU') host = 'sync.api-eu.docspring.com';
+                    else throw new Error(`${region} is not a valid region. Valid regions: US, EU`);
+                }
+                if (host) {
+                    let url = host.trim();
+                    if (!/^https?:\/\//i.test(url)) url = `https://${url}`;
+                    url = url.replace(/\/+$/, '');
+                    if (!/\/api\/v1$/i.test(url)) url = `${url}/api/v1`;
+                    configParams.baseServer = new ServerConfiguration(url, {});
+                }
             }
 
             configuration = createConfiguration(configParams);
@@ -123,7 +145,7 @@ export class PromiseClient {
     }
 
     /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch and Combine PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Generate and merge PDFs in one request 
+     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
      * Generate multiple PDFs
      * @param data
      * @param [wait] Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
@@ -135,7 +157,7 @@ export class PromiseClient {
     }
 
     /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch and Combine PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Generate and merge PDFs in one request 
+     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
      * Generate multiple PDFs
      * @param data
      * @param [wait] Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
@@ -239,7 +261,7 @@ export class PromiseClient {
     }
 
     /**
-     * Creates an authentication token for accessing a data request form. Tokens can be created for API access (1 hour expiration) or email links (30 day expiration). Returns a token and a pre-authenticated URL for the data request form.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
+     * Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
      * Create a new data request token for form authentication
      * @param dataRequestId
      * @param [type]
@@ -251,7 +273,7 @@ export class PromiseClient {
     }
 
     /**
-     * Creates an authentication token for accessing a data request form. Tokens can be created for API access (1 hour expiration) or email links (30 day expiration). Returns a token and a pre-authenticated URL for the data request form.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
+     * Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
      * Create a new data request token for form authentication
      * @param dataRequestId
      * @param [type]
@@ -359,6 +381,28 @@ export class PromiseClient {
     }
 
     /**
+     * Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+     * Create a webhook
+     * @param data
+     */
+    public createWebhookWithHttpInfo(data: CreateWebhookData, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Webhook>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.createWebhookWithHttpInfo(data, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+     * Create a webhook
+     * @param data
+     */
+    public createWebhook(data: CreateWebhookData, _options?: PromiseConfigurationOptions): Promise<Webhook> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.createWebhook(data, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
      * Deletes an empty folder. The folder must not contain any templates or subfolders. Move or delete all contents before attempting to delete the folder. 
      * Delete a folder
      * @param folderId
@@ -401,6 +445,28 @@ export class PromiseClient {
     public deleteTemplate(templateId: string, version?: string, _options?: PromiseConfigurationOptions): Promise<TemplateDeleteResponse> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.deleteTemplate(templateId, version, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+     * Delete a webhook
+     * @param webhookId
+     */
+    public deleteWebhookWithHttpInfo(webhookId: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Webhook>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.deleteWebhookWithHttpInfo(webhookId, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+     * Delete a webhook
+     * @param webhookId
+     */
+    public deleteWebhook(webhookId: string, _options?: PromiseConfigurationOptions): Promise<Webhook> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.deleteWebhook(webhookId, observableOptions);
         return result.toPromise();
     }
 
@@ -449,7 +515,7 @@ export class PromiseClient {
     }
 
     /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Set `wait: false` to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
+     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
      * Generate a PDF
      * @param templateId
      * @param submission
@@ -462,7 +528,7 @@ export class PromiseClient {
     }
 
     /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Set `wait: false` to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
+     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
      * Generate a PDF
      * @param templateId
      * @param submission
@@ -653,6 +719,30 @@ export class PromiseClient {
     }
 
     /**
+     * Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
+     * Generate typed model code for a template
+     * @param templateId
+     * @param lang The language to generate code for
+     */
+    public getTemplateModelCodeWithHttpInfo(templateId: string, lang: 'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go', _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplateModelCodeResponse>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getTemplateModelCodeWithHttpInfo(templateId, lang, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
+     * Generate typed model code for a template
+     * @param templateId
+     * @param lang The language to generate code for
+     */
+    public getTemplateModelCode(templateId: string, lang: 'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go', _options?: PromiseConfigurationOptions): Promise<TemplateModelCodeResponse> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getTemplateModelCode(templateId, lang, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
      * Retrieves the JSON Schema definition for a template\'s fields. Use this to validate data before submitting it for PDF generation, or to build dynamic forms that match the template\'s field structure and validation requirements.  See also: - [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data 
      * Fetch the JSON schema for a template
      * @param templateId
@@ -671,6 +761,28 @@ export class PromiseClient {
     public getTemplateSchema(templateId: string, _options?: PromiseConfigurationOptions): Promise<JsonSchema> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.getTemplateSchema(templateId, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Retrieves a single webhook by its ID.
+     * Get a webhook
+     * @param webhookId
+     */
+    public getWebhookWithHttpInfo(webhookId: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Webhook>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getWebhookWithHttpInfo(webhookId, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Retrieves a single webhook by its ID.
+     * Get a webhook
+     * @param webhookId
+     */
+    public getWebhook(webhookId: string, _options?: PromiseConfigurationOptions): Promise<Webhook> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getWebhook(webhookId, observableOptions);
         return result.toPromise();
     }
 
@@ -811,6 +923,40 @@ export class PromiseClient {
     public listTemplates(query?: string, parentFolderId?: string, page?: number, perPage?: number, _options?: PromiseConfigurationOptions): Promise<Array<TemplatePreview>> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.listTemplates(query, parentFolderId, page, perPage, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
+     * Get a list of all webhooks
+     * @param [page] Default: 1
+     * @param [perPage] Default: 50
+     * @param [eventType] Filter by a subscribed event type
+     * @param [mode] Filter by mode (test or live)
+     * @param [templateId] Filter by a scoped template ID
+     * @param [folderId] Filter by a scoped folder ID
+     * @param [apiTokenId] Filter by a scoped API token ID
+     */
+    public listWebhooksWithHttpInfo(page?: number, perPage?: number, eventType?: string, mode?: string, templateId?: string, folderId?: string, apiTokenId?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Array<Webhook>>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.listWebhooksWithHttpInfo(page, perPage, eventType, mode, templateId, folderId, apiTokenId, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
+     * Get a list of all webhooks
+     * @param [page] Default: 1
+     * @param [perPage] Default: 50
+     * @param [eventType] Filter by a subscribed event type
+     * @param [mode] Filter by mode (test or live)
+     * @param [templateId] Filter by a scoped template ID
+     * @param [folderId] Filter by a scoped folder ID
+     * @param [apiTokenId] Filter by a scoped API token ID
+     */
+    public listWebhooks(page?: number, perPage?: number, eventType?: string, mode?: string, templateId?: string, folderId?: string, apiTokenId?: string, _options?: PromiseConfigurationOptions): Promise<Array<Webhook>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.listWebhooks(page, perPage, eventType, mode, templateId, folderId, apiTokenId, observableOptions);
         return result.toPromise();
     }
 
@@ -979,7 +1125,7 @@ export class PromiseClient {
     }
 
     /**
-     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. 
+     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
      * Update a Template
      * @param templateId
      * @param data
@@ -991,7 +1137,7 @@ export class PromiseClient {
     }
 
     /**
-     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. 
+     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
      * Update a Template
      * @param templateId
      * @param data
@@ -1049,6 +1195,30 @@ export class PromiseClient {
     public updateTemplateDocumentFromUpload(templateId: string, data: UpdatePdfTemplate, _options?: PromiseConfigurationOptions): Promise<SuccessMultipleErrorsResponse> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.updateTemplateDocumentFromUpload(templateId, data, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Updates the configuration of an existing webhook.
+     * Update a webhook
+     * @param webhookId
+     * @param data
+     */
+    public updateWebhookWithHttpInfo(webhookId: string, data: UpdateWebhookData, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Webhook>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.updateWebhookWithHttpInfo(webhookId, data, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Updates the configuration of an existing webhook.
+     * Update a webhook
+     * @param webhookId
+     * @param data
+     */
+    public updateWebhook(webhookId: string, data: UpdateWebhookData, _options?: PromiseConfigurationOptions): Promise<Webhook> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.updateWebhook(webhookId, data, observableOptions);
         return result.toPromise();
     }
 

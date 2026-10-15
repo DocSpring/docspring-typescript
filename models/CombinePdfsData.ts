@@ -13,11 +13,17 @@
 import { HttpFile } from '../http/http';
 
 export class CombinePdfsData {
+    /**
+    * Delete the custom files in source_pdfs once the combined PDF has been processed (they\'re kept if it fails). Other combined submissions can\'t use them after that. A test API token can\'t delete custom files.
+    */
     'delete_custom_files'?: boolean;
     'expires_in'?: number;
     'metadata'?: any;
     'password'?: string;
     'source_pdfs': Array<any>;
+    /**
+    * Deprecated, and has no effect. A combined PDF is a test or live document because of its source PDFs.
+    */
     'test'?: boolean;
 
     static readonly discriminator: string | undefined = undefined;

@@ -25,6 +25,7 @@ import { CreateSubmissionDataRequestEventResponse } from '../models/CreateSubmis
 import { CreateSubmissionDataRequestResponse } from '../models/CreateSubmissionDataRequestResponse';
 import { CreateSubmissionDataRequestTokenResponse } from '../models/CreateSubmissionDataRequestTokenResponse';
 import { CreateSubmissionResponse } from '../models/CreateSubmissionResponse';
+import { CreateWebhookData } from '../models/CreateWebhookData';
 import { ErrorOrMultipleErrorsResponse } from '../models/ErrorOrMultipleErrorsResponse';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { Folder } from '../models/Folder';
@@ -47,12 +48,15 @@ import { SuccessMultipleErrorsResponse } from '../models/SuccessMultipleErrorsRe
 import { Template } from '../models/Template';
 import { TemplateAddFieldsResponse } from '../models/TemplateAddFieldsResponse';
 import { TemplateDeleteResponse } from '../models/TemplateDeleteResponse';
+import { TemplateModelCodeResponse } from '../models/TemplateModelCodeResponse';
 import { TemplatePreview } from '../models/TemplatePreview';
 import { TemplatePublishVersionResponse } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
 import { UpdatePdfTemplate } from '../models/UpdatePdfTemplate';
 import { UpdateSubmissionDataRequestData } from '../models/UpdateSubmissionDataRequestData';
+import { UpdateWebhookData } from '../models/UpdateWebhookData';
 import { UploadPresignResponse } from '../models/UploadPresignResponse';
+import { Webhook } from '../models/Webhook';
 
 /**
  * no description
@@ -116,7 +120,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch and Combine PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Generate and merge PDFs in one request 
+     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
      * Generate multiple PDFs
      * @param data 
      * @param wait Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
@@ -374,7 +378,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Creates an authentication token for accessing a data request form. Tokens can be created for API access (1 hour expiration) or email links (30 day expiration). Returns a token and a pre-authenticated URL for the data request form.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
+     * Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
      * Create a new data request token for form authentication
      * @param dataRequestId 
      * @param type 
@@ -657,6 +661,54 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
+     * Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+     * Create a webhook
+     * @param data 
+     */
+    public async createWebhook(data: CreateWebhookData, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'data' is not null or undefined
+        if (data === null || data === undefined) {
+            throw new RequiredError("Client", "createWebhook", "data");
+        }
+
+
+        // Path Params
+        const localVarPath = '/webhooks';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(data, "CreateWebhookData", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
      * Deletes an empty folder. The folder must not contain any templates or subfolders. Move or delete all contents before attempting to delete the folder. 
      * Delete a folder
      * @param folderId 
@@ -722,6 +774,44 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         if (version !== undefined) {
             requestContext.setQueryParam("version", ObjectSerializer.serialize(version, "string", ""));
         }
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+     * Delete a webhook
+     * @param webhookId 
+     */
+    public async deleteWebhook(webhookId: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'webhookId' is not null or undefined
+        if (webhookId === null || webhookId === undefined) {
+            throw new RequiredError("Client", "deleteWebhook", "webhookId");
+        }
+
+
+        // Path Params
+        const localVarPath = '/webhooks/{webhook_id}'
+            .replace('{' + 'webhook_id' + '}', encodeURIComponent(String(webhookId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
 
 
         let authMethod: SecurityAuthentication | undefined;
@@ -816,7 +906,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Set `wait: false` to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
+     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
      * Generate a PDF
      * @param templateId 
      * @param submission 
@@ -1189,6 +1279,56 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
+     * Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
+     * Generate typed model code for a template
+     * @param templateId 
+     * @param lang The language to generate code for
+     */
+    public async getTemplateModelCode(templateId: string, lang: 'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go', _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new RequiredError("Client", "getTemplateModelCode", "templateId");
+        }
+
+
+        // verify required parameter 'lang' is not null or undefined
+        if (lang === null || lang === undefined) {
+            throw new RequiredError("Client", "getTemplateModelCode", "lang");
+        }
+
+
+        // Path Params
+        const localVarPath = '/templates/{template_id}/model_code'
+            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (lang !== undefined) {
+            requestContext.setQueryParam("lang", ObjectSerializer.serialize(lang, "'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go'", ""));
+        }
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
      * Retrieves the JSON Schema definition for a template\'s fields. Use this to validate data before submitting it for PDF generation, or to build dynamic forms that match the template\'s field structure and validation requirements.  See also: - [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data 
      * Fetch the JSON schema for a template
      * @param templateId 
@@ -1205,6 +1345,44 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Path Params
         const localVarPath = '/templates/{template_id}/schema'
             .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Retrieves a single webhook by its ID.
+     * Get a webhook
+     * @param webhookId 
+     */
+    public async getWebhook(webhookId: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'webhookId' is not null or undefined
+        if (webhookId === null || webhookId === undefined) {
+            throw new RequiredError("Client", "getWebhook", "webhookId");
+        }
+
+
+        // Path Params
+        const localVarPath = '/webhooks/{webhook_id}'
+            .replace('{' + 'webhook_id' + '}', encodeURIComponent(String(webhookId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
@@ -1499,6 +1677,85 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Query Params
         if (perPage !== undefined) {
             requestContext.setQueryParam("per_page", ObjectSerializer.serialize(perPage, "number", ""));
+        }
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
+     * Get a list of all webhooks
+     * @param page Default: 1
+     * @param perPage Default: 50
+     * @param eventType Filter by a subscribed event type
+     * @param mode Filter by mode (test or live)
+     * @param templateId Filter by a scoped template ID
+     * @param folderId Filter by a scoped folder ID
+     * @param apiTokenId Filter by a scoped API token ID
+     */
+    public async listWebhooks(page?: number, perPage?: number, eventType?: string, mode?: string, templateId?: string, folderId?: string, apiTokenId?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+
+
+
+
+
+
+
+        // Path Params
+        const localVarPath = '/webhooks';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (page !== undefined) {
+            requestContext.setQueryParam("page", ObjectSerializer.serialize(page, "number", ""));
+        }
+
+        // Query Params
+        if (perPage !== undefined) {
+            requestContext.setQueryParam("per_page", ObjectSerializer.serialize(perPage, "number", ""));
+        }
+
+        // Query Params
+        if (eventType !== undefined) {
+            requestContext.setQueryParam("event_type", ObjectSerializer.serialize(eventType, "string", ""));
+        }
+
+        // Query Params
+        if (mode !== undefined) {
+            requestContext.setQueryParam("mode", ObjectSerializer.serialize(mode, "string", ""));
+        }
+
+        // Query Params
+        if (templateId !== undefined) {
+            requestContext.setQueryParam("template_id", ObjectSerializer.serialize(templateId, "string", ""));
+        }
+
+        // Query Params
+        if (folderId !== undefined) {
+            requestContext.setQueryParam("folder_id", ObjectSerializer.serialize(folderId, "string", ""));
+        }
+
+        // Query Params
+        if (apiTokenId !== undefined) {
+            requestContext.setQueryParam("api_token_id", ObjectSerializer.serialize(apiTokenId, "string", ""));
         }
 
 
@@ -1884,7 +2141,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. 
+     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
      * Update a Template
      * @param templateId 
      * @param data 
@@ -2073,6 +2330,62 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         return requestContext;
     }
 
+    /**
+     * Updates the configuration of an existing webhook.
+     * Update a webhook
+     * @param webhookId 
+     * @param data 
+     */
+    public async updateWebhook(webhookId: string, data: UpdateWebhookData, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'webhookId' is not null or undefined
+        if (webhookId === null || webhookId === undefined) {
+            throw new RequiredError("Client", "updateWebhook", "webhookId");
+        }
+
+
+        // verify required parameter 'data' is not null or undefined
+        if (data === null || data === undefined) {
+            throw new RequiredError("Client", "updateWebhook", "data");
+        }
+
+
+        // Path Params
+        const localVarPath = '/webhooks/{webhook_id}'
+            .replace('{' + 'webhook_id' + '}', encodeURIComponent(String(webhookId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(data, "UpdateWebhookData", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        return requestContext;
+    }
+
 }
 
 export class ClientResponseProcessor {
@@ -2192,6 +2505,13 @@ export class ClientResponseProcessor {
                 "MultipleErrorsResponse", ""
             ) as MultipleErrorsResponse;
             throw new ApiException<MultipleErrorsResponse>(response.httpStatusCode, "invalid request", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "test API token used to delete custom files", body, response.headers);
         }
         if (isCodeInRange("400", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -2540,6 +2860,49 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
+     * @params response Response returned by the server for a request to createWebhook
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async createWebhookWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Webhook >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: Webhook = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Webhook", ""
+            ) as Webhook;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: MultipleErrorsResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "MultipleErrorsResponse", ""
+            ) as MultipleErrorsResponse;
+            throw new ApiException<MultipleErrorsResponse>(response.httpStatusCode, "invalid parameters", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Webhook = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Webhook", ""
+            ) as Webhook;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
      * @params response Response returned by the server for a request to deleteFolder
      * @throws ApiException if the response code was not in [200, 299]
      */
@@ -2623,6 +2986,49 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "TemplateDeleteResponse", ""
             ) as TemplateDeleteResponse;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to deleteWebhook
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async deleteWebhookWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Webhook >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: Webhook = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Webhook", ""
+            ) as Webhook;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "webhook not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Webhook = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Webhook", ""
+            ) as Webhook;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3113,6 +3519,56 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
+     * @params response Response returned by the server for a request to getTemplateModelCode
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async getTemplateModelCodeWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplateModelCodeResponse >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: TemplateModelCodeResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "TemplateModelCodeResponse", ""
+            ) as TemplateModelCodeResponse;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "unknown language", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: TemplateModelCodeResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "TemplateModelCodeResponse", ""
+            ) as TemplateModelCodeResponse;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
      * @params response Response returned by the server for a request to getTemplateSchema
      * @throws ApiException if the response code was not in [200, 299]
      */
@@ -3146,6 +3602,49 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "JsonSchema", ""
             ) as JsonSchema;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to getWebhook
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async getWebhookWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Webhook >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: Webhook = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Webhook", ""
+            ) as Webhook;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "webhook not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Webhook = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Webhook", ""
+            ) as Webhook;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3340,6 +3839,42 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Array<TemplatePreview>", ""
             ) as Array<TemplatePreview>;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to listWebhooks
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async listWebhooksWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<Webhook> >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: Array<Webhook> = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Array<Webhook>", ""
+            ) as Array<Webhook>;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Array<Webhook> = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Array<Webhook>", ""
+            ) as Array<Webhook>;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3677,6 +4212,13 @@ export class ClientResponseProcessor {
             ) as SuccessMultipleErrorsResponse;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder not found", body, response.headers);
+        }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
@@ -3756,6 +4298,49 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "SuccessMultipleErrorsResponse", ""
             ) as SuccessMultipleErrorsResponse;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to updateWebhook
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async updateWebhookWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Webhook >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: Webhook = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Webhook", ""
+            ) as Webhook;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "webhook not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Webhook = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Webhook", ""
+            ) as Webhook;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 

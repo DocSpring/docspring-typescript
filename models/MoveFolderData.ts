@@ -13,7 +13,7 @@
 import { HttpFile } from '../http/http';
 
 export class MoveFolderData {
-    'parent_folder_id'?: string;
+    'parent_folder_id'?: string | null;
 
     static readonly discriminator: string | undefined = undefined;
 

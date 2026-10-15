@@ -15,6 +15,7 @@ import { HttpFile } from '../http/http';
 export class JsonSchema {
     'schema'?: string;
     'id'?: string;
+    'schema_id'?: string;
     'title'?: string;
     'description'?: string;
     'definitions'?: any;
@@ -22,6 +23,8 @@ export class JsonSchema {
     'properties'?: any;
     'additionalProperties'?: boolean;
     'required'?: Array<string>;
+    'dependencies'?: any;
+    'allOf'?: Array<any>;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -37,6 +40,12 @@ export class JsonSchema {
         {
             "name": "id",
             "baseName": "id",
+            "type": "string",
+            "format": "uri-reference"
+        },
+        {
+            "name": "schema_id",
+            "baseName": "$id",
             "type": "string",
             "format": "uri-reference"
         },
@@ -80,6 +89,18 @@ export class JsonSchema {
             "name": "required",
             "baseName": "required",
             "type": "Array<string>",
+            "format": ""
+        },
+        {
+            "name": "dependencies",
+            "baseName": "dependencies",
+            "type": "any",
+            "format": ""
+        },
+        {
+            "name": "allOf",
+            "baseName": "allOf",
+            "type": "Array<any>",
             "format": ""
         }    ];
 

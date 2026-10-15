@@ -19,6 +19,7 @@ export class CombinedSubmissionAction {
     'action_type': CombinedSubmissionActionActionTypeEnum | null;
     'action_category': CombinedSubmissionActionActionCategoryEnum;
     'result_data': any;
+    'error_message': string | null;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -59,6 +60,12 @@ export class CombinedSubmissionAction {
             "name": "result_data",
             "baseName": "result_data",
             "type": "any",
+            "format": ""
+        },
+        {
+            "name": "error_message",
+            "baseName": "error_message",
+            "type": "string",
             "format": ""
         }    ];
 
