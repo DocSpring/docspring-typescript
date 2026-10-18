@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring\'s API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures. Requests are rate limited per account, and live PDFs use credits: a request over the limit returns 429 with a Retry-After header, and one your credits can\'t cover returns 402. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).
  *
  * OpenAPI spec version: v1
  * 
@@ -16,7 +16,12 @@ import { HttpFile } from '../http/http';
 export class CreateCombinedSubmissionResponse {
     'status': CreateCombinedSubmissionResponseStatusEnum;
     'combined_submission': CombinedSubmission;
+    'error'?: string;
     'errors'?: Array<string>;
+    /**
+    * `insufficient_credits` when the response is a 402.
+    */
+    'code'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -36,9 +41,21 @@ export class CreateCombinedSubmissionResponse {
             "format": ""
         },
         {
+            "name": "error",
+            "baseName": "error",
+            "type": "string",
+            "format": ""
+        },
+        {
             "name": "errors",
             "baseName": "errors",
             "type": "Array<string>",
+            "format": ""
+        },
+        {
+            "name": "code",
+            "baseName": "code",
+            "type": "string",
             "format": ""
         }    ];
 

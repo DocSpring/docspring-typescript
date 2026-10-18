@@ -22,6 +22,7 @@ export * from '../models/CustomFile';
 export * from '../models/ErrorOrMultipleErrorsResponse';
 export * from '../models/ErrorResponse';
 export * from '../models/Folder';
+export * from '../models/ForbiddenErrorResponse';
 export * from '../models/JsonSchema';
 export * from '../models/ListSubmissionsResponse';
 export * from '../models/MoveFolderData';
@@ -57,29 +58,30 @@ export * from '../models/UploadPresignResponse';
 export * from '../models/Webhook';
 
 import { AddFieldsData } from '../models/AddFieldsData';
-import { BatchGeneratePdfs201Response, BatchGeneratePdfs201ResponseStatusEnum       } from '../models/BatchGeneratePdfs201Response';
+import { BatchGeneratePdfs201Response, BatchGeneratePdfs201ResponseStatusEnum        } from '../models/BatchGeneratePdfs201Response';
 import { CombinePdfsData } from '../models/CombinePdfsData';
 import { CombinedSubmission , CombinedSubmissionStateEnum               } from '../models/CombinedSubmission';
 import { CombinedSubmissionAction  , CombinedSubmissionActionStateEnum  , CombinedSubmissionActionActionTypeEnum  , CombinedSubmissionActionActionCategoryEnum     } from '../models/CombinedSubmissionAction';
 import { CopyTemplateOptions } from '../models/CopyTemplateOptions';
-import { CreateCombinedSubmissionResponse, CreateCombinedSubmissionResponseStatusEnum     } from '../models/CreateCombinedSubmissionResponse';
+import { CreateCombinedSubmissionResponse, CreateCombinedSubmissionResponseStatusEnum       } from '../models/CreateCombinedSubmissionResponse';
 import { CreateCustomFileData } from '../models/CreateCustomFileData';
-import { CreateCustomFileResponse, CreateCustomFileResponseStatusEnum     } from '../models/CreateCustomFileResponse';
+import { CreateCustomFileResponse, CreateCustomFileResponseStatusEnum      } from '../models/CreateCustomFileResponse';
 import { CreateFolderData } from '../models/CreateFolderData';
 import { CreateHtmlTemplate } from '../models/CreateHtmlTemplate';
 import { CreatePdfSubmissionData } from '../models/CreatePdfSubmissionData';
 import { CreatePdfTemplate } from '../models/CreatePdfTemplate';
 import { CreateSubmissionDataRequestData  , CreateSubmissionDataRequestDataAuthSecondFactorTypeEnum    , CreateSubmissionDataRequestDataAuthTypeEnum           } from '../models/CreateSubmissionDataRequestData';
 import { CreateSubmissionDataRequestEventRequest, CreateSubmissionDataRequestEventRequestEventTypeEnum   , CreateSubmissionDataRequestEventRequestMessageTypeEnum    } from '../models/CreateSubmissionDataRequestEventRequest';
-import { CreateSubmissionDataRequestEventResponse, CreateSubmissionDataRequestEventResponseStatusEnum     } from '../models/CreateSubmissionDataRequestEventResponse';
-import { CreateSubmissionDataRequestResponse, CreateSubmissionDataRequestResponseStatusEnum     } from '../models/CreateSubmissionDataRequestResponse';
-import { CreateSubmissionDataRequestTokenResponse, CreateSubmissionDataRequestTokenResponseStatusEnum     } from '../models/CreateSubmissionDataRequestTokenResponse';
-import { CreateSubmissionResponse, CreateSubmissionResponseStatusEnum     } from '../models/CreateSubmissionResponse';
+import { CreateSubmissionDataRequestEventResponse, CreateSubmissionDataRequestEventResponseStatusEnum      } from '../models/CreateSubmissionDataRequestEventResponse';
+import { CreateSubmissionDataRequestResponse, CreateSubmissionDataRequestResponseStatusEnum      } from '../models/CreateSubmissionDataRequestResponse';
+import { CreateSubmissionDataRequestTokenResponse, CreateSubmissionDataRequestTokenResponseStatusEnum      } from '../models/CreateSubmissionDataRequestTokenResponse';
+import { CreateSubmissionResponse, CreateSubmissionResponseStatusEnum       } from '../models/CreateSubmissionResponse';
 import { CreateWebhookData } from '../models/CreateWebhookData';
 import { CustomFile } from '../models/CustomFile';
 import { ErrorOrMultipleErrorsResponse, ErrorOrMultipleErrorsResponseStatusEnum     } from '../models/ErrorOrMultipleErrorsResponse';
 import { ErrorResponse, ErrorResponseStatusEnum    } from '../models/ErrorResponse';
 import { Folder } from '../models/Folder';
+import { ForbiddenErrorResponse, ForbiddenErrorResponseStatusEnum   , ForbiddenErrorResponseCodeEnum   } from '../models/ForbiddenErrorResponse';
 import { JsonSchema } from '../models/JsonSchema';
 import { ListSubmissionsResponse } from '../models/ListSubmissionsResponse';
 import { MoveFolderData } from '../models/MoveFolderData';
@@ -144,6 +146,8 @@ let enumsMap: Set<string> = new Set<string>([
     "CreateSubmissionResponseStatusEnum",
     "ErrorOrMultipleErrorsResponseStatusEnum",
     "ErrorResponseStatusEnum",
+    "ForbiddenErrorResponseStatusEnum",
+    "ForbiddenErrorResponseCodeEnum",
     "MultipleErrorsResponseStatusEnum",
     "SubmissionStateEnum",
     "SubmissionTemplateTypeEnum",
@@ -207,6 +211,7 @@ let typeMap: {[index: string]: any} = {
     "ErrorOrMultipleErrorsResponse": ErrorOrMultipleErrorsResponse,
     "ErrorResponse": ErrorResponse,
     "Folder": Folder,
+    "ForbiddenErrorResponse": ForbiddenErrorResponse,
     "JsonSchema": JsonSchema,
     "ListSubmissionsResponse": ListSubmissionsResponse,
     "MoveFolderData": MoveFolderData,

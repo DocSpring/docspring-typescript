@@ -29,6 +29,7 @@ import { CreateWebhookData } from '../models/CreateWebhookData';
 import { ErrorOrMultipleErrorsResponse } from '../models/ErrorOrMultipleErrorsResponse';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { Folder } from '../models/Folder';
+import { ForbiddenErrorResponse } from '../models/ForbiddenErrorResponse';
 import { JsonSchema } from '../models/JsonSchema';
 import { ListSubmissionsResponse } from '../models/ListSubmissionsResponse';
 import { MoveFolderData } from '../models/MoveFolderData';
@@ -120,7 +121,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
+     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  Live PDFs use credits. If any live submission is waiting for credits, the API returns 402 and the others are still processed: check each submission\'s `state`. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
      * Generate multiple PDFs
      * @param data 
      * @param wait Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
@@ -175,7 +176,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Combines multiple PDFs from various sources into a single PDF file. Supports merging submission PDFs, template PDFs, custom files, other merged PDFs, and PDFs from URLs. Merges the PDFs in the order provided. 
+     * Combines multiple PDFs from various sources into a single PDF file. Supports merging submission PDFs, template PDFs, custom files, other merged PDFs, and PDFs from URLs. Merges the PDFs in the order provided.  Combining uses credits (4 per source PDF, plus 4 per unit of the combined PDF), even with a test API token or watermarked source PDFs. If your balance can\'t cover it, the API returns 402 and the combined submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/). 
      * Merge submission PDFs, template PDFs, or custom files
      * @param data 
      */
@@ -906,7 +907,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
+     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  Live PDFs use credits; test PDFs (`test: true`) are free and watermarked. If your balance can\'t cover a live PDF, the API returns 402 and the submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
      * Generate a PDF
      * @param templateId 
      * @param submission 
@@ -1007,7 +1008,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Retrieves the details and status of a combined submission. Returns processing state, download URL (if processed), metadata, and information about any integrated actions (e.g., S3 uploads). 
+     * Retrieves the details and status of a combined submission. Returns processing state, download URL (if processed), metadata, and information about any integrated actions (e.g., S3 uploads).  `insufficient_credits` means the combined submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
      * Check the status of a combined submission (merged PDFs)
      * @param combinedSubmissionId 
      */
@@ -1151,7 +1152,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Retrieves the details and status of a PDF submission. Returns processing state, download URL (if processed), metadata, submission data (optional), and information about any integrated actions. Use this to poll for completion when using asynchronous processing. 
+     * Retrieves the details and status of a PDF submission. Returns processing state, download URL (if processed), metadata, submission data (optional), and information about any integrated actions. Use this to poll for completion when using asynchronous processing.  `insufficient_credits` means the submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
      * Check the status of a PDF
      * @param submissionId 
      * @param includeData 
@@ -1196,7 +1197,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Retrieves the status and results of a batch PDF generation job. Returns processing state, completion statistics, and optionally includes all individual submission details. Use this to poll for completion when using asynchronous batch processing. 
+     * Retrieves the status and results of a batch PDF generation job. Returns processing state, completion statistics, and optionally includes all individual submission details. Use this to poll for completion when using asynchronous batch processing.  Submissions waiting for credits are in the `insufficient_credits` state and count as pending, so the batch stays `pending` until you add credits or they stop waiting after 30 days. 
      * Check the status of a submission batch job
      * @param submissionBatchId 
      * @param includeSubmissions 
@@ -2435,6 +2436,20 @@ export class ClientResponseProcessor {
      */
      public async batchGeneratePdfsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<BatchGeneratePdfs201Response >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("402", response.httpStatusCode)) {
+            const body: BatchGeneratePdfs201Response = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "BatchGeneratePdfs201Response", ""
+            ) as BatchGeneratePdfs201Response;
+            throw new ApiException<BatchGeneratePdfs201Response>(response.httpStatusCode, "insufficient credits", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ForbiddenErrorResponse", ""
+            ) as ForbiddenErrorResponse;
+            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "account suspended", body, response.headers);
+        }
         if (isCodeInRange("201", response.httpStatusCode)) {
             const body: BatchGeneratePdfs201Response = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
@@ -2492,6 +2507,20 @@ export class ClientResponseProcessor {
      */
      public async combinePdfsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CreateCombinedSubmissionResponse >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("402", response.httpStatusCode)) {
+            const body: CreateCombinedSubmissionResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "CreateCombinedSubmissionResponse", ""
+            ) as CreateCombinedSubmissionResponse;
+            throw new ApiException<CreateCombinedSubmissionResponse>(response.httpStatusCode, "insufficient credits", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "test API token used to delete custom files", body, response.headers);
+        }
         if (isCodeInRange("201", response.httpStatusCode)) {
             const body: CreateCombinedSubmissionResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
@@ -2505,13 +2534,6 @@ export class ClientResponseProcessor {
                 "MultipleErrorsResponse", ""
             ) as MultipleErrorsResponse;
             throw new ApiException<MultipleErrorsResponse>(response.httpStatusCode, "invalid request", body, response.headers);
-        }
-        if (isCodeInRange("403", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "test API token used to delete custom files", body, response.headers);
         }
         if (isCodeInRange("400", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -2555,6 +2577,13 @@ export class ClientResponseProcessor {
                 "TemplatePreview", ""
             ) as TemplatePreview;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ForbiddenErrorResponse", ""
+            ) as ForbiddenErrorResponse;
+            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -2764,6 +2793,13 @@ export class ClientResponseProcessor {
             ) as TemplatePreview;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ForbiddenErrorResponse", ""
+            ) as ForbiddenErrorResponse;
+            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
+        }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
@@ -2799,6 +2835,13 @@ export class ClientResponseProcessor {
                 "TemplatePreview", ""
             ) as TemplatePreview;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ForbiddenErrorResponse", ""
+            ) as ForbiddenErrorResponse;
+            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -2842,6 +2885,13 @@ export class ClientResponseProcessor {
                 "ErrorResponse", ""
             ) as ErrorResponse;
             throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ForbiddenErrorResponse", ""
+            ) as ForbiddenErrorResponse;
+            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
@@ -3144,6 +3194,13 @@ export class ClientResponseProcessor {
      */
      public async generatePdfWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CreateSubmissionResponse >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("402", response.httpStatusCode)) {
+            const body: CreateSubmissionResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "CreateSubmissionResponse", ""
+            ) as CreateSubmissionResponse;
+            throw new ApiException<CreateSubmissionResponse>(response.httpStatusCode, "insufficient credits", body, response.headers);
+        }
         if (isCodeInRange("201", response.httpStatusCode)) {
             const body: CreateSubmissionResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
@@ -3157,6 +3214,13 @@ export class ClientResponseProcessor {
                 "Submission422Response", ""
             ) as Submission422Response;
             throw new ApiException<Submission422Response>(response.httpStatusCode, "invalid request", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ForbiddenErrorResponse", ""
+            ) as ForbiddenErrorResponse;
+            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "live data requests need Starter or higher", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
