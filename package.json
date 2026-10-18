@@ -1,8 +1,8 @@
 {
   "name": "docspring-ts",
-  "version": "3.1.0",
-  "description": "OpenAPI client for docspring-ts",
-  "author": "OpenAPI-Generator Contributors",
+  "version": "3.2.0",
+  "description": "An API client for the DocSpring PDF generation service",
+  "author": "DocSpring",
   "repository": {
     "type": "git",
     "url": "https://github.com/DocSpring/docspring-typescript.git"
@@ -23,7 +23,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "AGENTS.md"
   ],
   "typings": "./dist/index.d.ts",
   "scripts": {
@@ -37,5 +38,9 @@
   "devDependencies": {
     "@types/node": "^18.0.0",
     "typescript": "^4.0"
+  },
+  "homepage": "https://github.com/DocSpring/docspring-typescript#readme",
+  "bugs": {
+    "url": "https://github.com/DocSpring/docspring-typescript/issues"
   }
 }

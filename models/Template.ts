@@ -42,6 +42,7 @@ export class Template {
     'page_count': number;
     'page_dimensions': Array<Array<number>> | null;
     'parent_folder_id': string | null;
+    'parse_dates_using_template_date_format': boolean;
     'path': string;
     'permanent_document_url': string | null;
     'public_submissions': boolean;
@@ -253,6 +254,12 @@ export class Template {
             "name": "parent_folder_id",
             "baseName": "parent_folder_id",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "parse_dates_using_template_date_format",
+            "baseName": "parse_dates_using_template_date_format",
+            "type": "boolean",
             "format": ""
         },
         {

@@ -101,11 +101,11 @@ import { SubmissionDataRequestToken } from '../models/SubmissionDataRequestToken
 import { SubmissionPreview           , SubmissionPreviewStateEnum   , SubmissionPreviewTemplateTypeEnum             } from '../models/SubmissionPreview';
 import { SuccessErrorResponse, SuccessErrorResponseStatusEnum    } from '../models/SuccessErrorResponse';
 import { SuccessMultipleErrorsResponse, SuccessMultipleErrorsResponseStatusEnum    } from '../models/SuccessMultipleErrorsResponse';
-import { Template       , TemplateDocumentStateEnum                             , TemplateTemplateTypeEnum          , TemplateLastChangedByTypeEnum                    } from '../models/Template';
+import { Template       , TemplateDocumentStateEnum                              , TemplateTemplateTypeEnum          , TemplateLastChangedByTypeEnum                    } from '../models/Template';
 import { TemplateAddFieldsResponse, TemplateAddFieldsResponseStatusEnum     } from '../models/TemplateAddFieldsResponse';
 import { TemplateDeleteResponse, TemplateDeleteResponseStatusEnum      } from '../models/TemplateDeleteResponse';
 import { TemplateModelCodeResponse, TemplateModelCodeResponseLangEnum     } from '../models/TemplateModelCodeResponse';
-import { TemplatePreview       , TemplatePreviewDocumentStateEnum                             , TemplatePreviewTemplateTypeEnum          , TemplatePreviewLastChangedByTypeEnum       } from '../models/TemplatePreview';
+import { TemplatePreview       , TemplatePreviewDocumentStateEnum                              , TemplatePreviewTemplateTypeEnum          , TemplatePreviewLastChangedByTypeEnum       } from '../models/TemplatePreview';
 import { TemplatePublishVersionResponse, TemplatePublishVersionResponseStatusEnum     } from '../models/TemplatePublishVersionResponse';
 import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
 import { UpdatePdfTemplate } from '../models/UpdatePdfTemplate';
