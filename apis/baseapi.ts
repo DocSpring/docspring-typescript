@@ -33,5 +33,6 @@ export class RequiredError extends Error {
     override name: "RequiredError" = "RequiredError";
     constructor(public api: string, public method: string, public field: string) {
         super("Required parameter " + field + " was null or undefined when calling " + api + "." + method + ".");
+        Object.setPrototypeOf(this, RequiredError.prototype);
     }
 }

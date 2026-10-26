@@ -2,244 +2,304 @@ import { ResponseContext, RequestContext, HttpFile, HttpInfo } from '../http/htt
 import { Configuration, ConfigurationOptions } from '../configuration'
 import type { Middleware } from '../middleware';
 
-import { AddFieldsData } from '../models/AddFieldsData';
-import { BatchGeneratePdfs201Response } from '../models/BatchGeneratePdfs201Response';
-import { CombinePdfsData } from '../models/CombinePdfsData';
-import { CombinedSubmission } from '../models/CombinedSubmission';
-import { CombinedSubmissionAction } from '../models/CombinedSubmissionAction';
-import { CopyTemplateOptions } from '../models/CopyTemplateOptions';
-import { CreateCombinedSubmissionResponse } from '../models/CreateCombinedSubmissionResponse';
-import { CreateCustomFileData } from '../models/CreateCustomFileData';
-import { CreateCustomFileResponse } from '../models/CreateCustomFileResponse';
-import { CreateFolderData } from '../models/CreateFolderData';
-import { CreateHtmlTemplate } from '../models/CreateHtmlTemplate';
-import { CreatePdfSubmissionData } from '../models/CreatePdfSubmissionData';
-import { CreatePdfTemplate } from '../models/CreatePdfTemplate';
-import { CreateSubmissionDataRequestData } from '../models/CreateSubmissionDataRequestData';
-import { CreateSubmissionDataRequestEventRequest } from '../models/CreateSubmissionDataRequestEventRequest';
-import { CreateSubmissionDataRequestEventResponse } from '../models/CreateSubmissionDataRequestEventResponse';
-import { CreateSubmissionDataRequestResponse } from '../models/CreateSubmissionDataRequestResponse';
-import { CreateSubmissionDataRequestTokenResponse } from '../models/CreateSubmissionDataRequestTokenResponse';
-import { CreateSubmissionResponse } from '../models/CreateSubmissionResponse';
-import { CreateWebhookData } from '../models/CreateWebhookData';
+import { AiFieldNamingLanguage } from '../models/AiFieldNamingLanguage';
+import { AuthenticationCheck } from '../models/AuthenticationCheck';
+import { BarcodeSymbology } from '../models/BarcodeSymbology';
+import { CheckCharacter } from '../models/CheckCharacter';
+import { CombinedFieldType } from '../models/CombinedFieldType';
+import { CombinedPdf } from '../models/CombinedPdf';
+import { CombinedPdfFiles } from '../models/CombinedPdfFiles';
+import { CombinedPdfList } from '../models/CombinedPdfList';
+import { CombinedPdfSource } from '../models/CombinedPdfSource';
+import { CombinedPdfSourceInput } from '../models/CombinedPdfSourceInput';
+import { CombinedPdfSourcePdf } from '../models/CombinedPdfSourcePdf';
+import { CombinedPdfSourceType } from '../models/CombinedPdfSourceType';
+import { CombinedPdfState } from '../models/CombinedPdfState';
+import { CopyTemplateRequest } from '../models/CopyTemplateRequest';
+import { CreateCombinedPdfRequest } from '../models/CreateCombinedPdfRequest';
+import { CreateCustomFileFromUploadRequest } from '../models/CreateCustomFileFromUploadRequest';
+import { CreateFolderRequest } from '../models/CreateFolderRequest';
+import { CreateSignatureRequestEventRequest } from '../models/CreateSignatureRequestEventRequest';
+import { CreateSignatureRequestTokenRequest } from '../models/CreateSignatureRequestTokenRequest';
+import { CreateSubmissionBatchRequest } from '../models/CreateSubmissionBatchRequest';
+import { CreateSubmissionRequest } from '../models/CreateSubmissionRequest';
+import { CreateTemplateRequest } from '../models/CreateTemplateRequest';
+import { CreateWebhookRequest } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
-import { ErrorOrMultipleErrorsResponse } from '../models/ErrorOrMultipleErrorsResponse';
+import { CustomFileList } from '../models/CustomFileList';
+import { CustomFileSourcePdf } from '../models/CustomFileSourcePdf';
+import { ErrorCode } from '../models/ErrorCode';
+import { ErrorDetail } from '../models/ErrorDetail';
+import { ErrorInfo } from '../models/ErrorInfo';
 import { ErrorResponse } from '../models/ErrorResponse';
+import { ExpirationInterval } from '../models/ExpirationInterval';
+import { FieldComparisonCondition } from '../models/FieldComparisonCondition';
+import { FieldComparisonOperator } from '../models/FieldComparisonOperator';
+import { FieldDisplayType } from '../models/FieldDisplayType';
+import { FieldEqualsCondition } from '../models/FieldEqualsCondition';
+import { FieldEqualsOperator } from '../models/FieldEqualsOperator';
+import { FieldInCondition } from '../models/FieldInCondition';
+import { FieldOverride } from '../models/FieldOverride';
+import { FieldPresenceCondition } from '../models/FieldPresenceCondition';
+import { FieldPresenceOperator } from '../models/FieldPresenceOperator';
+import { FieldRangeCondition } from '../models/FieldRangeCondition';
+import { FieldReimportState } from '../models/FieldReimportState';
+import { FieldSetupLogic } from '../models/FieldSetupLogic';
+import { FieldSetupNaming } from '../models/FieldSetupNaming';
+import { FieldSetupSource } from '../models/FieldSetupSource';
 import { Folder } from '../models/Folder';
-import { ForbiddenErrorResponse } from '../models/ForbiddenErrorResponse';
-import { JsonSchema } from '../models/JsonSchema';
-import { ListSubmissionsResponse } from '../models/ListSubmissionsResponse';
-import { MoveFolderData } from '../models/MoveFolderData';
-import { MoveTemplateData } from '../models/MoveTemplateData';
-import { MultipleErrorsResponse } from '../models/MultipleErrorsResponse';
-import { PublishVersionData } from '../models/PublishVersionData';
-import { RenameFolderData } from '../models/RenameFolderData';
-import { RestoreVersionData } from '../models/RestoreVersionData';
+import { FolderList } from '../models/FolderList';
+import { GeneratedFile } from '../models/GeneratedFile';
+import { GeneratedFileState } from '../models/GeneratedFileState';
+import { HtmlEngineOptions } from '../models/HtmlEngineOptions';
+import { HtmlEngineOptionsInput } from '../models/HtmlEngineOptionsInput';
+import { ImageGravity } from '../models/ImageGravity';
+import { ImageScaleType } from '../models/ImageScaleType';
+import { ModelCodeLanguage } from '../models/ModelCodeLanguage';
+import { MoveFolderRequest } from '../models/MoveFolderRequest';
+import { MoveTemplateRequest } from '../models/MoveTemplateRequest';
+import { NumberConditionType } from '../models/NumberConditionType';
+import { PageFormat } from '../models/PageFormat';
+import { PublishTemplateVersionRequest } from '../models/PublishTemplateVersionRequest';
+import { RenameFolderRequest } from '../models/RenameFolderRequest';
+import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
+import { ShapeType } from '../models/ShapeType';
+import { SignatureRequest } from '../models/SignatureRequest';
+import { SignatureRequestAuthSecondFactorType } from '../models/SignatureRequestAuthSecondFactorType';
+import { SignatureRequestAuthType } from '../models/SignatureRequestAuthType';
+import { SignatureRequestEvent } from '../models/SignatureRequestEvent';
+import { SignatureRequestEventType } from '../models/SignatureRequestEventType';
+import { SignatureRequestInput } from '../models/SignatureRequestInput';
+import { SignatureRequestMessageType } from '../models/SignatureRequestMessageType';
+import { SignatureRequestState } from '../models/SignatureRequestState';
+import { SignatureRequestToken } from '../models/SignatureRequestToken';
+import { SignatureRequestTokenType } from '../models/SignatureRequestTokenType';
+import { StringConditionType } from '../models/StringConditionType';
 import { Submission } from '../models/Submission';
-import { Submission422Response } from '../models/Submission422Response';
 import { SubmissionAction } from '../models/SubmissionAction';
+import { SubmissionActionState } from '../models/SubmissionActionState';
+import { SubmissionActionType } from '../models/SubmissionActionType';
 import { SubmissionBatch } from '../models/SubmissionBatch';
-import { SubmissionBatchData } from '../models/SubmissionBatchData';
-import { SubmissionBatchWithSubmissions } from '../models/SubmissionBatchWithSubmissions';
-import { SubmissionDataRequest } from '../models/SubmissionDataRequest';
-import { SubmissionDataRequestEvent } from '../models/SubmissionDataRequestEvent';
-import { SubmissionDataRequestShow } from '../models/SubmissionDataRequestShow';
-import { SubmissionDataRequestToken } from '../models/SubmissionDataRequestToken';
-import { SubmissionPreview } from '../models/SubmissionPreview';
-import { SuccessErrorResponse } from '../models/SuccessErrorResponse';
-import { SuccessMultipleErrorsResponse } from '../models/SuccessMultipleErrorsResponse';
+import { SubmissionBatchState } from '../models/SubmissionBatchState';
+import { SubmissionFiles } from '../models/SubmissionFiles';
+import { SubmissionInput } from '../models/SubmissionInput';
+import { SubmissionList } from '../models/SubmissionList';
+import { SubmissionSource } from '../models/SubmissionSource';
+import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
+import { SubmissionState } from '../models/SubmissionState';
 import { Template } from '../models/Template';
-import { TemplateAddFieldsResponse } from '../models/TemplateAddFieldsResponse';
-import { TemplateDeleteResponse } from '../models/TemplateDeleteResponse';
-import { TemplateModelCodeResponse } from '../models/TemplateModelCodeResponse';
-import { TemplatePreview } from '../models/TemplatePreview';
-import { TemplatePublishVersionResponse } from '../models/TemplatePublishVersionResponse';
-import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
-import { UpdatePdfTemplate } from '../models/UpdatePdfTemplate';
-import { UpdateSubmissionDataRequestData } from '../models/UpdateSubmissionDataRequestData';
-import { UpdateWebhookData } from '../models/UpdateWebhookData';
-import { UploadPresignResponse } from '../models/UploadPresignResponse';
+import { TemplateActor } from '../models/TemplateActor';
+import { TemplateActorType } from '../models/TemplateActorType';
+import { TemplateDefaults } from '../models/TemplateDefaults';
+import { TemplateDefaultsInput } from '../models/TemplateDefaultsInput';
+import { TemplateDocument } from '../models/TemplateDocument';
+import { TemplateDocumentState } from '../models/TemplateDocumentState';
+import { TemplateFieldDependency } from '../models/TemplateFieldDependency';
+import { TemplateFieldDependencyAction } from '../models/TemplateFieldDependencyAction';
+import { TemplateFieldDependencyCondition } from '../models/TemplateFieldDependencyCondition';
+import { TemplateFieldDependencyConditionInput } from '../models/TemplateFieldDependencyConditionInput';
+import { TemplateFieldDependencyInput } from '../models/TemplateFieldDependencyInput';
+import { TemplateFieldDependencyMatch } from '../models/TemplateFieldDependencyMatch';
+import { TemplateFieldDependencyOperator } from '../models/TemplateFieldDependencyOperator';
+import { TemplateFieldLogicStatus } from '../models/TemplateFieldLogicStatus';
+import { TemplateFormMode } from '../models/TemplateFormMode';
+import { TemplateModelCode } from '../models/TemplateModelCode';
+import { TemplatePageAiError } from '../models/TemplatePageAiError';
+import { TemplatePageAiNamingStatus } from '../models/TemplatePageAiNamingStatus';
+import { TemplatePageFieldsStatus } from '../models/TemplatePageFieldsStatus';
+import { TemplatePageImageStatus } from '../models/TemplatePageImageStatus';
+import { TemplatePageProcessingStatus } from '../models/TemplatePageProcessingStatus';
+import { TemplateSourcePdf } from '../models/TemplateSourcePdf';
+import { TemplateSummary } from '../models/TemplateSummary';
+import { TemplateSummaryList } from '../models/TemplateSummaryList';
+import { TemplateType } from '../models/TemplateType';
+import { TemplateVersion } from '../models/TemplateVersion';
+import { TemplateVersionType } from '../models/TemplateVersionType';
+import { TextAlignment } from '../models/TextAlignment';
+import { TextOverflow } from '../models/TextOverflow';
+import { TextVerticalAlignment } from '../models/TextVerticalAlignment';
+import { Typeface } from '../models/Typeface';
+import { UpdateSignatureRequestRequest } from '../models/UpdateSignatureRequestRequest';
+import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
+import { UpdateTemplateRequest } from '../models/UpdateTemplateRequest';
+import { UpdateWebhookRequest } from '../models/UpdateWebhookRequest';
+import { UploadMethod } from '../models/UploadMethod';
+import { UploadPresign } from '../models/UploadPresign';
+import { UrlSourcePdf } from '../models/UrlSourcePdf';
 import { Webhook } from '../models/Webhook';
+import { WebhookEventType } from '../models/WebhookEventType';
+import { WebhookList } from '../models/WebhookList';
+import { WebhookMode } from '../models/WebhookMode';
 
 import { ObservableClient } from "./ObservableAPI";
 import { ClientRequestFactory, ClientResponseProcessor} from "../apis/Client";
 
-export interface ClientAddFieldsToTemplateRequest {
-    /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientaddFieldsToTemplate
-     */
-    templateId: string
-    /**
-     * 
-     * @type AddFieldsData
-     * @memberof ClientaddFieldsToTemplate
-     */
-    data: AddFieldsData
-}
-
-export interface ClientBatchGeneratePdfsRequest {
-    /**
-     * 
-     * @type SubmissionBatchData
-     * @memberof ClientbatchGeneratePdfs
-     */
-    data: SubmissionBatchData
-    /**
-     * Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     * Defaults to: true
-     * @type boolean
-     * @memberof ClientbatchGeneratePdfs
-     */
-    wait?: boolean
-}
-
-export interface ClientCombinePdfsRequest {
-    /**
-     * 
-     * @type CombinePdfsData
-     * @memberof ClientcombinePdfs
-     */
-    data: CombinePdfsData
-}
-
 export interface ClientCopyTemplateRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcopyTemplate
      */
     templateId: string
     /**
-     * 
-     * @type CopyTemplateOptions
+     * Settings for the copy.
+     * @type CopyTemplateRequest
      * @memberof ClientcopyTemplate
      */
-    options?: CopyTemplateOptions
+    body?: CopyTemplateRequest
+}
+
+export interface ClientCreateCombinedPdfRequest {
+    /**
+     * The PDFs to merge, and the combined PDF's settings.
+     * @type CreateCombinedPdfRequest
+     * @memberof ClientcreateCombinedPdf
+     */
+    body: CreateCombinedPdfRequest
+    /**
+     * Wait until the PDF has been generated before responding. Default true on sync.api hosts.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientcreateCombinedPdf
+     */
+    wait?: boolean
 }
 
 export interface ClientCreateCustomFileFromUploadRequest {
     /**
-     * 
-     * @type CreateCustomFileData
+     * The uploaded file to create the custom file from.
+     * @type CreateCustomFileFromUploadRequest
      * @memberof ClientcreateCustomFileFromUpload
      */
-    data: CreateCustomFileData
-}
-
-export interface ClientCreateDataRequestEventRequest {
-    /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientcreateDataRequestEvent
-     */
-    dataRequestId: string
-    /**
-     * 
-     * @type CreateSubmissionDataRequestEventRequest
-     * @memberof ClientcreateDataRequestEvent
-     */
-    event: CreateSubmissionDataRequestEventRequest
-}
-
-export interface ClientCreateDataRequestTokenRequest {
-    /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientcreateDataRequestToken
-     */
-    dataRequestId: string
-    /**
-     * 
-     * Defaults to: undefined
-     * @type &#39;api&#39; | &#39;email&#39;
-     * @memberof ClientcreateDataRequestToken
-     */
-    type?: 'api' | 'email'
+    body: CreateCustomFileFromUploadRequest
 }
 
 export interface ClientCreateFolderRequest {
     /**
-     * 
-     * @type CreateFolderData
+     * The folder to create.
+     * @type CreateFolderRequest
      * @memberof ClientcreateFolder
      */
-    data: CreateFolderData
+    body: CreateFolderRequest
 }
 
-export interface ClientCreateHtmlTemplateRequest {
+export interface ClientCreateSignatureRequestEventRequest {
     /**
-     * 
-     * @type CreateHtmlTemplate
-     * @memberof ClientcreateHtmlTemplate
-     */
-    data: CreateHtmlTemplate
-}
-
-export interface ClientCreatePdfTemplateRequest {
-    /**
-     * 
-     * Defaults to: undefined
-     * @type HttpFile
-     * @memberof ClientcreatePdfTemplate
-     */
-    templateDocument: HttpFile
-    /**
-     * 
+     * The signature request's ID.
      * Defaults to: undefined
      * @type string
-     * @memberof ClientcreatePdfTemplate
+     * @memberof ClientcreateSignatureRequestEvent
      */
-    templateName: string
+    signatureRequestId: string
     /**
-     * Wait for template document to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     * Defaults to: true
+     * The event to record.
+     * @type CreateSignatureRequestEventRequest
+     * @memberof ClientcreateSignatureRequestEvent
+     */
+    body: CreateSignatureRequestEventRequest
+}
+
+export interface ClientCreateSignatureRequestTokenRequest {
+    /**
+     * The signature request's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateSignatureRequestToken
+     */
+    signatureRequestId: string
+    /**
+     * The kind of link to make. Send no body for an `api` token.
+     * @type CreateSignatureRequestTokenRequest
+     * @memberof ClientcreateSignatureRequestToken
+     */
+    body?: CreateSignatureRequestTokenRequest
+}
+
+export interface ClientCreateSubmissionRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateSubmission
+     */
+    templateId: string
+    /**
+     * The submission's data and settings.
+     * @type CreateSubmissionRequest
+     * @memberof ClientcreateSubmission
+     */
+    body: CreateSubmissionRequest
+    /**
+     * The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateSubmission
+     */
+    version?: string
+    /**
+     * Wait until the PDF has been generated before responding. Default true on sync.api hosts.
+     * Defaults to: undefined
      * @type boolean
-     * @memberof ClientcreatePdfTemplate
+     * @memberof ClientcreateSubmission
      */
     wait?: boolean
-    /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientcreatePdfTemplate
-     */
-    templateDescription?: string
-    /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientcreatePdfTemplate
-     */
-    templateParentFolderId?: string
 }
 
-export interface ClientCreatePdfTemplateFromUploadRequest {
+export interface ClientCreateSubmissionBatchRequest {
     /**
-     * 
-     * @type CreatePdfTemplate
-     * @memberof ClientcreatePdfTemplateFromUpload
+     * The submissions to create, and the settings they share.
+     * @type CreateSubmissionBatchRequest
+     * @memberof ClientcreateSubmissionBatch
      */
-    data: CreatePdfTemplate
+    body: CreateSubmissionBatchRequest
+    /**
+     * Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientcreateSubmissionBatch
+     */
+    wait?: boolean
+}
+
+export interface ClientCreateTemplateRequest {
+    /**
+     * The template to create.
+     * @type CreateTemplateRequest
+     * @memberof ClientcreateTemplate
+     */
+    body: CreateTemplateRequest
+    /**
+     * Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientcreateTemplate
+     */
+    wait?: boolean
 }
 
 export interface ClientCreateWebhookRequest {
     /**
-     * 
-     * @type CreateWebhookData
+     * The webhook to create.
+     * @type CreateWebhookRequest
      * @memberof ClientcreateWebhook
      */
-    data: CreateWebhookData
+    body: CreateWebhookRequest
+}
+
+export interface ClientDeleteCustomFileRequest {
+    /**
+     * The custom file's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteCustomFile
+     */
+    customFileId: string
 }
 
 export interface ClientDeleteFolderRequest {
     /**
-     * 
+     * The folder's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteFolder
@@ -249,14 +309,14 @@ export interface ClientDeleteFolderRequest {
 
 export interface ClientDeleteTemplateRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteTemplate
      */
     templateId: string
     /**
-     * 
+     * Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteTemplate
@@ -266,7 +326,7 @@ export interface ClientDeleteTemplateRequest {
 
 export interface ClientDeleteWebhookRequest {
     /**
-     * 
+     * The webhook's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteWebhook
@@ -274,19 +334,19 @@ export interface ClientDeleteWebhookRequest {
     webhookId: string
 }
 
-export interface ClientExpireCombinedSubmissionRequest {
+export interface ClientExpireCombinedPdfRequest {
     /**
-     * 
+     * The combined PDF's ID.
      * Defaults to: undefined
      * @type string
-     * @memberof ClientexpireCombinedSubmission
+     * @memberof ClientexpireCombinedPdf
      */
-    combinedSubmissionId: string
+    combinedPdfId: string
 }
 
 export interface ClientExpireSubmissionRequest {
     /**
-     * 
+     * The submission's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientexpireSubmission
@@ -294,146 +354,147 @@ export interface ClientExpireSubmissionRequest {
     submissionId: string
 }
 
-export interface ClientGeneratePdfRequest {
+export interface ClientGenerateSubmissionPreviewRequest {
     /**
-     * 
+     * The submission's ID.
      * Defaults to: undefined
      * @type string
-     * @memberof ClientgeneratePdf
-     */
-    templateId: string
-    /**
-     * 
-     * @type CreatePdfSubmissionData
-     * @memberof ClientgeneratePdf
-     */
-    submission: CreatePdfSubmissionData
-    /**
-     * Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     * Defaults to: true
-     * @type boolean
-     * @memberof ClientgeneratePdf
-     */
-    wait?: boolean
-}
-
-export interface ClientGeneratePreviewRequest {
-    /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientgeneratePreview
+     * @memberof ClientgenerateSubmissionPreview
      */
     submissionId: string
 }
 
-export interface ClientGetCombinedSubmissionRequest {
+export interface ClientGetCombinedPdfRequest {
     /**
-     * 
+     * The combined PDF's ID.
      * Defaults to: undefined
      * @type string
-     * @memberof ClientgetCombinedSubmission
+     * @memberof ClientgetCombinedPdf
      */
-    combinedSubmissionId: string
+    combinedPdfId: string
 }
 
-export interface ClientGetDataRequestRequest {
+export interface ClientGetCustomFileRequest {
     /**
-     * 
+     * The custom file's ID.
      * Defaults to: undefined
      * @type string
-     * @memberof ClientgetDataRequest
+     * @memberof ClientgetCustomFile
      */
-    dataRequestId: string
+    customFileId: string
 }
 
-export interface ClientGetFullTemplateRequest {
+export interface ClientGetFolderRequest {
     /**
-     * 
+     * The folder's ID.
      * Defaults to: undefined
      * @type string
-     * @memberof ClientgetFullTemplate
+     * @memberof ClientgetFolder
      */
-    templateId: string
+    folderId: string
 }
 
 export interface ClientGetPresignUrlRequest {
 }
 
+export interface ClientGetSignatureRequestRequest {
+    /**
+     * The signature request's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetSignatureRequest
+     */
+    signatureRequestId: string
+}
+
 export interface ClientGetSubmissionRequest {
     /**
-     * 
+     * The submission's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetSubmission
      */
     submissionId: string
-    /**
-     * 
-     * Defaults to: undefined
-     * @type boolean
-     * @memberof ClientgetSubmission
-     */
-    includeData?: boolean
 }
 
 export interface ClientGetSubmissionBatchRequest {
     /**
-     * 
+     * The batch's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetSubmissionBatch
      */
     submissionBatchId: string
     /**
-     * 
+     * Include each submission's `data` (null without it).
      * Defaults to: undefined
      * @type boolean
      * @memberof ClientgetSubmissionBatch
      */
-    includeSubmissions?: boolean
+    includeData?: boolean
 }
 
 export interface ClientGetTemplateRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetTemplate
      */
     templateId: string
+    /**
+     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetTemplate
+     */
+    version?: string
 }
 
 export interface ClientGetTemplateModelCodeRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetTemplateModelCode
      */
     templateId: string
     /**
-     * The language to generate code for
+     * The language to generate the code in.
      * Defaults to: undefined
-     * @type &#39;typescript&#39; | &#39;javascript&#39; | &#39;ruby&#39; | &#39;python&#39; | &#39;php&#39; | &#39;java&#39; | &#39;csharp&#39; | &#39;elixir&#39; | &#39;go&#39;
+     * @type ModelCodeLanguage
      * @memberof ClientgetTemplateModelCode
      */
-    lang: 'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go'
+    lang: ModelCodeLanguage
+    /**
+     * The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetTemplateModelCode
+     */
+    version?: string
 }
 
 export interface ClientGetTemplateSchemaRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetTemplateSchema
      */
     templateId: string
+    /**
+     * The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetTemplateSchema
+     */
+    version?: string
 }
 
 export interface ClientGetWebhookRequest {
     /**
-     * 
+     * The webhook's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetWebhook
@@ -441,391 +502,507 @@ export interface ClientGetWebhookRequest {
     webhookId: string
 }
 
-export interface ClientListCombinedSubmissionsRequest {
+export interface ClientListCombinedPdfsRequest {
     /**
-     * Default: 1
-     * Minimum: 1
-     * Defaults to: undefined
+     * How many items to return (1-100, default 50).
+     * Defaults to: 50
      * @type number
-     * @memberof ClientlistCombinedSubmissions
+     * @memberof ClientlistCombinedPdfs
      */
-    page?: number
+    limit?: number
     /**
-     * Default: 50
-     * Minimum: 1
-     * Maximum: 50
+     * The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      * Defaults to: undefined
-     * @type number
-     * @memberof ClientlistCombinedSubmissions
+     * @type string
+     * @memberof ClientlistCombinedPdfs
      */
-    perPage?: number
+    cursor?: string
+}
+
+export interface ClientListCustomFilesRequest {
+    /**
+     * How many items to return (1-100, default 50).
+     * Defaults to: 50
+     * @type number
+     * @memberof ClientlistCustomFiles
+     */
+    limit?: number
+    /**
+     * The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientlistCustomFiles
+     */
+    cursor?: string
 }
 
 export interface ClientListFoldersRequest {
     /**
-     * Filter By Folder Id
+     * Only list the folders in this folder. Without it, the list has every folder, at any depth.
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistFolders
      */
     parentFolderId?: string
+    /**
+     * How many items to return (1-100, default 50).
+     * Defaults to: 50
+     * @type number
+     * @memberof ClientlistFolders
+     */
+    limit?: number
+    /**
+     * The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientlistFolders
+     */
+    cursor?: string
 }
 
 export interface ClientListSubmissionsRequest {
     /**
-     * 
+     * Only list this template's submissions.
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistSubmissions
      */
-    cursor?: string
+    templateId?: string
     /**
-     * 
+     * Only list test submissions (true) or live submissions (false).
      * Defaults to: undefined
-     * @type number
+     * @type boolean
      * @memberof ClientlistSubmissions
      */
-    limit?: number
+    test?: boolean
     /**
-     * 
+     * Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`).
      * Defaults to: undefined
-     * @type string
+     * @type Date
      * @memberof ClientlistSubmissions
      */
-    createdAfter?: string
+    createdAfter?: Date
     /**
-     * 
+     * Only list submissions created before this time.
      * Defaults to: undefined
-     * @type string
+     * @type Date
      * @memberof ClientlistSubmissions
      */
-    createdBefore?: string
+    createdBefore?: Date
     /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientlistSubmissions
-     */
-    type?: string
-    /**
-     * 
+     * Include each submission's `data` (null without it).
      * Defaults to: undefined
      * @type boolean
      * @memberof ClientlistSubmissions
      */
     includeData?: boolean
+    /**
+     * How many items to return (1-100, default 50).
+     * Defaults to: 50
+     * @type number
+     * @memberof ClientlistSubmissions
+     */
+    limit?: number
+    /**
+     * The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientlistSubmissions
+     */
+    cursor?: string
 }
 
 export interface ClientListTemplateSubmissionsRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistTemplateSubmissions
      */
     templateId: string
     /**
-     * 
+     * Only list test submissions (true) or live submissions (false).
      * Defaults to: undefined
-     * @type string
+     * @type boolean
      * @memberof ClientlistTemplateSubmissions
      */
-    cursor?: string
+    test?: boolean
     /**
-     * 
+     * Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`).
      * Defaults to: undefined
-     * @type number
+     * @type Date
      * @memberof ClientlistTemplateSubmissions
      */
-    limit?: number
+    createdAfter?: Date
     /**
-     * 
+     * Only list submissions created before this time.
      * Defaults to: undefined
-     * @type string
+     * @type Date
      * @memberof ClientlistTemplateSubmissions
      */
-    createdAfter?: string
+    createdBefore?: Date
     /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientlistTemplateSubmissions
-     */
-    createdBefore?: string
-    /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientlistTemplateSubmissions
-     */
-    type?: string
-    /**
-     * 
+     * Include each submission's `data` (null without it).
      * Defaults to: undefined
      * @type boolean
      * @memberof ClientlistTemplateSubmissions
      */
     includeData?: boolean
+    /**
+     * How many items to return (1-100, default 50).
+     * Defaults to: 50
+     * @type number
+     * @memberof ClientlistTemplateSubmissions
+     */
+    limit?: number
+    /**
+     * The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientlistTemplateSubmissions
+     */
+    cursor?: string
 }
 
 export interface ClientListTemplatesRequest {
     /**
-     * Search By Name
+     * Only list templates whose name contains this text (ignoring case).
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistTemplates
      */
     query?: string
     /**
-     * Filter By Folder Id
+     * Only list the templates in this folder (not in its subfolders).
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistTemplates
      */
     parentFolderId?: string
     /**
-     * Default: 1
-     * Minimum: 1
-     * Defaults to: undefined
+     * How many items to return (1-100, default 50).
+     * Defaults to: 50
      * @type number
      * @memberof ClientlistTemplates
      */
-    page?: number
+    limit?: number
     /**
-     * Default: 50
-     * Minimum: 1
-     * Maximum: 50
+     * The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      * Defaults to: undefined
-     * @type number
+     * @type string
      * @memberof ClientlistTemplates
      */
-    perPage?: number
+    cursor?: string
 }
 
 export interface ClientListWebhooksRequest {
     /**
-     * Default: 1
-     * Minimum: 1
+     * Only list webhooks that subscribe to this event.
      * Defaults to: undefined
-     * @type number
+     * @type WebhookEventType
      * @memberof ClientlistWebhooks
      */
-    page?: number
+    eventType?: WebhookEventType
     /**
-     * Default: 50
-     * Minimum: 1
-     * Maximum: 100
+     * Only list webhooks set to this mode.
      * Defaults to: undefined
-     * @type number
+     * @type WebhookMode
      * @memberof ClientlistWebhooks
      */
-    perPage?: number
+    mode?: WebhookMode
     /**
-     * Filter by a subscribed event type
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientlistWebhooks
-     */
-    eventType?: string
-    /**
-     * Filter by mode (test or live)
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientlistWebhooks
-     */
-    mode?: string
-    /**
-     * Filter by a scoped template ID
+     * Only list webhooks scoped to this template.
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistWebhooks
      */
     templateId?: string
     /**
-     * Filter by a scoped folder ID
+     * Only list webhooks scoped to this folder.
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistWebhooks
      */
     folderId?: string
     /**
-     * Filter by a scoped API token ID
+     * Only list webhooks scoped to this API token.
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistWebhooks
      */
     apiTokenId?: string
-}
-
-export interface ClientMoveFolderToFolderRequest {
     /**
-     * 
+     * How many items to return (1-100, default 50).
+     * Defaults to: 50
+     * @type number
+     * @memberof ClientlistWebhooks
+     */
+    limit?: number
+    /**
+     * The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      * Defaults to: undefined
      * @type string
-     * @memberof ClientmoveFolderToFolder
+     * @memberof ClientlistWebhooks
+     */
+    cursor?: string
+}
+
+export interface ClientMoveFolderRequest {
+    /**
+     * The folder's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientmoveFolder
      */
     folderId: string
     /**
-     * 
-     * @type MoveFolderData
-     * @memberof ClientmoveFolderToFolder
+     * Where to move the folder.
+     * @type MoveFolderRequest
+     * @memberof ClientmoveFolder
      */
-    data: MoveFolderData
+    body: MoveFolderRequest
 }
 
-export interface ClientMoveTemplateToFolderRequest {
+export interface ClientMoveTemplateRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
-     * @memberof ClientmoveTemplateToFolder
+     * @memberof ClientmoveTemplate
      */
     templateId: string
     /**
-     * 
-     * @type MoveTemplateData
-     * @memberof ClientmoveTemplateToFolder
+     * Where to move the template.
+     * @type MoveTemplateRequest
+     * @memberof ClientmoveTemplate
      */
-    data: MoveTemplateData
+    body: MoveTemplateRequest
 }
 
 export interface ClientPublishTemplateVersionRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientpublishTemplateVersion
      */
     templateId: string
     /**
-     * 
-     * @type PublishVersionData
+     * The version to publish.
+     * @type PublishTemplateVersionRequest
      * @memberof ClientpublishTemplateVersion
      */
-    data: PublishVersionData
+    body: PublishTemplateVersionRequest
 }
 
 export interface ClientRenameFolderRequest {
     /**
-     * 
+     * The folder's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientrenameFolder
      */
     folderId: string
     /**
-     * 
-     * @type RenameFolderData
+     * The folder's new name.
+     * @type RenameFolderRequest
      * @memberof ClientrenameFolder
      */
-    data: RenameFolderData
+    body: RenameFolderRequest
 }
 
 export interface ClientRestoreTemplateVersionRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientrestoreTemplateVersion
      */
     templateId: string
     /**
-     * 
-     * @type RestoreVersionData
+     * The version to restore.
+     * @type RestoreTemplateVersionRequest
      * @memberof ClientrestoreTemplateVersion
      */
-    data: RestoreVersionData
+    body: RestoreTemplateVersionRequest
 }
 
 export interface ClientTestAuthenticationRequest {
 }
 
-export interface ClientUpdateDataRequestRequest {
+export interface ClientUpdateSignatureRequestRequest {
     /**
-     * 
+     * The signature request's ID.
      * Defaults to: undefined
      * @type string
-     * @memberof ClientupdateDataRequest
+     * @memberof ClientupdateSignatureRequest
      */
-    dataRequestId: string
+    signatureRequestId: string
     /**
-     * 
-     * @type UpdateSubmissionDataRequestData
-     * @memberof ClientupdateDataRequest
+     * The settings to change. Properties left out keep their values.
+     * @type UpdateSignatureRequestRequest
+     * @memberof ClientupdateSignatureRequest
      */
-    data: UpdateSubmissionDataRequestData
+    body: UpdateSignatureRequestRequest
 }
 
 export interface ClientUpdateTemplateRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateTemplate
      */
     templateId: string
     /**
-     * 
-     * @type UpdateHtmlTemplate
+     * The settings to change. Properties left out keep their values.
+     * @type UpdateTemplateRequest
      * @memberof ClientupdateTemplate
      */
-    data: UpdateHtmlTemplate
+    body: UpdateTemplateRequest
 }
 
 export interface ClientUpdateTemplateDocumentRequest {
     /**
-     * 
+     * The template's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateTemplateDocument
      */
     templateId: string
     /**
-     * 
-     * Defaults to: undefined
-     * @type HttpFile
+     * The new PDF.
+     * @type UpdateTemplateDocumentRequest
      * @memberof ClientupdateTemplateDocument
      */
-    templateDocument: HttpFile
+    body: UpdateTemplateDocumentRequest
     /**
-     * 
+     * Wait until the PDF has been processed before responding. Default true on sync.api hosts.
      * Defaults to: undefined
-     * @type string
+     * @type boolean
      * @memberof ClientupdateTemplateDocument
      */
-    templateName?: string
-}
-
-export interface ClientUpdateTemplateDocumentFromUploadRequest {
-    /**
-     * 
-     * Defaults to: undefined
-     * @type string
-     * @memberof ClientupdateTemplateDocumentFromUpload
-     */
-    templateId: string
-    /**
-     * 
-     * @type UpdatePdfTemplate
-     * @memberof ClientupdateTemplateDocumentFromUpload
-     */
-    data: UpdatePdfTemplate
+    wait?: boolean
 }
 
 export interface ClientUpdateWebhookRequest {
     /**
-     * 
+     * The webhook's ID.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateWebhook
      */
     webhookId: string
     /**
-     * 
-     * @type UpdateWebhookData
+     * The settings to change. Properties left out keep their values.
+     * @type UpdateWebhookRequest
      * @memberof ClientupdateWebhook
      */
-    data: UpdateWebhookData
+    body: UpdateWebhookRequest
+}
+
+export interface ClientUploadTemplateRequest {
+    /**
+     * The PDF.
+     * Defaults to: undefined
+     * @type HttpFile
+     * @memberof ClientuploadTemplate
+     */
+    document: HttpFile
+    /**
+     * Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientuploadTemplate
+     */
+    wait?: boolean
+    /**
+     * The template's name.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientuploadTemplate
+     */
+    name?: string
+    /**
+     * The template's description.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientuploadTemplate
+     */
+    description?: string
+    /**
+     * The folder to put the template in. Left out, it's created at the root.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientuploadTemplate
+     */
+    parentFolderId?: string
+    /**
+     * The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. Default: your account's template settings.
+     * Defaults to: undefined
+     * @type AiFieldNamingLanguage
+     * @memberof ClientuploadTemplate
+     */
+    aiFieldNamingLanguage?: AiFieldNamingLanguage
+    /**
+     * Set up the PDF's fields as DocSpring's "Automatically detect fields" upload option does: import or detect the fields, name them with AI, and set up conditional logic. `field_source`, `field_naming` and `field_logic` choose how. Default false. `document.page_processing_statuses` and `document.field_logic_status` show how it's going, and `document.state` becomes `processed` once every page's fields are set up.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientuploadTemplate
+     */
+    detectFields?: boolean
+    /**
+     * With `detect_fields`, where the fields come from. `auto` (the default) imports the form fields of a fillable PDF and detects the fields of a PDF without them; `pdf_detection` detects the fields from the page layout, even on a fillable PDF; `pdf_form_fields` only imports the PDF's form fields.
+     * Defaults to: undefined
+     * @type FieldSetupSource
+     * @memberof ClientuploadTemplate
+     */
+    fieldSource?: FieldSetupSource
+    /**
+     * With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`.
+     * Defaults to: undefined
+     * @type FieldSetupNaming
+     * @memberof ClientuploadTemplate
+     */
+    fieldNaming?: FieldSetupNaming
+    /**
+     * With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
+     * Defaults to: undefined
+     * @type FieldSetupLogic
+     * @memberof ClientuploadTemplate
+     */
+    fieldLogic?: FieldSetupLogic
+}
+
+export interface ClientUploadTemplateDocumentRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientuploadTemplateDocument
+     */
+    templateId: string
+    /**
+     * The new PDF.
+     * Defaults to: undefined
+     * @type HttpFile
+     * @memberof ClientuploadTemplateDocument
+     */
+    document: HttpFile
+    /**
+     * Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientuploadTemplateDocument
+     */
+    wait?: boolean
+    /**
+     * Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientuploadTemplateDocument
+     */
+    reimportFields?: boolean
 }
 
 export class ObjectClient {
@@ -836,223 +1013,205 @@ export class ObjectClient {
     }
 
     /**
-     * Adds fields to a PDF template. Configure field types, positions, defaults, and formatting options. 
-     * Add new fields to a Template
-     * @param param the request object
-     */
-    public addFieldsToTemplateWithHttpInfo(param: ClientAddFieldsToTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateAddFieldsResponse>> {
-        return this.api.addFieldsToTemplateWithHttpInfo(param.templateId, param.data,  options).toPromise();
-    }
-
-    /**
-     * Adds fields to a PDF template. Configure field types, positions, defaults, and formatting options. 
-     * Add new fields to a Template
-     * @param param the request object
-     */
-    public addFieldsToTemplate(param: ClientAddFieldsToTemplateRequest, options?: ConfigurationOptions): Promise<TemplateAddFieldsResponse> {
-        return this.api.addFieldsToTemplate(param.templateId, param.data,  options).toPromise();
-    }
-
-    /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  Live PDFs use credits. If any live submission is waiting for credits, the API returns 402 and the others are still processed: check each submission\'s `state`. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
-     * Generate multiple PDFs
-     * @param param the request object
-     */
-    public batchGeneratePdfsWithHttpInfo(param: ClientBatchGeneratePdfsRequest, options?: ConfigurationOptions): Promise<HttpInfo<BatchGeneratePdfs201Response>> {
-        return this.api.batchGeneratePdfsWithHttpInfo(param.data, param.wait,  options).toPromise();
-    }
-
-    /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  Live PDFs use credits. If any live submission is waiting for credits, the API returns 402 and the others are still processed: check each submission\'s `state`. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
-     * Generate multiple PDFs
-     * @param param the request object
-     */
-    public batchGeneratePdfs(param: ClientBatchGeneratePdfsRequest, options?: ConfigurationOptions): Promise<BatchGeneratePdfs201Response> {
-        return this.api.batchGeneratePdfs(param.data, param.wait,  options).toPromise();
-    }
-
-    /**
-     * Combines multiple PDFs from various sources into a single PDF file. Supports merging submission PDFs, template PDFs, custom files, other merged PDFs, and PDFs from URLs. Merges the PDFs in the order provided.  Combining uses credits (4 per source PDF, plus 4 per unit of the combined PDF), even with a test API token or watermarked source PDFs. If your balance can\'t cover it, the API returns 402 and the combined submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/). 
-     * Merge submission PDFs, template PDFs, or custom files
-     * @param param the request object
-     */
-    public combinePdfsWithHttpInfo(param: ClientCombinePdfsRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateCombinedSubmissionResponse>> {
-        return this.api.combinePdfsWithHttpInfo(param.data,  options).toPromise();
-    }
-
-    /**
-     * Combines multiple PDFs from various sources into a single PDF file. Supports merging submission PDFs, template PDFs, custom files, other merged PDFs, and PDFs from URLs. Merges the PDFs in the order provided.  Combining uses credits (4 per source PDF, plus 4 per unit of the combined PDF), even with a test API token or watermarked source PDFs. If your balance can\'t cover it, the API returns 402 and the combined submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/). 
-     * Merge submission PDFs, template PDFs, or custom files
-     * @param param the request object
-     */
-    public combinePdfs(param: ClientCombinePdfsRequest, options?: ConfigurationOptions): Promise<CreateCombinedSubmissionResponse> {
-        return this.api.combinePdfs(param.data,  options).toPromise();
-    }
-
-    /**
-     * Creates a copy of an existing template with all its fields and configuration. Optionally specify a new name and target folder. The copied template starts as a new draft that can be modified independently of the original. 
+     * Copies a template (its draft, or a published version) into a new template.
      * Copy a template
      * @param param the request object
      */
-    public copyTemplateWithHttpInfo(param: ClientCopyTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
-        return this.api.copyTemplateWithHttpInfo(param.templateId, param.options,  options).toPromise();
+    public copyTemplateWithHttpInfo(param: ClientCopyTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
+        return this.api.copyTemplateWithHttpInfo(param.templateId, param.body,  options).toPromise();
     }
 
     /**
-     * Creates a copy of an existing template with all its fields and configuration. Optionally specify a new name and target folder. The copied template starts as a new draft that can be modified independently of the original. 
+     * Copies a template (its draft, or a published version) into a new template.
      * Copy a template
      * @param param the request object
      */
-    public copyTemplate(param: ClientCopyTemplateRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
-        return this.api.copyTemplate(param.templateId, param.options,  options).toPromise();
+    public copyTemplate(param: ClientCopyTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
+        return this.api.copyTemplate(param.templateId, param.body,  options).toPromise();
     }
 
     /**
-     * The Custom Files API endpoint allows you to upload PDFs to DocSpring and then merge them with other PDFs. First upload your file using the presigned URL endpoint, then use the returned cache_id to create the custom file. 
-     * Create a new custom file from a cached S3 upload
+     * Merges PDFs into one: submissions, other combined PDFs, templates, custom files (POST /custom_files) and PDFs from URLs, in the order of `source_pdfs`. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /combined_pdfs/{combined_pdf_id} until `state` isn't `pending`.  A template source merges the template's processed PDF by default: the PDF submissions are filled in on, decrypted and with its form fields removed. Pass `processed: false` to merge the PDF as it was uploaded. 
+     * Combine PDFs
      * @param param the request object
      */
-    public createCustomFileFromUploadWithHttpInfo(param: ClientCreateCustomFileFromUploadRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateCustomFileResponse>> {
-        return this.api.createCustomFileFromUploadWithHttpInfo(param.data,  options).toPromise();
+    public createCombinedPdfWithHttpInfo(param: ClientCreateCombinedPdfRequest, options?: ConfigurationOptions): Promise<HttpInfo<CombinedPdf>> {
+        return this.api.createCombinedPdfWithHttpInfo(param.body, param.wait,  options).toPromise();
     }
 
     /**
-     * The Custom Files API endpoint allows you to upload PDFs to DocSpring and then merge them with other PDFs. First upload your file using the presigned URL endpoint, then use the returned cache_id to create the custom file. 
-     * Create a new custom file from a cached S3 upload
+     * Merges PDFs into one: submissions, other combined PDFs, templates, custom files (POST /custom_files) and PDFs from URLs, in the order of `source_pdfs`. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /combined_pdfs/{combined_pdf_id} until `state` isn't `pending`.  A template source merges the template's processed PDF by default: the PDF submissions are filled in on, decrypted and with its form fields removed. Pass `processed: false` to merge the PDF as it was uploaded. 
+     * Combine PDFs
      * @param param the request object
      */
-    public createCustomFileFromUpload(param: ClientCreateCustomFileFromUploadRequest, options?: ConfigurationOptions): Promise<CreateCustomFileResponse> {
-        return this.api.createCustomFileFromUpload(param.data,  options).toPromise();
+    public createCombinedPdf(param: ClientCreateCombinedPdfRequest, options?: ConfigurationOptions): Promise<CombinedPdf> {
+        return this.api.createCombinedPdf(param.body, param.wait,  options).toPromise();
     }
 
     /**
-     * Records user notification events for data requests. Use this to create an audit trail showing when and how users were notified about data request forms. Supports email, SMS, and other notification types. Records the notification time for compliance tracking.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - User notification workflow 
-     * Create a new event for emailing a signee a request for signature
+     * Creates a custom file from a PDF you uploaded, so you can merge it with other PDFs. Upload the file with the presigned upload (GET /uploads/presign) first, then pass its `fields.key` as `cache_id`. 
+     * Create a custom file from an upload
      * @param param the request object
      */
-    public createDataRequestEventWithHttpInfo(param: ClientCreateDataRequestEventRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateSubmissionDataRequestEventResponse>> {
-        return this.api.createDataRequestEventWithHttpInfo(param.dataRequestId, param.event,  options).toPromise();
+    public createCustomFileFromUploadWithHttpInfo(param: ClientCreateCustomFileFromUploadRequest, options?: ConfigurationOptions): Promise<HttpInfo<CustomFile>> {
+        return this.api.createCustomFileFromUploadWithHttpInfo(param.body,  options).toPromise();
     }
 
     /**
-     * Records user notification events for data requests. Use this to create an audit trail showing when and how users were notified about data request forms. Supports email, SMS, and other notification types. Records the notification time for compliance tracking.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - User notification workflow 
-     * Create a new event for emailing a signee a request for signature
+     * Creates a custom file from a PDF you uploaded, so you can merge it with other PDFs. Upload the file with the presigned upload (GET /uploads/presign) first, then pass its `fields.key` as `cache_id`. 
+     * Create a custom file from an upload
      * @param param the request object
      */
-    public createDataRequestEvent(param: ClientCreateDataRequestEventRequest, options?: ConfigurationOptions): Promise<CreateSubmissionDataRequestEventResponse> {
-        return this.api.createDataRequestEvent(param.dataRequestId, param.event,  options).toPromise();
+    public createCustomFileFromUpload(param: ClientCreateCustomFileFromUploadRequest, options?: ConfigurationOptions): Promise<CustomFile> {
+        return this.api.createCustomFileFromUpload(param.body,  options).toPromise();
     }
 
     /**
-     * Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
-     * Create a new data request token for form authentication
-     * @param param the request object
-     */
-    public createDataRequestTokenWithHttpInfo(param: ClientCreateDataRequestTokenRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateSubmissionDataRequestTokenResponse>> {
-        return this.api.createDataRequestTokenWithHttpInfo(param.dataRequestId, param.type,  options).toPromise();
-    }
-
-    /**
-     * Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
-     * Create a new data request token for form authentication
-     * @param param the request object
-     */
-    public createDataRequestToken(param: ClientCreateDataRequestTokenRequest, options?: ConfigurationOptions): Promise<CreateSubmissionDataRequestTokenResponse> {
-        return this.api.createDataRequestToken(param.dataRequestId, param.type,  options).toPromise();
-    }
-
-    /**
-     * Creates a new folder for organizing templates. Folders can be nested within other folders by providing a `parent_folder_id`. Folder names must be unique within the same parent. 
+     * Creates a folder for organizing templates. Pass `parent_folder_id` to create it inside another folder. Folder names are unique within their parent folder. 
      * Create a folder
      * @param param the request object
      */
     public createFolderWithHttpInfo(param: ClientCreateFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
-        return this.api.createFolderWithHttpInfo(param.data,  options).toPromise();
+        return this.api.createFolderWithHttpInfo(param.body,  options).toPromise();
     }
 
     /**
-     * Creates a new folder for organizing templates. Folders can be nested within other folders by providing a `parent_folder_id`. Folder names must be unique within the same parent. 
+     * Creates a folder for organizing templates. Pass `parent_folder_id` to create it inside another folder. Folder names are unique within their parent folder. 
      * Create a folder
      * @param param the request object
      */
     public createFolder(param: ClientCreateFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
-        return this.api.createFolder(param.data,  options).toPromise();
+        return this.api.createFolder(param.body,  options).toPromise();
     }
 
     /**
-     * Creates a new HTML template using HTML, CSS/SCSS, and Liquid templating. Allows complete control over PDF layout and styling. Supports headers, footers, and dynamic content using Liquid syntax for field values, conditions, loops, and filters. 
-     * Create a new HTML template
+     * Records something that happened outside DocSpring in the signature request's audit trail: you sent the request to the person (`send_request`). The audit trail shows it as reported by your account. 
+     * Record a signature request event
      * @param param the request object
      */
-    public createHtmlTemplateWithHttpInfo(param: ClientCreateHtmlTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
-        return this.api.createHtmlTemplateWithHttpInfo(param.data,  options).toPromise();
+    public createSignatureRequestEventWithHttpInfo(param: ClientCreateSignatureRequestEventRequest, options?: ConfigurationOptions): Promise<HttpInfo<SignatureRequestEvent>> {
+        return this.api.createSignatureRequestEventWithHttpInfo(param.signatureRequestId, param.body,  options).toPromise();
     }
 
     /**
-     * Creates a new HTML template using HTML, CSS/SCSS, and Liquid templating. Allows complete control over PDF layout and styling. Supports headers, footers, and dynamic content using Liquid syntax for field values, conditions, loops, and filters. 
-     * Create a new HTML template
+     * Records something that happened outside DocSpring in the signature request's audit trail: you sent the request to the person (`send_request`). The audit trail shows it as reported by your account. 
+     * Record a signature request event
      * @param param the request object
      */
-    public createHtmlTemplate(param: ClientCreateHtmlTemplateRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
-        return this.api.createHtmlTemplate(param.data,  options).toPromise();
+    public createSignatureRequestEvent(param: ClientCreateSignatureRequestEventRequest, options?: ConfigurationOptions): Promise<SignatureRequestEvent> {
+        return this.api.createSignatureRequestEvent(param.signatureRequestId, param.body,  options).toPromise();
     }
 
     /**
-     * Creates a new PDF template by uploading a PDF file. The uploaded PDF becomes the foundation for your template, and you can then add fillable fields using the template editor. Use the wait parameter to control whether the request waits for document processing to complete. 
-     * Create a new PDF template with a form POST file upload
+     * Creates a token that opens the signature request without signing in, in a form embedded in your app or from a link you send. The response is the only time the token's secret is returned. The link works for 24 hours, or 7 days for an `email` token, and a signing page that opened in time keeps working for 7 more days. A test API token can't create a token for a live signature request. 
+     * Create a signature request token
      * @param param the request object
      */
-    public createPdfTemplateWithHttpInfo(param: ClientCreatePdfTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
-        return this.api.createPdfTemplateWithHttpInfo(param.templateDocument, param.templateName, param.wait, param.templateDescription, param.templateParentFolderId,  options).toPromise();
+    public createSignatureRequestTokenWithHttpInfo(param: ClientCreateSignatureRequestTokenRequest, options?: ConfigurationOptions): Promise<HttpInfo<SignatureRequestToken>> {
+        return this.api.createSignatureRequestTokenWithHttpInfo(param.signatureRequestId, param.body,  options).toPromise();
     }
 
     /**
-     * Creates a new PDF template by uploading a PDF file. The uploaded PDF becomes the foundation for your template, and you can then add fillable fields using the template editor. Use the wait parameter to control whether the request waits for document processing to complete. 
-     * Create a new PDF template with a form POST file upload
+     * Creates a token that opens the signature request without signing in, in a form embedded in your app or from a link you send. The response is the only time the token's secret is returned. The link works for 24 hours, or 7 days for an `email` token, and a signing page that opened in time keeps working for 7 more days. A test API token can't create a token for a live signature request. 
+     * Create a signature request token
      * @param param the request object
      */
-    public createPdfTemplate(param: ClientCreatePdfTemplateRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
-        return this.api.createPdfTemplate(param.templateDocument, param.templateName, param.wait, param.templateDescription, param.templateParentFolderId,  options).toPromise();
+    public createSignatureRequestToken(param: ClientCreateSignatureRequestTokenRequest, options?: ConfigurationOptions): Promise<SignatureRequestToken> {
+        return this.api.createSignatureRequestToken(param.signatureRequestId, param.body,  options).toPromise();
     }
 
     /**
-     * Creates a new PDF template from a file previously uploaded to S3 using a presigned URL. This two-step process allows for more reliable large file uploads by first uploading the file to S3, then creating the template using the cached upload ID. 
-     * Create a new PDF template from a cached S3 file upload
+     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID. 
+     * Generate a PDF
      * @param param the request object
      */
-    public createPdfTemplateFromUploadWithHttpInfo(param: ClientCreatePdfTemplateFromUploadRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
-        return this.api.createPdfTemplateFromUploadWithHttpInfo(param.data,  options).toPromise();
+    public createSubmissionWithHttpInfo(param: ClientCreateSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<Submission>> {
+        return this.api.createSubmissionWithHttpInfo(param.templateId, param.body, param.version, param.wait,  options).toPromise();
     }
 
     /**
-     * Creates a new PDF template from a file previously uploaded to S3 using a presigned URL. This two-step process allows for more reliable large file uploads by first uploading the file to S3, then creating the template using the cached upload ID. 
-     * Create a new PDF template from a cached S3 file upload
+     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID. 
+     * Generate a PDF
      * @param param the request object
      */
-    public createPdfTemplateFromUpload(param: ClientCreatePdfTemplateFromUploadRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
-        return this.api.createPdfTemplateFromUpload(param.data,  options).toPromise();
+    public createSubmission(param: ClientCreateSubmissionRequest, options?: ConfigurationOptions): Promise<Submission> {
+        return this.api.createSubmission(param.templateId, param.body, param.version, param.wait,  options).toPromise();
     }
 
     /**
-     * Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+     * Creates up to 50 submissions in one request, from one template or several. The PDFs are only generated when every submission is valid. On sync.api hosts the request waits until every PDF has been generated (unless you pass `wait=false`), otherwise poll GET /submissions/batches/{submission_batch_id} until `processed_at` is set.  When any submission is invalid, nothing is generated and the request returns a 422. Submissions whose data doesn't match their template's fields are still saved with their errors (an `invalid_data` error, with each one's `submission_id` in its details), so you can find them in DocSpring. The other submissions aren't saved. 
+     * Generate PDFs in a batch
+     * @param param the request object
+     */
+    public createSubmissionBatchWithHttpInfo(param: ClientCreateSubmissionBatchRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionBatch>> {
+        return this.api.createSubmissionBatchWithHttpInfo(param.body, param.wait,  options).toPromise();
+    }
+
+    /**
+     * Creates up to 50 submissions in one request, from one template or several. The PDFs are only generated when every submission is valid. On sync.api hosts the request waits until every PDF has been generated (unless you pass `wait=false`), otherwise poll GET /submissions/batches/{submission_batch_id} until `processed_at` is set.  When any submission is invalid, nothing is generated and the request returns a 422. Submissions whose data doesn't match their template's fields are still saved with their errors (an `invalid_data` error, with each one's `submission_id` in its details), so you can find them in DocSpring. The other submissions aren't saved. 
+     * Generate PDFs in a batch
+     * @param param the request object
+     */
+    public createSubmissionBatch(param: ClientCreateSubmissionBatchRequest, options?: ConfigurationOptions): Promise<SubmissionBatch> {
+        return this.api.createSubmissionBatch(param.body, param.wait,  options).toPromise();
+    }
+
+    /**
+     * Creates an HTML template, or a PDF template from a PDF you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. To send the PDF with the request instead, use POST /templates/upload.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+     * Create a template
+     * @param param the request object
+     */
+    public createTemplateWithHttpInfo(param: ClientCreateTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
+        return this.api.createTemplateWithHttpInfo(param.body, param.wait,  options).toPromise();
+    }
+
+    /**
+     * Creates an HTML template, or a PDF template from a PDF you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. To send the PDF with the request instead, use POST /templates/upload.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+     * Create a template
+     * @param param the request object
+     */
+    public createTemplate(param: ClientCreateTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
+        return this.api.createTemplate(param.body, param.wait,  options).toPromise();
+    }
+
+    /**
+     * Creates a webhook that sends a POST request to your endpoint whenever a subscribed event happens. Scope it to API tokens, templates or folders to receive only their events. 
      * Create a webhook
      * @param param the request object
      */
     public createWebhookWithHttpInfo(param: ClientCreateWebhookRequest, options?: ConfigurationOptions): Promise<HttpInfo<Webhook>> {
-        return this.api.createWebhookWithHttpInfo(param.data,  options).toPromise();
+        return this.api.createWebhookWithHttpInfo(param.body,  options).toPromise();
     }
 
     /**
-     * Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+     * Creates a webhook that sends a POST request to your endpoint whenever a subscribed event happens. Scope it to API tokens, templates or folders to receive only their events. 
      * Create a webhook
      * @param param the request object
      */
     public createWebhook(param: ClientCreateWebhookRequest, options?: ConfigurationOptions): Promise<Webhook> {
-        return this.api.createWebhook(param.data,  options).toPromise();
+        return this.api.createWebhook(param.body,  options).toPromise();
     }
 
     /**
-     * Deletes an empty folder. The folder must not contain any templates or subfolders. Move or delete all contents before attempting to delete the folder. 
+     * Deletes a custom file and returns it. Use a live API token: test tokens can't delete custom files. 
+     * Delete a custom file
+     * @param param the request object
+     */
+    public deleteCustomFileWithHttpInfo(param: ClientDeleteCustomFileRequest, options?: ConfigurationOptions): Promise<HttpInfo<CustomFile>> {
+        return this.api.deleteCustomFileWithHttpInfo(param.customFileId,  options).toPromise();
+    }
+
+    /**
+     * Deletes a custom file and returns it. Use a live API token: test tokens can't delete custom files. 
+     * Delete a custom file
+     * @param param the request object
+     */
+    public deleteCustomFile(param: ClientDeleteCustomFileRequest, options?: ConfigurationOptions): Promise<CustomFile> {
+        return this.api.deleteCustomFile(param.customFileId,  options).toPromise();
+    }
+
+    /**
+     * Deletes an empty folder and returns it. A folder that still has templates or folders in it can't be deleted. 
      * Delete a folder
      * @param param the request object
      */
@@ -1061,7 +1220,7 @@ export class ObjectClient {
     }
 
     /**
-     * Deletes an empty folder. The folder must not contain any templates or subfolders. Move or delete all contents before attempting to delete the folder. 
+     * Deletes an empty folder and returns it. A folder that still has templates or folders in it can't be deleted. 
      * Delete a folder
      * @param param the request object
      */
@@ -1070,25 +1229,25 @@ export class ObjectClient {
     }
 
     /**
-     * Deletes a template or a specific template version. When no version is specified, deletes the entire template including all versions. When a version is specified, deletes only that version while preserving others. Returns remaining version information. 
+     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. 
      * Delete a template
      * @param param the request object
      */
-    public deleteTemplateWithHttpInfo(param: ClientDeleteTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateDeleteResponse>> {
+    public deleteTemplateWithHttpInfo(param: ClientDeleteTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
         return this.api.deleteTemplateWithHttpInfo(param.templateId, param.version,  options).toPromise();
     }
 
     /**
-     * Deletes a template or a specific template version. When no version is specified, deletes the entire template including all versions. When a version is specified, deletes only that version while preserving others. Returns remaining version information. 
+     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. 
      * Delete a template
      * @param param the request object
      */
-    public deleteTemplate(param: ClientDeleteTemplateRequest, options?: ConfigurationOptions): Promise<TemplateDeleteResponse> {
+    public deleteTemplate(param: ClientDeleteTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
         return this.api.deleteTemplate(param.templateId, param.version,  options).toPromise();
     }
 
     /**
-     * Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+     * Deletes a webhook so it stops receiving events, and returns it.
      * Delete a webhook
      * @param param the request object
      */
@@ -1097,7 +1256,7 @@ export class ObjectClient {
     }
 
     /**
-     * Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+     * Deletes a webhook so it stops receiving events, and returns it.
      * Delete a webhook
      * @param param the request object
      */
@@ -1106,241 +1265,241 @@ export class ObjectClient {
     }
 
     /**
-     * Expiring a combined submission deletes the PDF from our system. This is useful for invalidating sensitive documents. 
-     * Expire a combined submission
+     * Deletes a combined PDF's PDF and returns the expired combined PDF.
+     * Expire a combined PDF
      * @param param the request object
      */
-    public expireCombinedSubmissionWithHttpInfo(param: ClientExpireCombinedSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<CombinedSubmission>> {
-        return this.api.expireCombinedSubmissionWithHttpInfo(param.combinedSubmissionId,  options).toPromise();
+    public expireCombinedPdfWithHttpInfo(param: ClientExpireCombinedPdfRequest, options?: ConfigurationOptions): Promise<HttpInfo<CombinedPdf>> {
+        return this.api.expireCombinedPdfWithHttpInfo(param.combinedPdfId,  options).toPromise();
     }
 
     /**
-     * Expiring a combined submission deletes the PDF from our system. This is useful for invalidating sensitive documents. 
-     * Expire a combined submission
+     * Deletes a combined PDF's PDF and returns the expired combined PDF.
+     * Expire a combined PDF
      * @param param the request object
      */
-    public expireCombinedSubmission(param: ClientExpireCombinedSubmissionRequest, options?: ConfigurationOptions): Promise<CombinedSubmission> {
-        return this.api.expireCombinedSubmission(param.combinedSubmissionId,  options).toPromise();
+    public expireCombinedPdf(param: ClientExpireCombinedPdfRequest, options?: ConfigurationOptions): Promise<CombinedPdf> {
+        return this.api.expireCombinedPdf(param.combinedPdfId,  options).toPromise();
     }
 
     /**
-     * Expiring a PDF submission deletes the PDF and removes the data from our database. This is useful for invalidating sensitive documents after they\'ve been downloaded. You can also [configure a data retention policy for your submissions](https://docspring.com/docs/template-editor/settings/#expire-submissions) so that they automatically expire. 
-     * Expire a PDF submission
+     * Deletes a submission's data and PDF now, and returns the expired submission.
+     * Expire a submission
      * @param param the request object
      */
-    public expireSubmissionWithHttpInfo(param: ClientExpireSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionPreview>> {
+    public expireSubmissionWithHttpInfo(param: ClientExpireSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<Submission>> {
         return this.api.expireSubmissionWithHttpInfo(param.submissionId,  options).toPromise();
     }
 
     /**
-     * Expiring a PDF submission deletes the PDF and removes the data from our database. This is useful for invalidating sensitive documents after they\'ve been downloaded. You can also [configure a data retention policy for your submissions](https://docspring.com/docs/template-editor/settings/#expire-submissions) so that they automatically expire. 
-     * Expire a PDF submission
+     * Deletes a submission's data and PDF now, and returns the expired submission.
+     * Expire a submission
      * @param param the request object
      */
-    public expireSubmission(param: ClientExpireSubmissionRequest, options?: ConfigurationOptions): Promise<SubmissionPreview> {
+    public expireSubmission(param: ClientExpireSubmissionRequest, options?: ConfigurationOptions): Promise<Submission> {
         return this.api.expireSubmission(param.submissionId,  options).toPromise();
     }
 
     /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  Live PDFs use credits; test PDFs (`test: true`) are free and watermarked. If your balance can\'t cover a live PDF, the API returns 402 and the submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
-     * Generate a PDF
+     * Generates a preview of a submission's PDF in the background, such as for a submission still waiting for its signature requests. It's in `files.preview` once `preview_generated_at` changes. 
+     * Generate a preview PDF
      * @param param the request object
      */
-    public generatePdfWithHttpInfo(param: ClientGeneratePdfRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateSubmissionResponse>> {
-        return this.api.generatePdfWithHttpInfo(param.templateId, param.submission, param.wait,  options).toPromise();
+    public generateSubmissionPreviewWithHttpInfo(param: ClientGenerateSubmissionPreviewRequest, options?: ConfigurationOptions): Promise<HttpInfo<Submission>> {
+        return this.api.generateSubmissionPreviewWithHttpInfo(param.submissionId,  options).toPromise();
     }
 
     /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  Live PDFs use credits; test PDFs (`test: true`) are free and watermarked. If your balance can\'t cover a live PDF, the API returns 402 and the submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
-     * Generate a PDF
+     * Generates a preview of a submission's PDF in the background, such as for a submission still waiting for its signature requests. It's in `files.preview` once `preview_generated_at` changes. 
+     * Generate a preview PDF
      * @param param the request object
      */
-    public generatePdf(param: ClientGeneratePdfRequest, options?: ConfigurationOptions): Promise<CreateSubmissionResponse> {
-        return this.api.generatePdf(param.templateId, param.submission, param.wait,  options).toPromise();
+    public generateSubmissionPreview(param: ClientGenerateSubmissionPreviewRequest, options?: ConfigurationOptions): Promise<Submission> {
+        return this.api.generateSubmissionPreview(param.submissionId,  options).toPromise();
     }
 
     /**
-     * Generates a preview PDF for a submission with partially completed data requests. Useful for showing users what the final document will look like before all signatures or data have been collected. The preview includes any data collected so far. 
-     * Generate a preview PDF for partially completed data requests
+     * Returns a combined PDF, with a temporary link to download it once it has been generated.
+     * Get a combined PDF
      * @param param the request object
      */
-    public generatePreviewWithHttpInfo(param: ClientGeneratePreviewRequest, options?: ConfigurationOptions): Promise<HttpInfo<SuccessErrorResponse>> {
-        return this.api.generatePreviewWithHttpInfo(param.submissionId,  options).toPromise();
+    public getCombinedPdfWithHttpInfo(param: ClientGetCombinedPdfRequest, options?: ConfigurationOptions): Promise<HttpInfo<CombinedPdf>> {
+        return this.api.getCombinedPdfWithHttpInfo(param.combinedPdfId,  options).toPromise();
     }
 
     /**
-     * Generates a preview PDF for a submission with partially completed data requests. Useful for showing users what the final document will look like before all signatures or data have been collected. The preview includes any data collected so far. 
-     * Generate a preview PDF for partially completed data requests
+     * Returns a combined PDF, with a temporary link to download it once it has been generated.
+     * Get a combined PDF
      * @param param the request object
      */
-    public generatePreview(param: ClientGeneratePreviewRequest, options?: ConfigurationOptions): Promise<SuccessErrorResponse> {
-        return this.api.generatePreview(param.submissionId,  options).toPromise();
+    public getCombinedPdf(param: ClientGetCombinedPdfRequest, options?: ConfigurationOptions): Promise<CombinedPdf> {
+        return this.api.getCombinedPdf(param.combinedPdfId,  options).toPromise();
     }
 
     /**
-     * Retrieves the details and status of a combined submission. Returns processing state, download URL (if processed), metadata, and information about any integrated actions (e.g., S3 uploads).  `insufficient_credits` means the combined submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
-     * Check the status of a combined submission (merged PDFs)
+     * Returns a custom file, with a temporary URL to download it.
+     * Get a custom file
      * @param param the request object
      */
-    public getCombinedSubmissionWithHttpInfo(param: ClientGetCombinedSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<CombinedSubmission>> {
-        return this.api.getCombinedSubmissionWithHttpInfo(param.combinedSubmissionId,  options).toPromise();
+    public getCustomFileWithHttpInfo(param: ClientGetCustomFileRequest, options?: ConfigurationOptions): Promise<HttpInfo<CustomFile>> {
+        return this.api.getCustomFileWithHttpInfo(param.customFileId,  options).toPromise();
     }
 
     /**
-     * Retrieves the details and status of a combined submission. Returns processing state, download URL (if processed), metadata, and information about any integrated actions (e.g., S3 uploads).  `insufficient_credits` means the combined submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
-     * Check the status of a combined submission (merged PDFs)
+     * Returns a custom file, with a temporary URL to download it.
+     * Get a custom file
      * @param param the request object
      */
-    public getCombinedSubmission(param: ClientGetCombinedSubmissionRequest, options?: ConfigurationOptions): Promise<CombinedSubmission> {
-        return this.api.getCombinedSubmission(param.combinedSubmissionId,  options).toPromise();
+    public getCustomFile(param: ClientGetCustomFileRequest, options?: ConfigurationOptions): Promise<CustomFile> {
+        return this.api.getCustomFile(param.customFileId,  options).toPromise();
     }
 
     /**
-     * Retrieves the details and status of a data request. Returns information about the request state (pending, viewed, completed), authentication details, and metadata. Includes audit information like IP address, browseruser agent, and timestamps.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - Complete guide to data request workflow 
-     * Look up a submission data request
+     * Returns a folder.
+     * Get a folder
      * @param param the request object
      */
-    public getDataRequestWithHttpInfo(param: ClientGetDataRequestRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionDataRequestShow>> {
-        return this.api.getDataRequestWithHttpInfo(param.dataRequestId,  options).toPromise();
+    public getFolderWithHttpInfo(param: ClientGetFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
+        return this.api.getFolderWithHttpInfo(param.folderId,  options).toPromise();
     }
 
     /**
-     * Retrieves the details and status of a data request. Returns information about the request state (pending, viewed, completed), authentication details, and metadata. Includes audit information like IP address, browseruser agent, and timestamps.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - Complete guide to data request workflow 
-     * Look up a submission data request
+     * Returns a folder.
+     * Get a folder
      * @param param the request object
      */
-    public getDataRequest(param: ClientGetDataRequestRequest, options?: ConfigurationOptions): Promise<SubmissionDataRequestShow> {
-        return this.api.getDataRequest(param.dataRequestId,  options).toPromise();
+    public getFolder(param: ClientGetFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
+        return this.api.getFolder(param.folderId,  options).toPromise();
     }
 
     /**
-     * Retrieves complete template information including fields, defaults, settings, and HTML/SCSS content. Use this to get all template data needed for automated updates or analysis. Returns more detailed information than the basic `getTemplate` endpoint. 
-     * Fetch the full attributes for a PDF template
+     * Returns a presigned S3 form for uploading a file directly to DocSpring, for files too large to send in a request body. POST the `fields` and the file (as `file`) to `url` as multipart/form-data, then pass `fields.key` as the `cache_id` when you create a custom file. 
+     * Get a presigned URL to upload a file
      * @param param the request object
      */
-    public getFullTemplateWithHttpInfo(param: ClientGetFullTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.getFullTemplateWithHttpInfo(param.templateId,  options).toPromise();
-    }
-
-    /**
-     * Retrieves complete template information including fields, defaults, settings, and HTML/SCSS content. Use this to get all template data needed for automated updates or analysis. Returns more detailed information than the basic `getTemplate` endpoint. 
-     * Fetch the full attributes for a PDF template
-     * @param param the request object
-     */
-    public getFullTemplate(param: ClientGetFullTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.getFullTemplate(param.templateId,  options).toPromise();
-    }
-
-    /**
-     * Returns a presigned S3 URL for uploading files directly to our S3 bucket. Use this endpoint to upload large files before creating templates or custom files. S3 will respond with a JSON object that you can include in your DocSpring API request.  Uploaded files can be used to: - [Create templates](https://docspring.com/docs/api/#tag/templates/post/templates?endpoint_variant=create_template_from_cached_upload) - [Update templates](https://docspring.com/docs/api/#tag/templates/put/templates/{template_id}?endpoint_variant=update_template_pdf_with_cached_upload) - [Create custom files](https://docspring.com/docs/api/#tag/custom-files/post/custom_files) and then [merge them with other PDFs](https://docspring.com/docs/api/#tag/combine-pdfs/post/combined_submissions) 
-     * Get a presigned S3 URL for direct file upload
-     * @param param the request object
-     */
-    public getPresignUrlWithHttpInfo(param: ClientGetPresignUrlRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<UploadPresignResponse>> {
+    public getPresignUrlWithHttpInfo(param: ClientGetPresignUrlRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<UploadPresign>> {
         return this.api.getPresignUrlWithHttpInfo( options).toPromise();
     }
 
     /**
-     * Returns a presigned S3 URL for uploading files directly to our S3 bucket. Use this endpoint to upload large files before creating templates or custom files. S3 will respond with a JSON object that you can include in your DocSpring API request.  Uploaded files can be used to: - [Create templates](https://docspring.com/docs/api/#tag/templates/post/templates?endpoint_variant=create_template_from_cached_upload) - [Update templates](https://docspring.com/docs/api/#tag/templates/put/templates/{template_id}?endpoint_variant=update_template_pdf_with_cached_upload) - [Create custom files](https://docspring.com/docs/api/#tag/custom-files/post/custom_files) and then [merge them with other PDFs](https://docspring.com/docs/api/#tag/combine-pdfs/post/combined_submissions) 
-     * Get a presigned S3 URL for direct file upload
+     * Returns a presigned S3 form for uploading a file directly to DocSpring, for files too large to send in a request body. POST the `fields` and the file (as `file`) to `url` as multipart/form-data, then pass `fields.key` as the `cache_id` when you create a custom file. 
+     * Get a presigned URL to upload a file
      * @param param the request object
      */
-    public getPresignUrl(param: ClientGetPresignUrlRequest = {}, options?: ConfigurationOptions): Promise<UploadPresignResponse> {
+    public getPresignUrl(param: ClientGetPresignUrlRequest = {}, options?: ConfigurationOptions): Promise<UploadPresign> {
         return this.api.getPresignUrl( options).toPromise();
     }
 
     /**
-     * Retrieves the details and status of a PDF submission. Returns processing state, download URL (if processed), metadata, submission data (optional), and information about any integrated actions. Use this to poll for completion when using asynchronous processing.  `insufficient_credits` means the submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
-     * Check the status of a PDF
+     * Returns a signature request, with the values the person has entered so far.
+     * Get a signature request
+     * @param param the request object
+     */
+    public getSignatureRequestWithHttpInfo(param: ClientGetSignatureRequestRequest, options?: ConfigurationOptions): Promise<HttpInfo<SignatureRequest>> {
+        return this.api.getSignatureRequestWithHttpInfo(param.signatureRequestId,  options).toPromise();
+    }
+
+    /**
+     * Returns a signature request, with the values the person has entered so far.
+     * Get a signature request
+     * @param param the request object
+     */
+    public getSignatureRequest(param: ClientGetSignatureRequestRequest, options?: ConfigurationOptions): Promise<SignatureRequest> {
+        return this.api.getSignatureRequest(param.signatureRequestId,  options).toPromise();
+    }
+
+    /**
+     * Returns a submission, with its data and links to download its PDF.
+     * Get a submission
      * @param param the request object
      */
     public getSubmissionWithHttpInfo(param: ClientGetSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<Submission>> {
-        return this.api.getSubmissionWithHttpInfo(param.submissionId, param.includeData,  options).toPromise();
+        return this.api.getSubmissionWithHttpInfo(param.submissionId,  options).toPromise();
     }
 
     /**
-     * Retrieves the details and status of a PDF submission. Returns processing state, download URL (if processed), metadata, submission data (optional), and information about any integrated actions. Use this to poll for completion when using asynchronous processing.  `insufficient_credits` means the submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
-     * Check the status of a PDF
+     * Returns a submission, with its data and links to download its PDF.
+     * Get a submission
      * @param param the request object
      */
     public getSubmission(param: ClientGetSubmissionRequest, options?: ConfigurationOptions): Promise<Submission> {
-        return this.api.getSubmission(param.submissionId, param.includeData,  options).toPromise();
+        return this.api.getSubmission(param.submissionId,  options).toPromise();
     }
 
     /**
-     * Retrieves the status and results of a batch PDF generation job. Returns processing state, completion statistics, and optionally includes all individual submission details. Use this to poll for completion when using asynchronous batch processing.  Submissions waiting for credits are in the `insufficient_credits` state and count as pending, so the batch stays `pending` until you add credits or they stop waiting after 30 days. 
-     * Check the status of a submission batch job
+     * Returns a batch with its submissions. The batch has finished once `processed_at` is set: its `state` is `processed` when every PDF was generated, or `error` when any submission failed. 
+     * Get a batch
      * @param param the request object
      */
-    public getSubmissionBatchWithHttpInfo(param: ClientGetSubmissionBatchRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionBatchWithSubmissions>> {
-        return this.api.getSubmissionBatchWithHttpInfo(param.submissionBatchId, param.includeSubmissions,  options).toPromise();
+    public getSubmissionBatchWithHttpInfo(param: ClientGetSubmissionBatchRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionBatch>> {
+        return this.api.getSubmissionBatchWithHttpInfo(param.submissionBatchId, param.includeData,  options).toPromise();
     }
 
     /**
-     * Retrieves the status and results of a batch PDF generation job. Returns processing state, completion statistics, and optionally includes all individual submission details. Use this to poll for completion when using asynchronous batch processing.  Submissions waiting for credits are in the `insufficient_credits` state and count as pending, so the batch stays `pending` until you add credits or they stop waiting after 30 days. 
-     * Check the status of a submission batch job
+     * Returns a batch with its submissions. The batch has finished once `processed_at` is set: its `state` is `processed` when every PDF was generated, or `error` when any submission failed. 
+     * Get a batch
      * @param param the request object
      */
-    public getSubmissionBatch(param: ClientGetSubmissionBatchRequest, options?: ConfigurationOptions): Promise<SubmissionBatchWithSubmissions> {
-        return this.api.getSubmissionBatch(param.submissionBatchId, param.includeSubmissions,  options).toPromise();
+    public getSubmissionBatch(param: ClientGetSubmissionBatchRequest, options?: ConfigurationOptions): Promise<SubmissionBatch> {
+        return this.api.getSubmissionBatch(param.submissionBatchId, param.includeData,  options).toPromise();
     }
 
     /**
-     * Retrieves information about a template including processing status and document URL. Use this to check if template is ready to view in the template editor or generate PDFs. 
-     * Check the status of an uploaded template
+     * Returns a template: its draft, or one of its published versions.
+     * Get a template
      * @param param the request object
      */
-    public getTemplateWithHttpInfo(param: ClientGetTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
-        return this.api.getTemplateWithHttpInfo(param.templateId,  options).toPromise();
+    public getTemplateWithHttpInfo(param: ClientGetTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
+        return this.api.getTemplateWithHttpInfo(param.templateId, param.version,  options).toPromise();
     }
 
     /**
-     * Retrieves information about a template including processing status and document URL. Use this to check if template is ready to view in the template editor or generate PDFs. 
-     * Check the status of an uploaded template
+     * Returns a template: its draft, or one of its published versions.
+     * Get a template
      * @param param the request object
      */
-    public getTemplate(param: ClientGetTemplateRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
-        return this.api.getTemplate(param.templateId,  options).toPromise();
+    public getTemplate(param: ClientGetTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
+        return this.api.getTemplate(param.templateId, param.version,  options).toPromise();
     }
 
     /**
-     * Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
-     * Generate typed model code for a template
+     * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
+     * Generate typed code for a template's submission data
      * @param param the request object
      */
-    public getTemplateModelCodeWithHttpInfo(param: ClientGetTemplateModelCodeRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateModelCodeResponse>> {
-        return this.api.getTemplateModelCodeWithHttpInfo(param.templateId, param.lang,  options).toPromise();
+    public getTemplateModelCodeWithHttpInfo(param: ClientGetTemplateModelCodeRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateModelCode>> {
+        return this.api.getTemplateModelCodeWithHttpInfo(param.templateId, param.lang, param.version,  options).toPromise();
     }
 
     /**
-     * Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
-     * Generate typed model code for a template
+     * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
+     * Generate typed code for a template's submission data
      * @param param the request object
      */
-    public getTemplateModelCode(param: ClientGetTemplateModelCodeRequest, options?: ConfigurationOptions): Promise<TemplateModelCodeResponse> {
-        return this.api.getTemplateModelCode(param.templateId, param.lang,  options).toPromise();
+    public getTemplateModelCode(param: ClientGetTemplateModelCodeRequest, options?: ConfigurationOptions): Promise<TemplateModelCode> {
+        return this.api.getTemplateModelCode(param.templateId, param.lang, param.version,  options).toPromise();
     }
 
     /**
-     * Retrieves the JSON Schema definition for a template\'s fields. Use this to validate data before submitting it for PDF generation, or to build dynamic forms that match the template\'s field structure and validation requirements.  See also: - [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data 
-     * Fetch the JSON schema for a template
+     * Returns the JSON Schema that a submission's `data` must match. Use it to check data before you create submissions, or to build a form for the template's fields. 
+     * Get the JSON Schema of a template's submission data
      * @param param the request object
      */
-    public getTemplateSchemaWithHttpInfo(param: ClientGetTemplateSchemaRequest, options?: ConfigurationOptions): Promise<HttpInfo<JsonSchema>> {
-        return this.api.getTemplateSchemaWithHttpInfo(param.templateId,  options).toPromise();
+    public getTemplateSchemaWithHttpInfo(param: ClientGetTemplateSchemaRequest, options?: ConfigurationOptions): Promise<HttpInfo<{ [key: string]: any; }>> {
+        return this.api.getTemplateSchemaWithHttpInfo(param.templateId, param.version,  options).toPromise();
     }
 
     /**
-     * Retrieves the JSON Schema definition for a template\'s fields. Use this to validate data before submitting it for PDF generation, or to build dynamic forms that match the template\'s field structure and validation requirements.  See also: - [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data 
-     * Fetch the JSON schema for a template
+     * Returns the JSON Schema that a submission's `data` must match. Use it to check data before you create submissions, or to build a form for the template's fields. 
+     * Get the JSON Schema of a template's submission data
      * @param param the request object
      */
-    public getTemplateSchema(param: ClientGetTemplateSchemaRequest, options?: ConfigurationOptions): Promise<JsonSchema> {
-        return this.api.getTemplateSchema(param.templateId,  options).toPromise();
+    public getTemplateSchema(param: ClientGetTemplateSchemaRequest, options?: ConfigurationOptions): Promise<{ [key: string]: any; }> {
+        return this.api.getTemplateSchema(param.templateId, param.version,  options).toPromise();
     }
 
     /**
-     * Retrieves a single webhook by its ID.
+     * Returns a webhook.
      * Get a webhook
      * @param param the request object
      */
@@ -1349,7 +1508,7 @@ export class ObjectClient {
     }
 
     /**
-     * Retrieves a single webhook by its ID.
+     * Returns a webhook.
      * Get a webhook
      * @param param the request object
      */
@@ -1358,309 +1517,345 @@ export class ObjectClient {
     }
 
     /**
-     * Returns a paginated list of combined submissions (merged PDFs) for your account. Includes processing status, expiration details, and download URLs for processed PDFs. 
-     * Get a list of all combined submissions
+     * Returns the combined PDFs in your account, newest first, one page at a time.
+     * List combined PDFs
      * @param param the request object
      */
-    public listCombinedSubmissionsWithHttpInfo(param: ClientListCombinedSubmissionsRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<Array<CombinedSubmission>>> {
-        return this.api.listCombinedSubmissionsWithHttpInfo(param.page, param.perPage,  options).toPromise();
+    public listCombinedPdfsWithHttpInfo(param: ClientListCombinedPdfsRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<CombinedPdfList>> {
+        return this.api.listCombinedPdfsWithHttpInfo(param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Returns a paginated list of combined submissions (merged PDFs) for your account. Includes processing status, expiration details, and download URLs for processed PDFs. 
-     * Get a list of all combined submissions
+     * Returns the combined PDFs in your account, newest first, one page at a time.
+     * List combined PDFs
      * @param param the request object
      */
-    public listCombinedSubmissions(param: ClientListCombinedSubmissionsRequest = {}, options?: ConfigurationOptions): Promise<Array<CombinedSubmission>> {
-        return this.api.listCombinedSubmissions(param.page, param.perPage,  options).toPromise();
+    public listCombinedPdfs(param: ClientListCombinedPdfsRequest = {}, options?: ConfigurationOptions): Promise<CombinedPdfList> {
+        return this.api.listCombinedPdfs(param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Returns a list of folders in your account. Can be filtered by parent folder ID to retrieve subfolders. Folders help organize templates and maintain a hierarchical structure. 
-     * Get a list of all folders
+     * Returns the custom files in your account, newest first, one page at a time.
+     * List custom files
      * @param param the request object
      */
-    public listFoldersWithHttpInfo(param: ClientListFoldersRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<Array<Folder>>> {
-        return this.api.listFoldersWithHttpInfo(param.parentFolderId,  options).toPromise();
+    public listCustomFilesWithHttpInfo(param: ClientListCustomFilesRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<CustomFileList>> {
+        return this.api.listCustomFilesWithHttpInfo(param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Returns a list of folders in your account. Can be filtered by parent folder ID to retrieve subfolders. Folders help organize templates and maintain a hierarchical structure. 
-     * Get a list of all folders
+     * Returns the custom files in your account, newest first, one page at a time.
+     * List custom files
      * @param param the request object
      */
-    public listFolders(param: ClientListFoldersRequest = {}, options?: ConfigurationOptions): Promise<Array<Folder>> {
-        return this.api.listFolders(param.parentFolderId,  options).toPromise();
+    public listCustomFiles(param: ClientListCustomFilesRequest = {}, options?: ConfigurationOptions): Promise<CustomFileList> {
+        return this.api.listCustomFiles(param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Returns a paginated list of all PDF submissions across all templates in your account. Can be filtered by date range and submission type (test/live). Supports cursor-based pagination and optionally includes submission data for each result. 
-     * List all submissions
+     * Returns the folders in your account, newest first, one page at a time. Pass `parent_folder_id` to list the folders in one folder. 
+     * List folders
      * @param param the request object
      */
-    public listSubmissionsWithHttpInfo(param: ClientListSubmissionsRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<ListSubmissionsResponse>> {
-        return this.api.listSubmissionsWithHttpInfo(param.cursor, param.limit, param.createdAfter, param.createdBefore, param.type, param.includeData,  options).toPromise();
+    public listFoldersWithHttpInfo(param: ClientListFoldersRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<FolderList>> {
+        return this.api.listFoldersWithHttpInfo(param.parentFolderId, param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Returns a paginated list of all PDF submissions across all templates in your account. Can be filtered by date range and submission type (test/live). Supports cursor-based pagination and optionally includes submission data for each result. 
-     * List all submissions
+     * Returns the folders in your account, newest first, one page at a time. Pass `parent_folder_id` to list the folders in one folder. 
+     * List folders
      * @param param the request object
      */
-    public listSubmissions(param: ClientListSubmissionsRequest = {}, options?: ConfigurationOptions): Promise<ListSubmissionsResponse> {
-        return this.api.listSubmissions(param.cursor, param.limit, param.createdAfter, param.createdBefore, param.type, param.includeData,  options).toPromise();
+    public listFolders(param: ClientListFoldersRequest = {}, options?: ConfigurationOptions): Promise<FolderList> {
+        return this.api.listFolders(param.parentFolderId, param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Returns a paginated list of all submissions for a specific template. Can be filtered by date range, submission type (test/live), and optionally include submission data. Supports cursor-based pagination for efficient retrieval of large result sets. 
-     * List all submissions for a given template
+     * Returns the submissions in your account, newest first, one page at a time. Lists leave out each submission's `data` unless you pass `include_data=true`. 
+     * List submissions
      * @param param the request object
      */
-    public listTemplateSubmissionsWithHttpInfo(param: ClientListTemplateSubmissionsRequest, options?: ConfigurationOptions): Promise<HttpInfo<ListSubmissionsResponse>> {
-        return this.api.listTemplateSubmissionsWithHttpInfo(param.templateId, param.cursor, param.limit, param.createdAfter, param.createdBefore, param.type, param.includeData,  options).toPromise();
+    public listSubmissionsWithHttpInfo(param: ClientListSubmissionsRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionList>> {
+        return this.api.listSubmissionsWithHttpInfo(param.templateId, param.test, param.createdAfter, param.createdBefore, param.includeData, param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Returns a paginated list of all submissions for a specific template. Can be filtered by date range, submission type (test/live), and optionally include submission data. Supports cursor-based pagination for efficient retrieval of large result sets. 
-     * List all submissions for a given template
+     * Returns the submissions in your account, newest first, one page at a time. Lists leave out each submission's `data` unless you pass `include_data=true`. 
+     * List submissions
      * @param param the request object
      */
-    public listTemplateSubmissions(param: ClientListTemplateSubmissionsRequest, options?: ConfigurationOptions): Promise<ListSubmissionsResponse> {
-        return this.api.listTemplateSubmissions(param.templateId, param.cursor, param.limit, param.createdAfter, param.createdBefore, param.type, param.includeData,  options).toPromise();
+    public listSubmissions(param: ClientListSubmissionsRequest = {}, options?: ConfigurationOptions): Promise<SubmissionList> {
+        return this.api.listSubmissions(param.templateId, param.test, param.createdAfter, param.createdBefore, param.includeData, param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Retrieves a list of your templates with search, filtering, and pagination options. Returns basic template information including ID, name, type (PDF or HTML), and folder location. Supports text search by name and filtering by parent folder. 
-     * Get a list of all templates
+     * Returns a template's submissions (from every version of the template), newest first.
+     * List a template's submissions
      * @param param the request object
      */
-    public listTemplatesWithHttpInfo(param: ClientListTemplatesRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<Array<TemplatePreview>>> {
-        return this.api.listTemplatesWithHttpInfo(param.query, param.parentFolderId, param.page, param.perPage,  options).toPromise();
+    public listTemplateSubmissionsWithHttpInfo(param: ClientListTemplateSubmissionsRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionList>> {
+        return this.api.listTemplateSubmissionsWithHttpInfo(param.templateId, param.test, param.createdAfter, param.createdBefore, param.includeData, param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Retrieves a list of your templates with search, filtering, and pagination options. Returns basic template information including ID, name, type (PDF or HTML), and folder location. Supports text search by name and filtering by parent folder. 
-     * Get a list of all templates
+     * Returns a template's submissions (from every version of the template), newest first.
+     * List a template's submissions
      * @param param the request object
      */
-    public listTemplates(param: ClientListTemplatesRequest = {}, options?: ConfigurationOptions): Promise<Array<TemplatePreview>> {
-        return this.api.listTemplates(param.query, param.parentFolderId, param.page, param.perPage,  options).toPromise();
+    public listTemplateSubmissions(param: ClientListTemplateSubmissionsRequest, options?: ConfigurationOptions): Promise<SubmissionList> {
+        return this.api.listTemplateSubmissions(param.templateId, param.test, param.createdAfter, param.createdBefore, param.includeData, param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
-     * Get a list of all webhooks
+     * Returns the templates in your account (their drafts), newest first, one page at a time. Get a template by its ID for its HTML, defaults and published versions. 
+     * List templates
      * @param param the request object
      */
-    public listWebhooksWithHttpInfo(param: ClientListWebhooksRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<Array<Webhook>>> {
-        return this.api.listWebhooksWithHttpInfo(param.page, param.perPage, param.eventType, param.mode, param.templateId, param.folderId, param.apiTokenId,  options).toPromise();
+    public listTemplatesWithHttpInfo(param: ClientListTemplatesRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<TemplateSummaryList>> {
+        return this.api.listTemplatesWithHttpInfo(param.query, param.parentFolderId, param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
-     * Get a list of all webhooks
+     * Returns the templates in your account (their drafts), newest first, one page at a time. Get a template by its ID for its HTML, defaults and published versions. 
+     * List templates
      * @param param the request object
      */
-    public listWebhooks(param: ClientListWebhooksRequest = {}, options?: ConfigurationOptions): Promise<Array<Webhook>> {
-        return this.api.listWebhooks(param.page, param.perPage, param.eventType, param.mode, param.templateId, param.folderId, param.apiTokenId,  options).toPromise();
+    public listTemplates(param: ClientListTemplatesRequest = {}, options?: ConfigurationOptions): Promise<TemplateSummaryList> {
+        return this.api.listTemplates(param.query, param.parentFolderId, param.limit, param.cursor,  options).toPromise();
     }
 
     /**
-     * Moves a folder to a new parent folder or to the root level. All templates and subfolders within the folder are moved together. Cannot move a folder into one of its own subfolders. 
+     * Returns the webhooks in your account, newest first, one page at a time. Filter them by event type, mode, or the API token, template or folder they're scoped to. 
+     * List webhooks
+     * @param param the request object
+     */
+    public listWebhooksWithHttpInfo(param: ClientListWebhooksRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<WebhookList>> {
+        return this.api.listWebhooksWithHttpInfo(param.eventType, param.mode, param.templateId, param.folderId, param.apiTokenId, param.limit, param.cursor,  options).toPromise();
+    }
+
+    /**
+     * Returns the webhooks in your account, newest first, one page at a time. Filter them by event type, mode, or the API token, template or folder they're scoped to. 
+     * List webhooks
+     * @param param the request object
+     */
+    public listWebhooks(param: ClientListWebhooksRequest = {}, options?: ConfigurationOptions): Promise<WebhookList> {
+        return this.api.listWebhooks(param.eventType, param.mode, param.templateId, param.folderId, param.apiTokenId, param.limit, param.cursor,  options).toPromise();
+    }
+
+    /**
+     * Moves a folder into another folder, or to the root with `parent_folder_id: null`. Its templates and folders move with it. A folder can't move into itself or one of its own folders. 
      * Move a folder
      * @param param the request object
      */
-    public moveFolderToFolderWithHttpInfo(param: ClientMoveFolderToFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
-        return this.api.moveFolderToFolderWithHttpInfo(param.folderId, param.data,  options).toPromise();
+    public moveFolderWithHttpInfo(param: ClientMoveFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
+        return this.api.moveFolderWithHttpInfo(param.folderId, param.body,  options).toPromise();
     }
 
     /**
-     * Moves a folder to a new parent folder or to the root level. All templates and subfolders within the folder are moved together. Cannot move a folder into one of its own subfolders. 
+     * Moves a folder into another folder, or to the root with `parent_folder_id: null`. Its templates and folders move with it. A folder can't move into itself or one of its own folders. 
      * Move a folder
      * @param param the request object
      */
-    public moveFolderToFolder(param: ClientMoveFolderToFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
-        return this.api.moveFolderToFolder(param.folderId, param.data,  options).toPromise();
+    public moveFolder(param: ClientMoveFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
+        return this.api.moveFolder(param.folderId, param.body,  options).toPromise();
     }
 
     /**
-     * Moves a template to a different folder or to the root level. Use this to organize templates within your folders. Provide a folder ID to move to a specific folder, or `null` to move to the root level. 
-     * Move Template to folder
+     * Moves a template and all of its published versions to a folder, or to the root (`null`).
+     * Move a template to a folder
      * @param param the request object
      */
-    public moveTemplateToFolderWithHttpInfo(param: ClientMoveTemplateToFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
-        return this.api.moveTemplateToFolderWithHttpInfo(param.templateId, param.data,  options).toPromise();
+    public moveTemplateWithHttpInfo(param: ClientMoveTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
+        return this.api.moveTemplateWithHttpInfo(param.templateId, param.body,  options).toPromise();
     }
 
     /**
-     * Moves a template to a different folder or to the root level. Use this to organize templates within your folders. Provide a folder ID to move to a specific folder, or `null` to move to the root level. 
-     * Move Template to folder
+     * Moves a template and all of its published versions to a folder, or to the root (`null`).
+     * Move a template to a folder
      * @param param the request object
      */
-    public moveTemplateToFolder(param: ClientMoveTemplateToFolderRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
-        return this.api.moveTemplateToFolder(param.templateId, param.data,  options).toPromise();
+    public moveTemplate(param: ClientMoveTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
+        return this.api.moveTemplate(param.templateId, param.body,  options).toPromise();
     }
 
     /**
-     * Publishes the current draft version of a template and creates a new immutable version with semantic versioning (major.minor.patch). 
+     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. 
      * Publish a template version
      * @param param the request object
      */
-    public publishTemplateVersionWithHttpInfo(param: ClientPublishTemplateVersionRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePublishVersionResponse>> {
-        return this.api.publishTemplateVersionWithHttpInfo(param.templateId, param.data,  options).toPromise();
+    public publishTemplateVersionWithHttpInfo(param: ClientPublishTemplateVersionRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateVersion>> {
+        return this.api.publishTemplateVersionWithHttpInfo(param.templateId, param.body,  options).toPromise();
     }
 
     /**
-     * Publishes the current draft version of a template and creates a new immutable version with semantic versioning (major.minor.patch). 
+     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. 
      * Publish a template version
      * @param param the request object
      */
-    public publishTemplateVersion(param: ClientPublishTemplateVersionRequest, options?: ConfigurationOptions): Promise<TemplatePublishVersionResponse> {
-        return this.api.publishTemplateVersion(param.templateId, param.data,  options).toPromise();
+    public publishTemplateVersion(param: ClientPublishTemplateVersionRequest, options?: ConfigurationOptions): Promise<TemplateVersion> {
+        return this.api.publishTemplateVersion(param.templateId, param.body,  options).toPromise();
     }
 
     /**
-     * Renames an existing folder. The new name must be unique within the same parent folder. This operation only changes the folder name, not its location or contents. 
+     * Renames a folder. The name must be unique within its parent folder. 
      * Rename a folder
      * @param param the request object
      */
     public renameFolderWithHttpInfo(param: ClientRenameFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
-        return this.api.renameFolderWithHttpInfo(param.folderId, param.data,  options).toPromise();
+        return this.api.renameFolderWithHttpInfo(param.folderId, param.body,  options).toPromise();
     }
 
     /**
-     * Renames an existing folder. The new name must be unique within the same parent folder. This operation only changes the folder name, not its location or contents. 
+     * Renames a folder. The name must be unique within its parent folder. 
      * Rename a folder
      * @param param the request object
      */
     public renameFolder(param: ClientRenameFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
-        return this.api.renameFolder(param.folderId, param.data,  options).toPromise();
+        return this.api.renameFolder(param.folderId, param.body,  options).toPromise();
     }
 
     /**
-     * Restores your template to a previously published version, copying that version\'s content and configuration to the current draft. Use this to revert changes or recover from an unwanted modification. 
+     * Replaces the template's draft with a copy of one of its published versions.
      * Restore a template version
      * @param param the request object
      */
-    public restoreTemplateVersionWithHttpInfo(param: ClientRestoreTemplateVersionRequest, options?: ConfigurationOptions): Promise<HttpInfo<SuccessErrorResponse>> {
-        return this.api.restoreTemplateVersionWithHttpInfo(param.templateId, param.data,  options).toPromise();
+    public restoreTemplateVersionWithHttpInfo(param: ClientRestoreTemplateVersionRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
+        return this.api.restoreTemplateVersionWithHttpInfo(param.templateId, param.body,  options).toPromise();
     }
 
     /**
-     * Restores your template to a previously published version, copying that version\'s content and configuration to the current draft. Use this to revert changes or recover from an unwanted modification. 
+     * Replaces the template's draft with a copy of one of its published versions.
      * Restore a template version
      * @param param the request object
      */
-    public restoreTemplateVersion(param: ClientRestoreTemplateVersionRequest, options?: ConfigurationOptions): Promise<SuccessErrorResponse> {
-        return this.api.restoreTemplateVersion(param.templateId, param.data,  options).toPromise();
+    public restoreTemplateVersion(param: ClientRestoreTemplateVersionRequest, options?: ConfigurationOptions): Promise<Template> {
+        return this.api.restoreTemplateVersion(param.templateId, param.body,  options).toPromise();
     }
 
     /**
-     * Checks whether your API token is valid by making an authenticated request. Returns a success response if authentication passes. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
+     * Checks whether your API token is valid by making an authenticated request. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
      * Test authentication
      * @param param the request object
      */
-    public testAuthenticationWithHttpInfo(param: ClientTestAuthenticationRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<SuccessErrorResponse>> {
+    public testAuthenticationWithHttpInfo(param: ClientTestAuthenticationRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<AuthenticationCheck>> {
         return this.api.testAuthenticationWithHttpInfo( options).toPromise();
     }
 
     /**
-     * Checks whether your API token is valid by making an authenticated request. Returns a success response if authentication passes. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
+     * Checks whether your API token is valid by making an authenticated request. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
      * Test authentication
      * @param param the request object
      */
-    public testAuthentication(param: ClientTestAuthenticationRequest = {}, options?: ConfigurationOptions): Promise<SuccessErrorResponse> {
+    public testAuthentication(param: ClientTestAuthenticationRequest = {}, options?: ConfigurationOptions): Promise<AuthenticationCheck> {
         return this.api.testAuthentication( options).toPromise();
     }
 
     /**
-     * Updates authentication details for a data request. Use this when a user logs in to record their authentication method, provider, session information, and hashed identifiers. Updates metadata and tracks authentication state changes for auditing and compliance. 
-     * Update a submission data request
+     * Changes a pending signature request's metadata, or how your app authenticated the person (for the audit trail). Once the person has opened it, only its metadata can be changed, and a completed or declined signature request can't be changed. 
+     * Update a signature request
      * @param param the request object
      */
-    public updateDataRequestWithHttpInfo(param: ClientUpdateDataRequestRequest, options?: ConfigurationOptions): Promise<HttpInfo<CreateSubmissionDataRequestResponse>> {
-        return this.api.updateDataRequestWithHttpInfo(param.dataRequestId, param.data,  options).toPromise();
+    public updateSignatureRequestWithHttpInfo(param: ClientUpdateSignatureRequestRequest, options?: ConfigurationOptions): Promise<HttpInfo<SignatureRequest>> {
+        return this.api.updateSignatureRequestWithHttpInfo(param.signatureRequestId, param.body,  options).toPromise();
     }
 
     /**
-     * Updates authentication details for a data request. Use this when a user logs in to record their authentication method, provider, session information, and hashed identifiers. Updates metadata and tracks authentication state changes for auditing and compliance. 
-     * Update a submission data request
+     * Changes a pending signature request's metadata, or how your app authenticated the person (for the audit trail). Once the person has opened it, only its metadata can be changed, and a completed or declined signature request can't be changed. 
+     * Update a signature request
      * @param param the request object
      */
-    public updateDataRequest(param: ClientUpdateDataRequestRequest, options?: ConfigurationOptions): Promise<CreateSubmissionDataRequestResponse> {
-        return this.api.updateDataRequest(param.dataRequestId, param.data,  options).toPromise();
+    public updateSignatureRequest(param: ClientUpdateSignatureRequestRequest, options?: ConfigurationOptions): Promise<SignatureRequest> {
+        return this.api.updateSignatureRequest(param.signatureRequestId, param.body,  options).toPromise();
     }
 
     /**
-     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
-     * Update a Template
+     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions. 
+     * Update a template
      * @param param the request object
      */
-    public updateTemplateWithHttpInfo(param: ClientUpdateTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<SuccessMultipleErrorsResponse>> {
-        return this.api.updateTemplateWithHttpInfo(param.templateId, param.data,  options).toPromise();
+    public updateTemplateWithHttpInfo(param: ClientUpdateTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
+        return this.api.updateTemplateWithHttpInfo(param.templateId, param.body,  options).toPromise();
     }
 
     /**
-     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
-     * Update a Template
+     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions. 
+     * Update a template
      * @param param the request object
      */
-    public updateTemplate(param: ClientUpdateTemplateRequest, options?: ConfigurationOptions): Promise<SuccessMultipleErrorsResponse> {
-        return this.api.updateTemplate(param.templateId, param.data,  options).toPromise();
+    public updateTemplate(param: ClientUpdateTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
+        return this.api.updateTemplate(param.templateId, param.body,  options).toPromise();
     }
 
     /**
-     * Upload a new PDF file to update a PDF template\'s document. This replaces the template\'s PDF while preserving all of the existing fields. If you upload a PDF with fewer pages than the current document, any fields on the removed pages will be deleted. 
-     * Update a template\'s document with a form POST file upload
+     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF with the request instead, use PUT /templates/{template_id}/document/upload. 
+     * Replace a template's PDF
      * @param param the request object
      */
-    public updateTemplateDocumentWithHttpInfo(param: ClientUpdateTemplateDocumentRequest, options?: ConfigurationOptions): Promise<HttpInfo<SuccessMultipleErrorsResponse>> {
-        return this.api.updateTemplateDocumentWithHttpInfo(param.templateId, param.templateDocument, param.templateName,  options).toPromise();
+    public updateTemplateDocumentWithHttpInfo(param: ClientUpdateTemplateDocumentRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
+        return this.api.updateTemplateDocumentWithHttpInfo(param.templateId, param.body, param.wait,  options).toPromise();
     }
 
     /**
-     * Upload a new PDF file to update a PDF template\'s document. This replaces the template\'s PDF while preserving all of the existing fields. If you upload a PDF with fewer pages than the current document, any fields on the removed pages will be deleted. 
-     * Update a template\'s document with a form POST file upload
+     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF with the request instead, use PUT /templates/{template_id}/document/upload. 
+     * Replace a template's PDF
      * @param param the request object
      */
-    public updateTemplateDocument(param: ClientUpdateTemplateDocumentRequest, options?: ConfigurationOptions): Promise<SuccessMultipleErrorsResponse> {
-        return this.api.updateTemplateDocument(param.templateId, param.templateDocument, param.templateName,  options).toPromise();
+    public updateTemplateDocument(param: ClientUpdateTemplateDocumentRequest, options?: ConfigurationOptions): Promise<Template> {
+        return this.api.updateTemplateDocument(param.templateId, param.body, param.wait,  options).toPromise();
     }
 
     /**
-     * Updates a PDF template\'s document using a cached file upload. This is a three-step process: First, request a presigned URL to upload your PDF file to our S3 bucket. Then, use that URL to upload your PDF file. Finally, submit the ID of the uploaded file to replace the template\'s document. 
-     * Update a template\'s document with a cached S3 file upload
-     * @param param the request object
-     */
-    public updateTemplateDocumentFromUploadWithHttpInfo(param: ClientUpdateTemplateDocumentFromUploadRequest, options?: ConfigurationOptions): Promise<HttpInfo<SuccessMultipleErrorsResponse>> {
-        return this.api.updateTemplateDocumentFromUploadWithHttpInfo(param.templateId, param.data,  options).toPromise();
-    }
-
-    /**
-     * Updates a PDF template\'s document using a cached file upload. This is a three-step process: First, request a presigned URL to upload your PDF file to our S3 bucket. Then, use that URL to upload your PDF file. Finally, submit the ID of the uploaded file to replace the template\'s document. 
-     * Update a template\'s document with a cached S3 file upload
-     * @param param the request object
-     */
-    public updateTemplateDocumentFromUpload(param: ClientUpdateTemplateDocumentFromUploadRequest, options?: ConfigurationOptions): Promise<SuccessMultipleErrorsResponse> {
-        return this.api.updateTemplateDocumentFromUpload(param.templateId, param.data,  options).toPromise();
-    }
-
-    /**
-     * Updates the configuration of an existing webhook.
+     * Updates a webhook. Only the properties you send change.
      * Update a webhook
      * @param param the request object
      */
     public updateWebhookWithHttpInfo(param: ClientUpdateWebhookRequest, options?: ConfigurationOptions): Promise<HttpInfo<Webhook>> {
-        return this.api.updateWebhookWithHttpInfo(param.webhookId, param.data,  options).toPromise();
+        return this.api.updateWebhookWithHttpInfo(param.webhookId, param.body,  options).toPromise();
     }
 
     /**
-     * Updates the configuration of an existing webhook.
+     * Updates a webhook. Only the properties you send change.
      * Update a webhook
      * @param param the request object
      */
     public updateWebhook(param: ClientUpdateWebhookRequest, options?: ConfigurationOptions): Promise<Webhook> {
-        return this.api.updateWebhook(param.webhookId, param.data,  options).toPromise();
+        return this.api.updateWebhook(param.webhookId, param.body,  options).toPromise();
+    }
+
+    /**
+     * Creates a PDF template from a PDF sent with the request (`multipart/form-data`). For large files, upload the PDF with the presigned upload (GET /uploads/presign) and create the template with POST /templates. 
+     * Create a PDF template from an uploaded PDF
+     * @param param the request object
+     */
+    public uploadTemplateWithHttpInfo(param: ClientUploadTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
+        return this.api.uploadTemplateWithHttpInfo(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic,  options).toPromise();
+    }
+
+    /**
+     * Creates a PDF template from a PDF sent with the request (`multipart/form-data`). For large files, upload the PDF with the presigned upload (GET /uploads/presign) and create the template with POST /templates. 
+     * Create a PDF template from an uploaded PDF
+     * @param param the request object
+     */
+    public uploadTemplate(param: ClientUploadTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
+        return this.api.uploadTemplate(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic,  options).toPromise();
+    }
+
+    /**
+     * Replaces a PDF template's PDF with one sent with the request (`multipart/form-data`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. 
+     * Replace a template's PDF with an uploaded PDF
+     * @param param the request object
+     */
+    public uploadTemplateDocumentWithHttpInfo(param: ClientUploadTemplateDocumentRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
+        return this.api.uploadTemplateDocumentWithHttpInfo(param.templateId, param.document, param.wait, param.reimportFields,  options).toPromise();
+    }
+
+    /**
+     * Replaces a PDF template's PDF with one sent with the request (`multipart/form-data`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. 
+     * Replace a template's PDF with an uploaded PDF
+     * @param param the request object
+     */
+    public uploadTemplateDocument(param: ClientUploadTemplateDocumentRequest, options?: ConfigurationOptions): Promise<Template> {
+        return this.api.uploadTemplateDocument(param.templateId, param.document, param.wait, param.reimportFields,  options).toPromise();
     }
 
 }

@@ -49,6 +49,7 @@ export class ServerConfiguration<T extends { [key: string]: string }> implements
     }
 }
 
-export const server1 = new ServerConfiguration<{  }>("https://sync.api.docspring.com/api/v1", {  })
+export const server1 = new ServerConfiguration<{  }>("https://sync.api.docspring.com/api/v2", {  })
+export const server2 = new ServerConfiguration<{  }>("https://sync.api-eu.docspring.com/api/v2", {  })
 
-export const servers = [server1];
+export const servers = [server1, server2];

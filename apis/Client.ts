@@ -1,6 +1,7 @@
 // TODO: better import syntax?
 import {BaseAPIRequestFactory, RequiredError, COLLECTION_FORMATS} from './baseapi';
 import {Configuration} from '../configuration';
+import { validateRequest } from '../RequestValidator';
 import {RequestContext, HttpMethod, ResponseContext, HttpFile, HttpInfo} from '../http/http';
 import {ObjectSerializer} from '../models/ObjectSerializer';
 import {ApiException} from './exception';
@@ -8,56 +9,53 @@ import {canConsumeForm, isCodeInRange} from '../util';
 import {SecurityAuthentication} from '../auth/auth';
 
 
-import { AddFieldsData } from '../models/AddFieldsData';
-import { BatchGeneratePdfs201Response } from '../models/BatchGeneratePdfs201Response';
-import { CombinePdfsData } from '../models/CombinePdfsData';
-import { CombinedSubmission } from '../models/CombinedSubmission';
-import { CopyTemplateOptions } from '../models/CopyTemplateOptions';
-import { CreateCombinedSubmissionResponse } from '../models/CreateCombinedSubmissionResponse';
-import { CreateCustomFileData } from '../models/CreateCustomFileData';
-import { CreateCustomFileResponse } from '../models/CreateCustomFileResponse';
-import { CreateFolderData } from '../models/CreateFolderData';
-import { CreateHtmlTemplate } from '../models/CreateHtmlTemplate';
-import { CreatePdfSubmissionData } from '../models/CreatePdfSubmissionData';
-import { CreatePdfTemplate } from '../models/CreatePdfTemplate';
-import { CreateSubmissionDataRequestEventRequest } from '../models/CreateSubmissionDataRequestEventRequest';
-import { CreateSubmissionDataRequestEventResponse } from '../models/CreateSubmissionDataRequestEventResponse';
-import { CreateSubmissionDataRequestResponse } from '../models/CreateSubmissionDataRequestResponse';
-import { CreateSubmissionDataRequestTokenResponse } from '../models/CreateSubmissionDataRequestTokenResponse';
-import { CreateSubmissionResponse } from '../models/CreateSubmissionResponse';
-import { CreateWebhookData } from '../models/CreateWebhookData';
-import { ErrorOrMultipleErrorsResponse } from '../models/ErrorOrMultipleErrorsResponse';
+import { AiFieldNamingLanguage } from '../models/AiFieldNamingLanguage';
+import { AuthenticationCheck } from '../models/AuthenticationCheck';
+import { CombinedPdf } from '../models/CombinedPdf';
+import { CombinedPdfList } from '../models/CombinedPdfList';
+import { CopyTemplateRequest } from '../models/CopyTemplateRequest';
+import { CreateCombinedPdfRequest } from '../models/CreateCombinedPdfRequest';
+import { CreateCustomFileFromUploadRequest } from '../models/CreateCustomFileFromUploadRequest';
+import { CreateFolderRequest } from '../models/CreateFolderRequest';
+import { CreateSignatureRequestEventRequest } from '../models/CreateSignatureRequestEventRequest';
+import { CreateSignatureRequestTokenRequest } from '../models/CreateSignatureRequestTokenRequest';
+import { CreateSubmissionBatchRequest } from '../models/CreateSubmissionBatchRequest';
+import { CreateSubmissionRequest } from '../models/CreateSubmissionRequest';
+import { CreateTemplateRequest } from '../models/CreateTemplateRequest';
+import { CreateWebhookRequest } from '../models/CreateWebhookRequest';
+import { CustomFile } from '../models/CustomFile';
+import { CustomFileList } from '../models/CustomFileList';
 import { ErrorResponse } from '../models/ErrorResponse';
+import { FieldSetupLogic } from '../models/FieldSetupLogic';
+import { FieldSetupNaming } from '../models/FieldSetupNaming';
+import { FieldSetupSource } from '../models/FieldSetupSource';
 import { Folder } from '../models/Folder';
-import { ForbiddenErrorResponse } from '../models/ForbiddenErrorResponse';
-import { JsonSchema } from '../models/JsonSchema';
-import { ListSubmissionsResponse } from '../models/ListSubmissionsResponse';
-import { MoveFolderData } from '../models/MoveFolderData';
-import { MoveTemplateData } from '../models/MoveTemplateData';
-import { MultipleErrorsResponse } from '../models/MultipleErrorsResponse';
-import { PublishVersionData } from '../models/PublishVersionData';
-import { RenameFolderData } from '../models/RenameFolderData';
-import { RestoreVersionData } from '../models/RestoreVersionData';
+import { FolderList } from '../models/FolderList';
+import { ModelCodeLanguage } from '../models/ModelCodeLanguage';
+import { MoveFolderRequest } from '../models/MoveFolderRequest';
+import { MoveTemplateRequest } from '../models/MoveTemplateRequest';
+import { PublishTemplateVersionRequest } from '../models/PublishTemplateVersionRequest';
+import { RenameFolderRequest } from '../models/RenameFolderRequest';
+import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
+import { SignatureRequest } from '../models/SignatureRequest';
+import { SignatureRequestEvent } from '../models/SignatureRequestEvent';
+import { SignatureRequestToken } from '../models/SignatureRequestToken';
 import { Submission } from '../models/Submission';
-import { Submission422Response } from '../models/Submission422Response';
-import { SubmissionBatchData } from '../models/SubmissionBatchData';
-import { SubmissionBatchWithSubmissions } from '../models/SubmissionBatchWithSubmissions';
-import { SubmissionDataRequestShow } from '../models/SubmissionDataRequestShow';
-import { SubmissionPreview } from '../models/SubmissionPreview';
-import { SuccessErrorResponse } from '../models/SuccessErrorResponse';
-import { SuccessMultipleErrorsResponse } from '../models/SuccessMultipleErrorsResponse';
+import { SubmissionBatch } from '../models/SubmissionBatch';
+import { SubmissionList } from '../models/SubmissionList';
 import { Template } from '../models/Template';
-import { TemplateAddFieldsResponse } from '../models/TemplateAddFieldsResponse';
-import { TemplateDeleteResponse } from '../models/TemplateDeleteResponse';
-import { TemplateModelCodeResponse } from '../models/TemplateModelCodeResponse';
-import { TemplatePreview } from '../models/TemplatePreview';
-import { TemplatePublishVersionResponse } from '../models/TemplatePublishVersionResponse';
-import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
-import { UpdatePdfTemplate } from '../models/UpdatePdfTemplate';
-import { UpdateSubmissionDataRequestData } from '../models/UpdateSubmissionDataRequestData';
-import { UpdateWebhookData } from '../models/UpdateWebhookData';
-import { UploadPresignResponse } from '../models/UploadPresignResponse';
+import { TemplateModelCode } from '../models/TemplateModelCode';
+import { TemplateSummaryList } from '../models/TemplateSummaryList';
+import { TemplateVersion } from '../models/TemplateVersion';
+import { UpdateSignatureRequestRequest } from '../models/UpdateSignatureRequestRequest';
+import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
+import { UpdateTemplateRequest } from '../models/UpdateTemplateRequest';
+import { UpdateWebhookRequest } from '../models/UpdateWebhookRequest';
+import { UploadPresign } from '../models/UploadPresign';
 import { Webhook } from '../models/Webhook';
+import { WebhookEventType } from '../models/WebhookEventType';
+import { WebhookList } from '../models/WebhookList';
+import { WebhookMode } from '../models/WebhookMode';
 
 /**
  * no description
@@ -65,32 +63,27 @@ import { Webhook } from '../models/Webhook';
 export class ClientRequestFactory extends BaseAPIRequestFactory {
 
     /**
-     * Adds fields to a PDF template. Configure field types, positions, defaults, and formatting options. 
-     * Add new fields to a Template
-     * @param templateId 
-     * @param data 
+     * Copies a template (its draft, or a published version) into a new template.
+     * Copy a template
+     * @param templateId The template's ID.
+     * @param body Settings for the copy.
      */
-    public async addFieldsToTemplate(templateId: string, data: AddFieldsData, _options?: Configuration): Promise<RequestContext> {
+    public async copyTemplate(templateId: string, body?: CopyTemplateRequest, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
         if (templateId === null || templateId === undefined) {
-            throw new RequiredError("Client", "addFieldsToTemplate", "templateId");
+            throw new RequiredError("Client", "copyTemplate", "templateId");
         }
 
-
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "addFieldsToTemplate", "data");
-        }
 
 
         // Path Params
-        const localVarPath = '/templates/{template_id}/add_fields'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+        const localVarPath = '/templates/{template_id}/copy'
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
 
 
@@ -100,7 +93,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "AddFieldsData", ""),
+            ObjectSerializer.serialize(body, "CopyTemplateRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -117,21 +110,377 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("copyTemplate", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  Live PDFs use credits. If any live submission is waiting for credits, the API returns 402 and the others are still processed: check each submission\'s `state`. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
-     * Generate multiple PDFs
-     * @param data 
-     * @param wait Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
+     * Merges PDFs into one: submissions, other combined PDFs, templates, custom files (POST /custom_files) and PDFs from URLs, in the order of `source_pdfs`. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /combined_pdfs/{combined_pdf_id} until `state` isn't `pending`.  A template source merges the template's processed PDF by default: the PDF submissions are filled in on, decrypted and with its form fields removed. Pass `processed: false` to merge the PDF as it was uploaded. 
+     * Combine PDFs
+     * @param body The PDFs to merge, and the combined PDF's settings.
+     * @param wait Wait until the PDF has been generated before responding. Default true on sync.api hosts.
      */
-    public async batchGeneratePdfs(data: SubmissionBatchData, wait?: boolean, _options?: Configuration): Promise<RequestContext> {
+    public async createCombinedPdf(body: CreateCombinedPdfRequest, wait?: boolean, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "batchGeneratePdfs", "data");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createCombinedPdf", "body");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/combined_pdfs';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (wait !== undefined) {
+            requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
+        }
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "CreateCombinedPdfRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("createCombinedPdf", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Creates a custom file from a PDF you uploaded, so you can merge it with other PDFs. Upload the file with the presigned upload (GET /uploads/presign) first, then pass its `fields.key` as `cache_id`. 
+     * Create a custom file from an upload
+     * @param body The uploaded file to create the custom file from.
+     */
+    public async createCustomFileFromUpload(body: CreateCustomFileFromUploadRequest, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createCustomFileFromUpload", "body");
+        }
+
+
+        // Path Params
+        const localVarPath = '/custom_files';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "CreateCustomFileFromUploadRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("createCustomFileFromUpload", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Creates a folder for organizing templates. Pass `parent_folder_id` to create it inside another folder. Folder names are unique within their parent folder. 
+     * Create a folder
+     * @param body The folder to create.
+     */
+    public async createFolder(body: CreateFolderRequest, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createFolder", "body");
+        }
+
+
+        // Path Params
+        const localVarPath = '/folders';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "CreateFolderRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("createFolder", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Records something that happened outside DocSpring in the signature request's audit trail: you sent the request to the person (`send_request`). The audit trail shows it as reported by your account. 
+     * Record a signature request event
+     * @param signatureRequestId The signature request's ID.
+     * @param body The event to record.
+     */
+    public async createSignatureRequestEvent(signatureRequestId: string, body: CreateSignatureRequestEventRequest, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'signatureRequestId' is not null or undefined
+        if (signatureRequestId === null || signatureRequestId === undefined) {
+            throw new RequiredError("Client", "createSignatureRequestEvent", "signatureRequestId");
+        }
+
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createSignatureRequestEvent", "body");
+        }
+
+
+        // Path Params
+        const localVarPath = '/signature_requests/{signature_request_id}/events'
+            .replace('{signature_request_id}', encodeURIComponent(String(signatureRequestId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "CreateSignatureRequestEventRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("createSignatureRequestEvent", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Creates a token that opens the signature request without signing in, in a form embedded in your app or from a link you send. The response is the only time the token's secret is returned. The link works for 24 hours, or 7 days for an `email` token, and a signing page that opened in time keeps working for 7 more days. A test API token can't create a token for a live signature request. 
+     * Create a signature request token
+     * @param signatureRequestId The signature request's ID.
+     * @param body The kind of link to make. Send no body for an `api` token.
+     */
+    public async createSignatureRequestToken(signatureRequestId: string, body?: CreateSignatureRequestTokenRequest, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'signatureRequestId' is not null or undefined
+        if (signatureRequestId === null || signatureRequestId === undefined) {
+            throw new RequiredError("Client", "createSignatureRequestToken", "signatureRequestId");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/signature_requests/{signature_request_id}/tokens'
+            .replace('{signature_request_id}', encodeURIComponent(String(signatureRequestId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "CreateSignatureRequestTokenRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("createSignatureRequestToken", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID. 
+     * Generate a PDF
+     * @param templateId The template's ID.
+     * @param body The submission's data and settings.
+     * @param version The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * @param wait Wait until the PDF has been generated before responding. Default true on sync.api hosts.
+     */
+    public async createSubmission(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new RequiredError("Client", "createSubmission", "templateId");
+        }
+
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createSubmission", "body");
+        }
+
+
+
+
+        // Path Params
+        const localVarPath = '/templates/{template_id}/submissions'
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (version !== undefined) {
+            requestContext.setQueryParam("version", ObjectSerializer.serialize(version, "string", ""));
+        }
+
+        // Query Params
+        if (wait !== undefined) {
+            requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
+        }
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "CreateSubmissionRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("createSubmission", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Creates up to 50 submissions in one request, from one template or several. The PDFs are only generated when every submission is valid. On sync.api hosts the request waits until every PDF has been generated (unless you pass `wait=false`), otherwise poll GET /submissions/batches/{submission_batch_id} until `processed_at` is set.  When any submission is invalid, nothing is generated and the request returns a 422. Submissions whose data doesn't match their template's fields are still saved with their errors (an `invalid_data` error, with each one's `submission_id` in its details), so you can find them in DocSpring. The other submissions aren't saved. 
+     * Generate PDFs in a batch
+     * @param body The submissions to create, and the settings they share.
+     * @param wait Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts.
+     */
+    public async createSubmissionBatch(body: CreateSubmissionBatchRequest, wait?: boolean, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createSubmissionBatch", "body");
         }
 
 
@@ -155,7 +504,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "SubmissionBatchData", ""),
+            ObjectSerializer.serialize(body, "CreateSubmissionBatchRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -172,377 +521,26 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
-        return requestContext;
-    }
-
-    /**
-     * Combines multiple PDFs from various sources into a single PDF file. Supports merging submission PDFs, template PDFs, custom files, other merged PDFs, and PDFs from URLs. Merges the PDFs in the order provided.  Combining uses credits (4 per source PDF, plus 4 per unit of the combined PDF), even with a test API token or watermarked source PDFs. If your balance can\'t cover it, the API returns 402 and the combined submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/). 
-     * Merge submission PDFs, template PDFs, or custom files
-     * @param data 
-     */
-    public async combinePdfs(data: CombinePdfsData, _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "combinePdfs", "data");
-        }
-
-
-        // Path Params
-        const localVarPath = '/combined_submissions';
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
-
-        // Body Params
-        const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json"
-        ]);
-        requestContext.setHeaderParam("Content-Type", contentType);
-        const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "CombinePdfsData", ""),
-            contentType
-        );
-        requestContext.setBody(serializedBody);
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
+        if (_config.validateRequests !== false) {
+            validateRequest("createSubmissionBatch", requestContext);
         }
 
         return requestContext;
     }
 
     /**
-     * Creates a copy of an existing template with all its fields and configuration. Optionally specify a new name and target folder. The copied template starts as a new draft that can be modified independently of the original. 
-     * Copy a template
-     * @param templateId 
-     * @param options 
+     * Creates an HTML template, or a PDF template from a PDF you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. To send the PDF with the request instead, use POST /templates/upload.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+     * Create a template
+     * @param body The template to create.
+     * @param wait Wait until the PDF has been processed before responding. Default true on sync.api hosts.
      */
-    public async copyTemplate(templateId: string, options?: CopyTemplateOptions, _options?: Configuration): Promise<RequestContext> {
+    public async createTemplate(body: CreateTemplateRequest, wait?: boolean, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
-        // verify required parameter 'templateId' is not null or undefined
-        if (templateId === null || templateId === undefined) {
-            throw new RequiredError("Client", "copyTemplate", "templateId");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createTemplate", "body");
         }
-
-
-
-        // Path Params
-        const localVarPath = '/templates/{template_id}/copy'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
-
-        // Body Params
-        const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json"
-        ]);
-        requestContext.setHeaderParam("Content-Type", contentType);
-        const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(options, "CopyTemplateOptions", ""),
-            contentType
-        );
-        requestContext.setBody(serializedBody);
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
-        }
-
-        return requestContext;
-    }
-
-    /**
-     * The Custom Files API endpoint allows you to upload PDFs to DocSpring and then merge them with other PDFs. First upload your file using the presigned URL endpoint, then use the returned cache_id to create the custom file. 
-     * Create a new custom file from a cached S3 upload
-     * @param data 
-     */
-    public async createCustomFileFromUpload(data: CreateCustomFileData, _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "createCustomFileFromUpload", "data");
-        }
-
-
-        // Path Params
-        const localVarPath = '/custom_files';
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
-
-        // Body Params
-        const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json"
-        ]);
-        requestContext.setHeaderParam("Content-Type", contentType);
-        const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "CreateCustomFileData", ""),
-            contentType
-        );
-        requestContext.setBody(serializedBody);
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
-        }
-
-        return requestContext;
-    }
-
-    /**
-     * Records user notification events for data requests. Use this to create an audit trail showing when and how users were notified about data request forms. Supports email, SMS, and other notification types. Records the notification time for compliance tracking.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - User notification workflow 
-     * Create a new event for emailing a signee a request for signature
-     * @param dataRequestId 
-     * @param event 
-     */
-    public async createDataRequestEvent(dataRequestId: string, event: CreateSubmissionDataRequestEventRequest, _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'dataRequestId' is not null or undefined
-        if (dataRequestId === null || dataRequestId === undefined) {
-            throw new RequiredError("Client", "createDataRequestEvent", "dataRequestId");
-        }
-
-
-        // verify required parameter 'event' is not null or undefined
-        if (event === null || event === undefined) {
-            throw new RequiredError("Client", "createDataRequestEvent", "event");
-        }
-
-
-        // Path Params
-        const localVarPath = '/data_requests/{data_request_id}/events'
-            .replace('{' + 'data_request_id' + '}', encodeURIComponent(String(dataRequestId)));
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
-
-        // Body Params
-        const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json"
-        ]);
-        requestContext.setHeaderParam("Content-Type", contentType);
-        const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(event, "CreateSubmissionDataRequestEventRequest", ""),
-            contentType
-        );
-        requestContext.setBody(serializedBody);
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
-        }
-
-        return requestContext;
-    }
-
-    /**
-     * Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
-     * Create a new data request token for form authentication
-     * @param dataRequestId 
-     * @param type 
-     */
-    public async createDataRequestToken(dataRequestId: string, type?: 'api' | 'email', _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'dataRequestId' is not null or undefined
-        if (dataRequestId === null || dataRequestId === undefined) {
-            throw new RequiredError("Client", "createDataRequestToken", "dataRequestId");
-        }
-
-
-
-        // Path Params
-        const localVarPath = '/data_requests/{data_request_id}/tokens'
-            .replace('{' + 'data_request_id' + '}', encodeURIComponent(String(dataRequestId)));
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
-        // Query Params
-        if (type !== undefined) {
-            requestContext.setQueryParam("type", ObjectSerializer.serialize(type, "'api' | 'email'", ""));
-        }
-
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
-        }
-
-        return requestContext;
-    }
-
-    /**
-     * Creates a new folder for organizing templates. Folders can be nested within other folders by providing a `parent_folder_id`. Folder names must be unique within the same parent. 
-     * Create a folder
-     * @param data 
-     */
-    public async createFolder(data: CreateFolderData, _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "createFolder", "data");
-        }
-
-
-        // Path Params
-        const localVarPath = '/folders/';
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
-
-        // Body Params
-        const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json"
-        ]);
-        requestContext.setHeaderParam("Content-Type", contentType);
-        const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "CreateFolderData", ""),
-            contentType
-        );
-        requestContext.setBody(serializedBody);
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
-        }
-
-        return requestContext;
-    }
-
-    /**
-     * Creates a new HTML template using HTML, CSS/SCSS, and Liquid templating. Allows complete control over PDF layout and styling. Supports headers, footers, and dynamic content using Liquid syntax for field values, conditions, loops, and filters. 
-     * Create a new HTML template
-     * @param data 
-     */
-    public async createHtmlTemplate(data: CreateHtmlTemplate, _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "createHtmlTemplate", "data");
-        }
-
-
-        // Path Params
-        const localVarPath = '/templates?endpoint_variant=create_html_template';
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
-
-        // Body Params
-        const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json"
-        ]);
-        requestContext.setHeaderParam("Content-Type", contentType);
-        const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "CreateHtmlTemplate", ""),
-            contentType
-        );
-        requestContext.setBody(serializedBody);
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
-        }
-
-        return requestContext;
-    }
-
-    /**
-     * Creates a new PDF template by uploading a PDF file. The uploaded PDF becomes the foundation for your template, and you can then add fillable fields using the template editor. Use the wait parameter to control whether the request waits for document processing to complete. 
-     * Create a new PDF template with a form POST file upload
-     * @param templateDocument 
-     * @param templateName 
-     * @param wait Wait for template document to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     * @param templateDescription 
-     * @param templateParentFolderId 
-     */
-    public async createPdfTemplate(templateDocument: HttpFile, templateName: string, wait?: boolean, templateDescription?: string, templateParentFolderId?: string, _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'templateDocument' is not null or undefined
-        if (templateDocument === null || templateDocument === undefined) {
-            throw new RequiredError("Client", "createPdfTemplate", "templateDocument");
-        }
-
-
-        // verify required parameter 'templateName' is not null or undefined
-        if (templateName === null || templateName === undefined) {
-            throw new RequiredError("Client", "createPdfTemplate", "templateName");
-        }
-
-
 
 
 
@@ -558,82 +556,6 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
         }
 
-        // Form Params
-        const useForm = canConsumeForm([
-            'multipart/form-data',
-        ]);
-
-        let localVarFormParams
-        if (useForm) {
-            localVarFormParams = new FormData();
-        } else {
-            localVarFormParams = new URLSearchParams();
-        }
-
-        if (templateDocument !== undefined) {
-             // TODO: replace .append with .set
-             if (localVarFormParams instanceof FormData) {
-                 localVarFormParams.append('template[document]', templateDocument, templateDocument.name);
-             }
-        }
-        if (templateName !== undefined) {
-             // TODO: replace .append with .set
-             localVarFormParams.append('template[name]', templateName as any);
-        }
-        if (templateDescription !== undefined) {
-             // TODO: replace .append with .set
-             localVarFormParams.append('template[description]', templateDescription as any);
-        }
-        if (templateParentFolderId !== undefined) {
-             // TODO: replace .append with .set
-             localVarFormParams.append('template[parent_folder_id]', templateParentFolderId as any);
-        }
-
-        requestContext.setBody(localVarFormParams);
-
-        if(!useForm) {
-            const contentType = ObjectSerializer.getPreferredMediaType([
-                "multipart/form-data"
-            ]);
-            requestContext.setHeaderParam("Content-Type", contentType);
-        }
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
-        }
-
-        return requestContext;
-    }
-
-    /**
-     * Creates a new PDF template from a file previously uploaded to S3 using a presigned URL. This two-step process allows for more reliable large file uploads by first uploading the file to S3, then creating the template using the cached upload ID. 
-     * Create a new PDF template from a cached S3 file upload
-     * @param data 
-     */
-    public async createPdfTemplateFromUpload(data: CreatePdfTemplate, _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "createPdfTemplateFromUpload", "data");
-        }
-
-
-        // Path Params
-        const localVarPath = '/templates?endpoint_variant=create_template_from_cached_upload';
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
 
         // Body Params
         const contentType = ObjectSerializer.getPreferredMediaType([
@@ -641,7 +563,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "CreatePdfTemplate", ""),
+            ObjectSerializer.serialize(body, "CreateTemplateRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -658,20 +580,24 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("createTemplate", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+     * Creates a webhook that sends a POST request to your endpoint whenever a subscribed event happens. Scope it to API tokens, templates or folders to receive only their events. 
      * Create a webhook
-     * @param data 
+     * @param body The webhook to create.
      */
-    public async createWebhook(data: CreateWebhookData, _options?: Configuration): Promise<RequestContext> {
+    public async createWebhook(body: CreateWebhookRequest, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "createWebhook", "data");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createWebhook", "body");
         }
 
 
@@ -689,7 +615,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "CreateWebhookData", ""),
+            ObjectSerializer.serialize(body, "CreateWebhookRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -706,26 +632,30 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("createWebhook", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Deletes an empty folder. The folder must not contain any templates or subfolders. Move or delete all contents before attempting to delete the folder. 
-     * Delete a folder
-     * @param folderId 
+     * Deletes a custom file and returns it. Use a live API token: test tokens can't delete custom files. 
+     * Delete a custom file
+     * @param customFileId The custom file's ID.
      */
-    public async deleteFolder(folderId: string, _options?: Configuration): Promise<RequestContext> {
+    public async deleteCustomFile(customFileId: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
-        // verify required parameter 'folderId' is not null or undefined
-        if (folderId === null || folderId === undefined) {
-            throw new RequiredError("Client", "deleteFolder", "folderId");
+        // verify required parameter 'customFileId' is not null or undefined
+        if (customFileId === null || customFileId === undefined) {
+            throw new RequiredError("Client", "deleteCustomFile", "customFileId");
         }
 
 
         // Path Params
-        const localVarPath = '/folders/{folder_id}'
-            .replace('{' + 'folder_id' + '}', encodeURIComponent(String(folderId)));
+        const localVarPath = '/custom_files/{custom_file_id}'
+            .replace('{custom_file_id}', encodeURIComponent(String(customFileId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
@@ -744,14 +674,60 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("deleteCustomFile", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Deletes a template or a specific template version. When no version is specified, deletes the entire template including all versions. When a version is specified, deletes only that version while preserving others. Returns remaining version information. 
+     * Deletes an empty folder and returns it. A folder that still has templates or folders in it can't be deleted. 
+     * Delete a folder
+     * @param folderId The folder's ID.
+     */
+    public async deleteFolder(folderId: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'folderId' is not null or undefined
+        if (folderId === null || folderId === undefined) {
+            throw new RequiredError("Client", "deleteFolder", "folderId");
+        }
+
+
+        // Path Params
+        const localVarPath = '/folders/{folder_id}'
+            .replace('{folder_id}', encodeURIComponent(String(folderId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("deleteFolder", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. 
      * Delete a template
-     * @param templateId 
-     * @param version 
+     * @param templateId The template's ID.
+     * @param version Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted.
      */
     public async deleteTemplate(templateId: string, version?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -765,7 +741,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         // Path Params
         const localVarPath = '/templates/{template_id}'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
@@ -789,13 +765,17 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("deleteTemplate", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+     * Deletes a webhook so it stops receiving events, and returns it.
      * Delete a webhook
-     * @param webhookId 
+     * @param webhookId The webhook's ID.
      */
     public async deleteWebhook(webhookId: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -808,7 +788,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         // Path Params
         const localVarPath = '/webhooks/{webhook_id}'
-            .replace('{' + 'webhook_id' + '}', encodeURIComponent(String(webhookId)));
+            .replace('{webhook_id}', encodeURIComponent(String(webhookId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
@@ -827,26 +807,30 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("deleteWebhook", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Expiring a combined submission deletes the PDF from our system. This is useful for invalidating sensitive documents. 
-     * Expire a combined submission
-     * @param combinedSubmissionId 
+     * Deletes a combined PDF's PDF and returns the expired combined PDF.
+     * Expire a combined PDF
+     * @param combinedPdfId The combined PDF's ID.
      */
-    public async expireCombinedSubmission(combinedSubmissionId: string, _options?: Configuration): Promise<RequestContext> {
+    public async expireCombinedPdf(combinedPdfId: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
-        // verify required parameter 'combinedSubmissionId' is not null or undefined
-        if (combinedSubmissionId === null || combinedSubmissionId === undefined) {
-            throw new RequiredError("Client", "expireCombinedSubmission", "combinedSubmissionId");
+        // verify required parameter 'combinedPdfId' is not null or undefined
+        if (combinedPdfId === null || combinedPdfId === undefined) {
+            throw new RequiredError("Client", "expireCombinedPdf", "combinedPdfId");
         }
 
 
         // Path Params
-        const localVarPath = '/combined_submissions/{combined_submission_id}'
-            .replace('{' + 'combined_submission_id' + '}', encodeURIComponent(String(combinedSubmissionId)));
+        const localVarPath = '/combined_pdfs/{combined_pdf_id}'
+            .replace('{combined_pdf_id}', encodeURIComponent(String(combinedPdfId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
@@ -865,13 +849,17 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("expireCombinedPdf", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Expiring a PDF submission deletes the PDF and removes the data from our database. This is useful for invalidating sensitive documents after they\'ve been downloaded. You can also [configure a data retention policy for your submissions](https://docspring.com/docs/template-editor/settings/#expire-submissions) so that they automatically expire. 
-     * Expire a PDF submission
-     * @param submissionId 
+     * Deletes a submission's data and PDF now, and returns the expired submission.
+     * Expire a submission
+     * @param submissionId The submission's ID.
      */
     public async expireSubmission(submissionId: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -884,7 +872,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         // Path Params
         const localVarPath = '/submissions/{submission_id}'
-            .replace('{' + 'submission_id' + '}', encodeURIComponent(String(submissionId)));
+            .replace('{submission_id}', encodeURIComponent(String(submissionId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
@@ -903,89 +891,30 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
-        return requestContext;
-    }
-
-    /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  Live PDFs use credits; test PDFs (`test: true`) are free and watermarked. If your balance can\'t cover a live PDF, the API returns 402 and the submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
-     * Generate a PDF
-     * @param templateId 
-     * @param submission 
-     * @param wait Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     */
-    public async generatePdf(templateId: string, submission: CreatePdfSubmissionData, wait?: boolean, _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'templateId' is not null or undefined
-        if (templateId === null || templateId === undefined) {
-            throw new RequiredError("Client", "generatePdf", "templateId");
-        }
-
-
-        // verify required parameter 'submission' is not null or undefined
-        if (submission === null || submission === undefined) {
-            throw new RequiredError("Client", "generatePdf", "submission");
-        }
-
-
-
-        // Path Params
-        const localVarPath = '/templates/{template_id}/submissions'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
-        // Query Params
-        if (wait !== undefined) {
-            requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
-        }
-
-
-        // Body Params
-        const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json"
-        ]);
-        requestContext.setHeaderParam("Content-Type", contentType);
-        const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(submission, "CreatePdfSubmissionData", ""),
-            contentType
-        );
-        requestContext.setBody(serializedBody);
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
+        if (_config.validateRequests !== false) {
+            validateRequest("expireSubmission", requestContext);
         }
 
         return requestContext;
     }
 
     /**
-     * Generates a preview PDF for a submission with partially completed data requests. Useful for showing users what the final document will look like before all signatures or data have been collected. The preview includes any data collected so far. 
-     * Generate a preview PDF for partially completed data requests
-     * @param submissionId 
+     * Generates a preview of a submission's PDF in the background, such as for a submission still waiting for its signature requests. It's in `files.preview` once `preview_generated_at` changes. 
+     * Generate a preview PDF
+     * @param submissionId The submission's ID.
      */
-    public async generatePreview(submissionId: string, _options?: Configuration): Promise<RequestContext> {
+    public async generateSubmissionPreview(submissionId: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'submissionId' is not null or undefined
         if (submissionId === null || submissionId === undefined) {
-            throw new RequiredError("Client", "generatePreview", "submissionId");
+            throw new RequiredError("Client", "generateSubmissionPreview", "submissionId");
         }
 
 
         // Path Params
         const localVarPath = '/submissions/{submission_id}/generate_preview'
-            .replace('{' + 'submission_id' + '}', encodeURIComponent(String(submissionId)));
+            .replace('{submission_id}', encodeURIComponent(String(submissionId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
@@ -1004,26 +933,30 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("generateSubmissionPreview", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Retrieves the details and status of a combined submission. Returns processing state, download URL (if processed), metadata, and information about any integrated actions (e.g., S3 uploads).  `insufficient_credits` means the combined submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
-     * Check the status of a combined submission (merged PDFs)
-     * @param combinedSubmissionId 
+     * Returns a combined PDF, with a temporary link to download it once it has been generated.
+     * Get a combined PDF
+     * @param combinedPdfId The combined PDF's ID.
      */
-    public async getCombinedSubmission(combinedSubmissionId: string, _options?: Configuration): Promise<RequestContext> {
+    public async getCombinedPdf(combinedPdfId: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
-        // verify required parameter 'combinedSubmissionId' is not null or undefined
-        if (combinedSubmissionId === null || combinedSubmissionId === undefined) {
-            throw new RequiredError("Client", "getCombinedSubmission", "combinedSubmissionId");
+        // verify required parameter 'combinedPdfId' is not null or undefined
+        if (combinedPdfId === null || combinedPdfId === undefined) {
+            throw new RequiredError("Client", "getCombinedPdf", "combinedPdfId");
         }
 
 
         // Path Params
-        const localVarPath = '/combined_submissions/{combined_submission_id}'
-            .replace('{' + 'combined_submission_id' + '}', encodeURIComponent(String(combinedSubmissionId)));
+        const localVarPath = '/combined_pdfs/{combined_pdf_id}'
+            .replace('{combined_pdf_id}', encodeURIComponent(String(combinedPdfId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
@@ -1042,26 +975,30 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("getCombinedPdf", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Retrieves the details and status of a data request. Returns information about the request state (pending, viewed, completed), authentication details, and metadata. Includes audit information like IP address, browseruser agent, and timestamps.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - Complete guide to data request workflow 
-     * Look up a submission data request
-     * @param dataRequestId 
+     * Returns a custom file, with a temporary URL to download it.
+     * Get a custom file
+     * @param customFileId The custom file's ID.
      */
-    public async getDataRequest(dataRequestId: string, _options?: Configuration): Promise<RequestContext> {
+    public async getCustomFile(customFileId: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
-        // verify required parameter 'dataRequestId' is not null or undefined
-        if (dataRequestId === null || dataRequestId === undefined) {
-            throw new RequiredError("Client", "getDataRequest", "dataRequestId");
+        // verify required parameter 'customFileId' is not null or undefined
+        if (customFileId === null || customFileId === undefined) {
+            throw new RequiredError("Client", "getCustomFile", "customFileId");
         }
 
 
         // Path Params
-        const localVarPath = '/data_requests/{data_request_id}'
-            .replace('{' + 'data_request_id' + '}', encodeURIComponent(String(dataRequestId)));
+        const localVarPath = '/custom_files/{custom_file_id}'
+            .replace('{custom_file_id}', encodeURIComponent(String(customFileId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
@@ -1080,26 +1017,30 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("getCustomFile", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Retrieves complete template information including fields, defaults, settings, and HTML/SCSS content. Use this to get all template data needed for automated updates or analysis. Returns more detailed information than the basic `getTemplate` endpoint. 
-     * Fetch the full attributes for a PDF template
-     * @param templateId 
+     * Returns a folder.
+     * Get a folder
+     * @param folderId The folder's ID.
      */
-    public async getFullTemplate(templateId: string, _options?: Configuration): Promise<RequestContext> {
+    public async getFolder(folderId: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
-        // verify required parameter 'templateId' is not null or undefined
-        if (templateId === null || templateId === undefined) {
-            throw new RequiredError("Client", "getFullTemplate", "templateId");
+        // verify required parameter 'folderId' is not null or undefined
+        if (folderId === null || folderId === undefined) {
+            throw new RequiredError("Client", "getFolder", "folderId");
         }
 
 
         // Path Params
-        const localVarPath = '/templates/{template_id}?full=true'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+        const localVarPath = '/folders/{folder_id}'
+            .replace('{folder_id}', encodeURIComponent(String(folderId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
@@ -1118,12 +1059,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("getFolder", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Returns a presigned S3 URL for uploading files directly to our S3 bucket. Use this endpoint to upload large files before creating templates or custom files. S3 will respond with a JSON object that you can include in your DocSpring API request.  Uploaded files can be used to: - [Create templates](https://docspring.com/docs/api/#tag/templates/post/templates?endpoint_variant=create_template_from_cached_upload) - [Update templates](https://docspring.com/docs/api/#tag/templates/put/templates/{template_id}?endpoint_variant=update_template_pdf_with_cached_upload) - [Create custom files](https://docspring.com/docs/api/#tag/custom-files/post/custom_files) and then [merge them with other PDFs](https://docspring.com/docs/api/#tag/combine-pdfs/post/combined_submissions) 
-     * Get a presigned S3 URL for direct file upload
+     * Returns a presigned S3 form for uploading a file directly to DocSpring, for files too large to send in a request body. POST the `fields` and the file (as `file`) to `url` as multipart/form-data, then pass `fields.key` as the `cache_id` when you create a custom file. 
+     * Get a presigned URL to upload a file
      */
     public async getPresignUrl(_options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -1148,16 +1093,61 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("getPresignUrl", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Retrieves the details and status of a PDF submission. Returns processing state, download URL (if processed), metadata, submission data (optional), and information about any integrated actions. Use this to poll for completion when using asynchronous processing.  `insufficient_credits` means the submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
-     * Check the status of a PDF
-     * @param submissionId 
-     * @param includeData 
+     * Returns a signature request, with the values the person has entered so far.
+     * Get a signature request
+     * @param signatureRequestId The signature request's ID.
      */
-    public async getSubmission(submissionId: string, includeData?: boolean, _options?: Configuration): Promise<RequestContext> {
+    public async getSignatureRequest(signatureRequestId: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'signatureRequestId' is not null or undefined
+        if (signatureRequestId === null || signatureRequestId === undefined) {
+            throw new RequiredError("Client", "getSignatureRequest", "signatureRequestId");
+        }
+
+
+        // Path Params
+        const localVarPath = '/signature_requests/{signature_request_id}'
+            .replace('{signature_request_id}', encodeURIComponent(String(signatureRequestId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("getSignatureRequest", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Returns a submission, with its data and links to download its PDF.
+     * Get a submission
+     * @param submissionId The submission's ID.
+     */
+    public async getSubmission(submissionId: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'submissionId' is not null or undefined
@@ -1166,10 +1156,53 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
-
         // Path Params
         const localVarPath = '/submissions/{submission_id}'
-            .replace('{' + 'submission_id' + '}', encodeURIComponent(String(submissionId)));
+            .replace('{submission_id}', encodeURIComponent(String(submissionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("getSubmission", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Returns a batch with its submissions. The batch has finished once `processed_at` is set: its `state` is `processed` when every PDF was generated, or `error` when any submission failed. 
+     * Get a batch
+     * @param submissionBatchId The batch's ID.
+     * @param includeData Include each submission's `data` (null without it).
+     */
+    public async getSubmissionBatch(submissionBatchId: string, includeData?: boolean, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'submissionBatchId' is not null or undefined
+        if (submissionBatchId === null || submissionBatchId === undefined) {
+            throw new RequiredError("Client", "getSubmissionBatch", "submissionBatchId");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/submissions/batches/{submission_batch_id}'
+            .replace('{submission_batch_id}', encodeURIComponent(String(submissionBatchId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
@@ -1193,60 +1226,20 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
-        return requestContext;
-    }
-
-    /**
-     * Retrieves the status and results of a batch PDF generation job. Returns processing state, completion statistics, and optionally includes all individual submission details. Use this to poll for completion when using asynchronous batch processing.  Submissions waiting for credits are in the `insufficient_credits` state and count as pending, so the batch stays `pending` until you add credits or they stop waiting after 30 days. 
-     * Check the status of a submission batch job
-     * @param submissionBatchId 
-     * @param includeSubmissions 
-     */
-    public async getSubmissionBatch(submissionBatchId: string, includeSubmissions?: boolean, _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'submissionBatchId' is not null or undefined
-        if (submissionBatchId === null || submissionBatchId === undefined) {
-            throw new RequiredError("Client", "getSubmissionBatch", "submissionBatchId");
-        }
-
-
-
-        // Path Params
-        const localVarPath = '/submissions/batches/{submission_batch_id}'
-            .replace('{' + 'submission_batch_id' + '}', encodeURIComponent(String(submissionBatchId)));
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
-        // Query Params
-        if (includeSubmissions !== undefined) {
-            requestContext.setQueryParam("include_submissions", ObjectSerializer.serialize(includeSubmissions, "boolean", ""));
-        }
-
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
+        if (_config.validateRequests !== false) {
+            validateRequest("getSubmissionBatch", requestContext);
         }
 
         return requestContext;
     }
 
     /**
-     * Retrieves information about a template including processing status and document URL. Use this to check if template is ready to view in the template editor or generate PDFs. 
-     * Check the status of an uploaded template
-     * @param templateId 
+     * Returns a template: its draft, or one of its published versions.
+     * Get a template
+     * @param templateId The template's ID.
+     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
      */
-    public async getTemplate(templateId: string, _options?: Configuration): Promise<RequestContext> {
+    public async getTemplate(templateId: string, version?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -1255,13 +1248,19 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (version !== undefined) {
+            requestContext.setQueryParam("version", ObjectSerializer.serialize(version, "string", ""));
+        }
 
 
         let authMethod: SecurityAuthentication | undefined;
@@ -1276,16 +1275,21 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("getTemplate", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
-     * Generate typed model code for a template
-     * @param templateId 
-     * @param lang The language to generate code for
+     * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
+     * Generate typed code for a template's submission data
+     * @param templateId The template's ID.
+     * @param lang The language to generate the code in.
+     * @param version The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
      */
-    public async getTemplateModelCode(templateId: string, lang: 'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go', _options?: Configuration): Promise<RequestContext> {
+    public async getTemplateModelCode(templateId: string, lang: ModelCodeLanguage, version?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -1300,17 +1304,23 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/model_code'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
 
         // Query Params
+        if (version !== undefined) {
+            requestContext.setQueryParam("version", ObjectSerializer.serialize(version, "string", ""));
+        }
+
+        // Query Params
         if (lang !== undefined) {
-            requestContext.setQueryParam("lang", ObjectSerializer.serialize(lang, "'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go'", ""));
+            requestContext.setQueryParam("lang", ObjectSerializer.serialize(lang, "ModelCodeLanguage", ""));
         }
 
 
@@ -1326,15 +1336,20 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("getTemplateModelCode", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Retrieves the JSON Schema definition for a template\'s fields. Use this to validate data before submitting it for PDF generation, or to build dynamic forms that match the template\'s field structure and validation requirements.  See also: - [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data 
-     * Fetch the JSON schema for a template
-     * @param templateId 
+     * Returns the JSON Schema that a submission's `data` must match. Use it to check data before you create submissions, or to build a form for the template's fields. 
+     * Get the JSON Schema of a template's submission data
+     * @param templateId The template's ID.
+     * @param version The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
      */
-    public async getTemplateSchema(templateId: string, _options?: Configuration): Promise<RequestContext> {
+    public async getTemplateSchema(templateId: string, version?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -1343,13 +1358,19 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/schema'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (version !== undefined) {
+            requestContext.setQueryParam("version", ObjectSerializer.serialize(version, "string", ""));
+        }
 
 
         let authMethod: SecurityAuthentication | undefined;
@@ -1364,13 +1385,17 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("getTemplateSchema", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Retrieves a single webhook by its ID.
+     * Returns a webhook.
      * Get a webhook
-     * @param webhookId 
+     * @param webhookId The webhook's ID.
      */
     public async getWebhook(webhookId: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -1383,7 +1408,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         // Path Params
         const localVarPath = '/webhooks/{webhook_id}'
-            .replace('{' + 'webhook_id' + '}', encodeURIComponent(String(webhookId)));
+            .replace('{webhook_id}', encodeURIComponent(String(webhookId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
@@ -1402,35 +1427,39 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("getWebhook", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Returns a paginated list of combined submissions (merged PDFs) for your account. Includes processing status, expiration details, and download URLs for processed PDFs. 
-     * Get a list of all combined submissions
-     * @param page Default: 1
-     * @param perPage Default: 50
+     * Returns the combined PDFs in your account, newest first, one page at a time.
+     * List combined PDFs
+     * @param limit How many items to return (1-100, default 50).
+     * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public async listCombinedSubmissions(page?: number, perPage?: number, _options?: Configuration): Promise<RequestContext> {
+    public async listCombinedPdfs(limit?: number, cursor?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
 
 
         // Path Params
-        const localVarPath = '/combined_submissions';
+        const localVarPath = '/combined_pdfs';
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
 
         // Query Params
-        if (page !== undefined) {
-            requestContext.setQueryParam("page", ObjectSerializer.serialize(page, "number", ""));
+        if (limit !== undefined) {
+            requestContext.setQueryParam("limit", ObjectSerializer.serialize(limit, "number", ""));
         }
 
         // Query Params
-        if (perPage !== undefined) {
-            requestContext.setQueryParam("per_page", ObjectSerializer.serialize(perPage, "number", ""));
+        if (cursor !== undefined) {
+            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
         }
 
 
@@ -1446,20 +1475,76 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("listCombinedPdfs", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Returns a list of folders in your account. Can be filtered by parent folder ID to retrieve subfolders. Folders help organize templates and maintain a hierarchical structure. 
-     * Get a list of all folders
-     * @param parentFolderId Filter By Folder Id
+     * Returns the custom files in your account, newest first, one page at a time.
+     * List custom files
+     * @param limit How many items to return (1-100, default 50).
+     * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public async listFolders(parentFolderId?: string, _options?: Configuration): Promise<RequestContext> {
+    public async listCustomFiles(limit?: number, cursor?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
 
+
         // Path Params
-        const localVarPath = '/folders/';
+        const localVarPath = '/custom_files';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (limit !== undefined) {
+            requestContext.setQueryParam("limit", ObjectSerializer.serialize(limit, "number", ""));
+        }
+
+        // Query Params
+        if (cursor !== undefined) {
+            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
+        }
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("listCustomFiles", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Returns the folders in your account, newest first, one page at a time. Pass `parent_folder_id` to list the folders in one folder. 
+     * List folders
+     * @param parentFolderId Only list the folders in this folder. Without it, the list has every folder, at any depth.
+     * @param limit How many items to return (1-100, default 50).
+     * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public async listFolders(parentFolderId?: string, limit?: number, cursor?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+
+
+
+        // Path Params
+        const localVarPath = '/folders';
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
@@ -1470,6 +1555,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             requestContext.setQueryParam("parent_folder_id", ObjectSerializer.serialize(parentFolderId, "string", ""));
         }
 
+        // Query Params
+        if (limit !== undefined) {
+            requestContext.setQueryParam("limit", ObjectSerializer.serialize(limit, "number", ""));
+        }
+
+        // Query Params
+        if (cursor !== undefined) {
+            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
+        }
+
 
         let authMethod: SecurityAuthentication | undefined;
         // Apply auth methods
@@ -1483,21 +1578,27 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("listFolders", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Returns a paginated list of all PDF submissions across all templates in your account. Can be filtered by date range and submission type (test/live). Supports cursor-based pagination and optionally includes submission data for each result. 
-     * List all submissions
-     * @param cursor 
-     * @param limit 
-     * @param createdAfter 
-     * @param createdBefore 
-     * @param type 
-     * @param includeData 
+     * Returns the submissions in your account, newest first, one page at a time. Lists leave out each submission's `data` unless you pass `include_data=true`. 
+     * List submissions
+     * @param templateId Only list this template's submissions.
+     * @param test Only list test submissions (true) or live submissions (false).
+     * @param createdAfter Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`).
+     * @param createdBefore Only list submissions created before this time.
+     * @param includeData Include each submission's `data` (null without it).
+     * @param limit How many items to return (1-100, default 50).
+     * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public async listSubmissions(cursor?: string, limit?: number, createdAfter?: string, createdBefore?: string, type?: string, includeData?: boolean, _options?: Configuration): Promise<RequestContext> {
+    public async listSubmissions(templateId?: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
+
 
 
 
@@ -1513,8 +1614,28 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
 
         // Query Params
-        if (cursor !== undefined) {
-            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
+        if (templateId !== undefined) {
+            requestContext.setQueryParam("template_id", ObjectSerializer.serialize(templateId, "string", ""));
+        }
+
+        // Query Params
+        if (test !== undefined) {
+            requestContext.setQueryParam("test", ObjectSerializer.serialize(test, "boolean", ""));
+        }
+
+        // Query Params
+        if (createdAfter !== undefined) {
+            requestContext.setQueryParam("created_after", ObjectSerializer.serialize(createdAfter, "Date", "date-time"));
+        }
+
+        // Query Params
+        if (createdBefore !== undefined) {
+            requestContext.setQueryParam("created_before", ObjectSerializer.serialize(createdBefore, "Date", "date-time"));
+        }
+
+        // Query Params
+        if (includeData !== undefined) {
+            requestContext.setQueryParam("include_data", ObjectSerializer.serialize(includeData, "boolean", ""));
         }
 
         // Query Params
@@ -1523,23 +1644,8 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
         // Query Params
-        if (createdAfter !== undefined) {
-            requestContext.setQueryParam("created_after", ObjectSerializer.serialize(createdAfter, "string", ""));
-        }
-
-        // Query Params
-        if (createdBefore !== undefined) {
-            requestContext.setQueryParam("created_before", ObjectSerializer.serialize(createdBefore, "string", ""));
-        }
-
-        // Query Params
-        if (type !== undefined) {
-            requestContext.setQueryParam("type", ObjectSerializer.serialize(type, "string", ""));
-        }
-
-        // Query Params
-        if (includeData !== undefined) {
-            requestContext.setQueryParam("include_data", ObjectSerializer.serialize(includeData, "boolean", ""));
+        if (cursor !== undefined) {
+            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
         }
 
 
@@ -1555,21 +1661,25 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("listSubmissions", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Returns a paginated list of all submissions for a specific template. Can be filtered by date range, submission type (test/live), and optionally include submission data. Supports cursor-based pagination for efficient retrieval of large result sets. 
-     * List all submissions for a given template
-     * @param templateId 
-     * @param cursor 
-     * @param limit 
-     * @param createdAfter 
-     * @param createdBefore 
-     * @param type 
-     * @param includeData 
+     * Returns a template's submissions (from every version of the template), newest first.
+     * List a template's submissions
+     * @param templateId The template's ID.
+     * @param test Only list test submissions (true) or live submissions (false).
+     * @param createdAfter Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`).
+     * @param createdBefore Only list submissions created before this time.
+     * @param includeData Include each submission's `data` (null without it).
+     * @param limit How many items to return (1-100, default 50).
+     * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public async listTemplateSubmissions(templateId: string, cursor?: string, limit?: number, createdAfter?: string, createdBefore?: string, type?: string, includeData?: boolean, _options?: Configuration): Promise<RequestContext> {
+    public async listTemplateSubmissions(templateId: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -1586,15 +1696,30 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         // Path Params
         const localVarPath = '/templates/{template_id}/submissions'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
 
         // Query Params
-        if (cursor !== undefined) {
-            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
+        if (test !== undefined) {
+            requestContext.setQueryParam("test", ObjectSerializer.serialize(test, "boolean", ""));
+        }
+
+        // Query Params
+        if (createdAfter !== undefined) {
+            requestContext.setQueryParam("created_after", ObjectSerializer.serialize(createdAfter, "Date", "date-time"));
+        }
+
+        // Query Params
+        if (createdBefore !== undefined) {
+            requestContext.setQueryParam("created_before", ObjectSerializer.serialize(createdBefore, "Date", "date-time"));
+        }
+
+        // Query Params
+        if (includeData !== undefined) {
+            requestContext.setQueryParam("include_data", ObjectSerializer.serialize(includeData, "boolean", ""));
         }
 
         // Query Params
@@ -1603,23 +1728,8 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
         // Query Params
-        if (createdAfter !== undefined) {
-            requestContext.setQueryParam("created_after", ObjectSerializer.serialize(createdAfter, "string", ""));
-        }
-
-        // Query Params
-        if (createdBefore !== undefined) {
-            requestContext.setQueryParam("created_before", ObjectSerializer.serialize(createdBefore, "string", ""));
-        }
-
-        // Query Params
-        if (type !== undefined) {
-            requestContext.setQueryParam("type", ObjectSerializer.serialize(type, "string", ""));
-        }
-
-        // Query Params
-        if (includeData !== undefined) {
-            requestContext.setQueryParam("include_data", ObjectSerializer.serialize(includeData, "boolean", ""));
+        if (cursor !== undefined) {
+            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
         }
 
 
@@ -1635,18 +1745,22 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("listTemplateSubmissions", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Retrieves a list of your templates with search, filtering, and pagination options. Returns basic template information including ID, name, type (PDF or HTML), and folder location. Supports text search by name and filtering by parent folder. 
-     * Get a list of all templates
-     * @param query Search By Name
-     * @param parentFolderId Filter By Folder Id
-     * @param page Default: 1
-     * @param perPage Default: 50
+     * Returns the templates in your account (their drafts), newest first, one page at a time. Get a template by its ID for its HTML, defaults and published versions. 
+     * List templates
+     * @param query Only list templates whose name contains this text (ignoring case).
+     * @param parentFolderId Only list the templates in this folder (not in its subfolders).
+     * @param limit How many items to return (1-100, default 50).
+     * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public async listTemplates(query?: string, parentFolderId?: string, page?: number, perPage?: number, _options?: Configuration): Promise<RequestContext> {
+    public async listTemplates(query?: string, parentFolderId?: string, limit?: number, cursor?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
 
@@ -1671,13 +1785,13 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
         // Query Params
-        if (page !== undefined) {
-            requestContext.setQueryParam("page", ObjectSerializer.serialize(page, "number", ""));
+        if (limit !== undefined) {
+            requestContext.setQueryParam("limit", ObjectSerializer.serialize(limit, "number", ""));
         }
 
         // Query Params
-        if (perPage !== undefined) {
-            requestContext.setQueryParam("per_page", ObjectSerializer.serialize(perPage, "number", ""));
+        if (cursor !== undefined) {
+            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
         }
 
 
@@ -1693,21 +1807,25 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("listTemplates", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
-     * Get a list of all webhooks
-     * @param page Default: 1
-     * @param perPage Default: 50
-     * @param eventType Filter by a subscribed event type
-     * @param mode Filter by mode (test or live)
-     * @param templateId Filter by a scoped template ID
-     * @param folderId Filter by a scoped folder ID
-     * @param apiTokenId Filter by a scoped API token ID
+     * Returns the webhooks in your account, newest first, one page at a time. Filter them by event type, mode, or the API token, template or folder they're scoped to. 
+     * List webhooks
+     * @param eventType Only list webhooks that subscribe to this event.
+     * @param mode Only list webhooks set to this mode.
+     * @param templateId Only list webhooks scoped to this template.
+     * @param folderId Only list webhooks scoped to this folder.
+     * @param apiTokenId Only list webhooks scoped to this API token.
+     * @param limit How many items to return (1-100, default 50).
+     * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public async listWebhooks(page?: number, perPage?: number, eventType?: string, mode?: string, templateId?: string, folderId?: string, apiTokenId?: string, _options?: Configuration): Promise<RequestContext> {
+    public async listWebhooks(eventType?: WebhookEventType, mode?: WebhookMode, templateId?: string, folderId?: string, apiTokenId?: string, limit?: number, cursor?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
 
@@ -1725,23 +1843,13 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
 
         // Query Params
-        if (page !== undefined) {
-            requestContext.setQueryParam("page", ObjectSerializer.serialize(page, "number", ""));
-        }
-
-        // Query Params
-        if (perPage !== undefined) {
-            requestContext.setQueryParam("per_page", ObjectSerializer.serialize(perPage, "number", ""));
-        }
-
-        // Query Params
         if (eventType !== undefined) {
-            requestContext.setQueryParam("event_type", ObjectSerializer.serialize(eventType, "string", ""));
+            requestContext.setQueryParam("event_type", ObjectSerializer.serialize(eventType, "WebhookEventType", ""));
         }
 
         // Query Params
         if (mode !== undefined) {
-            requestContext.setQueryParam("mode", ObjectSerializer.serialize(mode, "string", ""));
+            requestContext.setQueryParam("mode", ObjectSerializer.serialize(mode, "WebhookMode", ""));
         }
 
         // Query Params
@@ -1759,6 +1867,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             requestContext.setQueryParam("api_token_id", ObjectSerializer.serialize(apiTokenId, "string", ""));
         }
 
+        // Query Params
+        if (limit !== undefined) {
+            requestContext.setQueryParam("limit", ObjectSerializer.serialize(limit, "number", ""));
+        }
+
+        // Query Params
+        if (cursor !== undefined) {
+            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
+        }
+
 
         let authMethod: SecurityAuthentication | undefined;
         // Apply auth methods
@@ -1772,33 +1890,37 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("listWebhooks", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Moves a folder to a new parent folder or to the root level. All templates and subfolders within the folder are moved together. Cannot move a folder into one of its own subfolders. 
+     * Moves a folder into another folder, or to the root with `parent_folder_id: null`. Its templates and folders move with it. A folder can't move into itself or one of its own folders. 
      * Move a folder
-     * @param folderId 
-     * @param data 
+     * @param folderId The folder's ID.
+     * @param body Where to move the folder.
      */
-    public async moveFolderToFolder(folderId: string, data: MoveFolderData, _options?: Configuration): Promise<RequestContext> {
+    public async moveFolder(folderId: string, body: MoveFolderRequest, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'folderId' is not null or undefined
         if (folderId === null || folderId === undefined) {
-            throw new RequiredError("Client", "moveFolderToFolder", "folderId");
+            throw new RequiredError("Client", "moveFolder", "folderId");
         }
 
 
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "moveFolderToFolder", "data");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "moveFolder", "body");
         }
 
 
         // Path Params
         const localVarPath = '/folders/{folder_id}/move'
-            .replace('{' + 'folder_id' + '}', encodeURIComponent(String(folderId)));
+            .replace('{folder_id}', encodeURIComponent(String(folderId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
@@ -1811,7 +1933,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "MoveFolderData", ""),
+            ObjectSerializer.serialize(body, "MoveFolderRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -1828,33 +1950,37 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("moveFolder", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Moves a template to a different folder or to the root level. Use this to organize templates within your folders. Provide a folder ID to move to a specific folder, or `null` to move to the root level. 
-     * Move Template to folder
-     * @param templateId 
-     * @param data 
+     * Moves a template and all of its published versions to a folder, or to the root (`null`).
+     * Move a template to a folder
+     * @param templateId The template's ID.
+     * @param body Where to move the template.
      */
-    public async moveTemplateToFolder(templateId: string, data: MoveTemplateData, _options?: Configuration): Promise<RequestContext> {
+    public async moveTemplate(templateId: string, body: MoveTemplateRequest, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
         if (templateId === null || templateId === undefined) {
-            throw new RequiredError("Client", "moveTemplateToFolder", "templateId");
+            throw new RequiredError("Client", "moveTemplate", "templateId");
         }
 
 
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "moveTemplateToFolder", "data");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "moveTemplate", "body");
         }
 
 
         // Path Params
         const localVarPath = '/templates/{template_id}/move'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
@@ -1867,7 +1993,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "MoveTemplateData", ""),
+            ObjectSerializer.serialize(body, "MoveTemplateRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -1884,16 +2010,20 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("moveTemplate", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Publishes the current draft version of a template and creates a new immutable version with semantic versioning (major.minor.patch). 
+     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. 
      * Publish a template version
-     * @param templateId 
-     * @param data 
+     * @param templateId The template's ID.
+     * @param body The version to publish.
      */
-    public async publishTemplateVersion(templateId: string, data: PublishVersionData, _options?: Configuration): Promise<RequestContext> {
+    public async publishTemplateVersion(templateId: string, body: PublishTemplateVersionRequest, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -1902,15 +2032,15 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "publishTemplateVersion", "data");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "publishTemplateVersion", "body");
         }
 
 
         // Path Params
         const localVarPath = '/templates/{template_id}/publish_version'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
@@ -1923,7 +2053,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "PublishVersionData", ""),
+            ObjectSerializer.serialize(body, "PublishTemplateVersionRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -1940,16 +2070,20 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("publishTemplateVersion", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Renames an existing folder. The new name must be unique within the same parent folder. This operation only changes the folder name, not its location or contents. 
+     * Renames a folder. The name must be unique within its parent folder. 
      * Rename a folder
-     * @param folderId 
-     * @param data 
+     * @param folderId The folder's ID.
+     * @param body The folder's new name.
      */
-    public async renameFolder(folderId: string, data: RenameFolderData, _options?: Configuration): Promise<RequestContext> {
+    public async renameFolder(folderId: string, body: RenameFolderRequest, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'folderId' is not null or undefined
@@ -1958,15 +2092,15 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "renameFolder", "data");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "renameFolder", "body");
         }
 
 
         // Path Params
         const localVarPath = '/folders/{folder_id}/rename'
-            .replace('{' + 'folder_id' + '}', encodeURIComponent(String(folderId)));
+            .replace('{folder_id}', encodeURIComponent(String(folderId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
@@ -1979,7 +2113,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "RenameFolderData", ""),
+            ObjectSerializer.serialize(body, "RenameFolderRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -1996,16 +2130,20 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("renameFolder", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Restores your template to a previously published version, copying that version\'s content and configuration to the current draft. Use this to revert changes or recover from an unwanted modification. 
+     * Replaces the template's draft with a copy of one of its published versions.
      * Restore a template version
-     * @param templateId 
-     * @param data 
+     * @param templateId The template's ID.
+     * @param body The version to restore.
      */
-    public async restoreTemplateVersion(templateId: string, data: RestoreVersionData, _options?: Configuration): Promise<RequestContext> {
+    public async restoreTemplateVersion(templateId: string, body: RestoreTemplateVersionRequest, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -2014,15 +2152,15 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "restoreTemplateVersion", "data");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "restoreTemplateVersion", "body");
         }
 
 
         // Path Params
         const localVarPath = '/templates/{template_id}/restore_version'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
@@ -2035,7 +2173,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "RestoreVersionData", ""),
+            ObjectSerializer.serialize(body, "RestoreTemplateVersionRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -2052,11 +2190,15 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("restoreTemplateVersion", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Checks whether your API token is valid by making an authenticated request. Returns a success response if authentication passes. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
+     * Checks whether your API token is valid by making an authenticated request. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
      * Test authentication
      */
     public async testAuthentication(_options?: Configuration): Promise<RequestContext> {
@@ -2082,33 +2224,37 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("testAuthentication", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Updates authentication details for a data request. Use this when a user logs in to record their authentication method, provider, session information, and hashed identifiers. Updates metadata and tracks authentication state changes for auditing and compliance. 
-     * Update a submission data request
-     * @param dataRequestId 
-     * @param data 
+     * Changes a pending signature request's metadata, or how your app authenticated the person (for the audit trail). Once the person has opened it, only its metadata can be changed, and a completed or declined signature request can't be changed. 
+     * Update a signature request
+     * @param signatureRequestId The signature request's ID.
+     * @param body The settings to change. Properties left out keep their values.
      */
-    public async updateDataRequest(dataRequestId: string, data: UpdateSubmissionDataRequestData, _options?: Configuration): Promise<RequestContext> {
+    public async updateSignatureRequest(signatureRequestId: string, body: UpdateSignatureRequestRequest, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
-        // verify required parameter 'dataRequestId' is not null or undefined
-        if (dataRequestId === null || dataRequestId === undefined) {
-            throw new RequiredError("Client", "updateDataRequest", "dataRequestId");
+        // verify required parameter 'signatureRequestId' is not null or undefined
+        if (signatureRequestId === null || signatureRequestId === undefined) {
+            throw new RequiredError("Client", "updateSignatureRequest", "signatureRequestId");
         }
 
 
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "updateDataRequest", "data");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "updateSignatureRequest", "body");
         }
 
 
         // Path Params
-        const localVarPath = '/data_requests/{data_request_id}'
-            .replace('{' + 'data_request_id' + '}', encodeURIComponent(String(dataRequestId)));
+        const localVarPath = '/signature_requests/{signature_request_id}'
+            .replace('{signature_request_id}', encodeURIComponent(String(signatureRequestId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
@@ -2121,7 +2267,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "UpdateSubmissionDataRequestData", ""),
+            ObjectSerializer.serialize(body, "UpdateSignatureRequestRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -2138,16 +2284,20 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("updateSignatureRequest", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
-     * Update a Template
-     * @param templateId 
-     * @param data 
+     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions. 
+     * Update a template
+     * @param templateId The template's ID.
+     * @param body The settings to change. Properties left out keep their values.
      */
-    public async updateTemplate(templateId: string, data: UpdateHtmlTemplate, _options?: Configuration): Promise<RequestContext> {
+    public async updateTemplate(templateId: string, body: UpdateTemplateRequest, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -2156,15 +2306,15 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "updateTemplate", "data");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "updateTemplate", "body");
         }
 
 
         // Path Params
         const localVarPath = '/templates/{template_id}'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
@@ -2177,7 +2327,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "UpdateHtmlTemplate", ""),
+            ObjectSerializer.serialize(body, "UpdateTemplateRequest", ""),
             contentType
         );
         requestContext.setBody(serializedBody);
@@ -2194,17 +2344,21 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("updateTemplate", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Upload a new PDF file to update a PDF template\'s document. This replaces the template\'s PDF while preserving all of the existing fields. If you upload a PDF with fewer pages than the current document, any fields on the removed pages will be deleted. 
-     * Update a template\'s document with a form POST file upload
-     * @param templateId 
-     * @param templateDocument 
-     * @param templateName 
+     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF with the request instead, use PUT /templates/{template_id}/document/upload. 
+     * Replace a template's PDF
+     * @param templateId The template's ID.
+     * @param body The new PDF.
+     * @param wait Wait until the PDF has been processed before responding. Default true on sync.api hosts.
      */
-    public async updateTemplateDocument(templateId: string, templateDocument: HttpFile, templateName?: string, _options?: Configuration): Promise<RequestContext> {
+    public async updateTemplateDocument(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -2213,20 +2367,160 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
-        // verify required parameter 'templateDocument' is not null or undefined
-        if (templateDocument === null || templateDocument === undefined) {
-            throw new RequiredError("Client", "updateTemplateDocument", "templateDocument");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "updateTemplateDocument", "body");
         }
 
 
 
         // Path Params
-        const localVarPath = '/templates/{template_id}?endpoint_variant=update_template_pdf_with_form_post'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+        const localVarPath = '/templates/{template_id}/document'
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (wait !== undefined) {
+            requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
+        }
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "UpdateTemplateDocumentRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("updateTemplateDocument", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Updates a webhook. Only the properties you send change.
+     * Update a webhook
+     * @param webhookId The webhook's ID.
+     * @param body The settings to change. Properties left out keep their values.
+     */
+    public async updateWebhook(webhookId: string, body: UpdateWebhookRequest, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'webhookId' is not null or undefined
+        if (webhookId === null || webhookId === undefined) {
+            throw new RequiredError("Client", "updateWebhook", "webhookId");
+        }
+
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "updateWebhook", "body");
+        }
+
+
+        // Path Params
+        const localVarPath = '/webhooks/{webhook_id}'
+            .replace('{webhook_id}', encodeURIComponent(String(webhookId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "UpdateWebhookRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("updateWebhook", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Creates a PDF template from a PDF sent with the request (`multipart/form-data`). For large files, upload the PDF with the presigned upload (GET /uploads/presign) and create the template with POST /templates. 
+     * Create a PDF template from an uploaded PDF
+     * @param document The PDF.
+     * @param wait Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param name The template's name.
+     * @param description The template's description.
+     * @param parentFolderId The folder to put the template in. Left out, it's created at the root.
+     * @param aiFieldNamingLanguage The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. Default: your account's template settings.
+     * @param detectFields Set up the PDF's fields as DocSpring's "Automatically detect fields" upload option does: import or detect the fields, name them with AI, and set up conditional logic. `field_source`, `field_naming` and `field_logic` choose how. Default false. `document.page_processing_statuses` and `document.field_logic_status` show how it's going, and `document.state` becomes `processed` once every page's fields are set up.
+     * @param fieldSource With `detect_fields`, where the fields come from. `auto` (the default) imports the form fields of a fillable PDF and detects the fields of a PDF without them; `pdf_detection` detects the fields from the page layout, even on a fillable PDF; `pdf_form_fields` only imports the PDF's form fields.
+     * @param fieldNaming With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`.
+     * @param fieldLogic With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
+     */
+    public async uploadTemplate(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'document' is not null or undefined
+        if (document === null || document === undefined) {
+            throw new RequiredError("Client", "uploadTemplate", "document");
+        }
+
+
+
+
+
+
+
+
+
+
+
+        // Path Params
+        const localVarPath = '/templates/upload';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (wait !== undefined) {
+            requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
+        }
 
         // Form Params
         const useForm = canConsumeForm([
@@ -2240,15 +2534,43 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             localVarFormParams = new URLSearchParams();
         }
 
-        if (templateDocument !== undefined) {
+        if (document !== undefined) {
              // TODO: replace .append with .set
              if (localVarFormParams instanceof FormData) {
-                 localVarFormParams.append('template[document]', templateDocument, templateDocument.name);
+                 localVarFormParams.append('document', document, document.name);
              }
         }
-        if (templateName !== undefined) {
+        if (name !== undefined) {
              // TODO: replace .append with .set
-             localVarFormParams.append('template[name]', templateName as any);
+             localVarFormParams.append('name', name as any);
+        }
+        if (description !== undefined) {
+             // TODO: replace .append with .set
+             localVarFormParams.append('description', description as any);
+        }
+        if (parentFolderId !== undefined) {
+             // TODO: replace .append with .set
+             localVarFormParams.append('parent_folder_id', parentFolderId as any);
+        }
+        if (aiFieldNamingLanguage !== undefined) {
+             // TODO: replace .append with .set
+             localVarFormParams.append('ai_field_naming_language', aiFieldNamingLanguage as any);
+        }
+        if (detectFields !== undefined) {
+             // TODO: replace .append with .set
+             localVarFormParams.append('detect_fields', detectFields as any);
+        }
+        if (fieldSource !== undefined) {
+             // TODO: replace .append with .set
+             localVarFormParams.append('field_source', fieldSource as any);
+        }
+        if (fieldNaming !== undefined) {
+             // TODO: replace .append with .set
+             localVarFormParams.append('field_naming', fieldNaming as any);
+        }
+        if (fieldLogic !== undefined) {
+             // TODO: replace .append with .set
+             localVarFormParams.append('field_logic', fieldLogic as any);
         }
 
         requestContext.setBody(localVarFormParams);
@@ -2272,49 +2594,82 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
+        if (_config.validateRequests !== false) {
+            validateRequest("uploadTemplate", requestContext);
+        }
+
         return requestContext;
     }
 
     /**
-     * Updates a PDF template\'s document using a cached file upload. This is a three-step process: First, request a presigned URL to upload your PDF file to our S3 bucket. Then, use that URL to upload your PDF file. Finally, submit the ID of the uploaded file to replace the template\'s document. 
-     * Update a template\'s document with a cached S3 file upload
-     * @param templateId 
-     * @param data 
+     * Replaces a PDF template's PDF with one sent with the request (`multipart/form-data`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. 
+     * Replace a template's PDF with an uploaded PDF
+     * @param templateId The template's ID.
+     * @param document The new PDF.
+     * @param wait Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param reimportFields Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields.
      */
-    public async updateTemplateDocumentFromUpload(templateId: string, data: UpdatePdfTemplate, _options?: Configuration): Promise<RequestContext> {
+    public async uploadTemplateDocument(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
         if (templateId === null || templateId === undefined) {
-            throw new RequiredError("Client", "updateTemplateDocumentFromUpload", "templateId");
+            throw new RequiredError("Client", "uploadTemplateDocument", "templateId");
         }
 
 
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "updateTemplateDocumentFromUpload", "data");
+        // verify required parameter 'document' is not null or undefined
+        if (document === null || document === undefined) {
+            throw new RequiredError("Client", "uploadTemplateDocument", "document");
         }
+
+
 
 
         // Path Params
-        const localVarPath = '/templates/{template_id}?endpoint_variant=update_template_pdf_with_cached_upload'
-            .replace('{' + 'template_id' + '}', encodeURIComponent(String(templateId)));
+        const localVarPath = '/templates/{template_id}/document/upload'
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
 
+        // Query Params
+        if (wait !== undefined) {
+            requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
+        }
 
-        // Body Params
-        const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json"
+        // Form Params
+        const useForm = canConsumeForm([
+            'multipart/form-data',
         ]);
-        requestContext.setHeaderParam("Content-Type", contentType);
-        const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "UpdatePdfTemplate", ""),
-            contentType
-        );
-        requestContext.setBody(serializedBody);
+
+        let localVarFormParams
+        if (useForm) {
+            localVarFormParams = new FormData();
+        } else {
+            localVarFormParams = new URLSearchParams();
+        }
+
+        if (document !== undefined) {
+             // TODO: replace .append with .set
+             if (localVarFormParams instanceof FormData) {
+                 localVarFormParams.append('document', document, document.name);
+             }
+        }
+        if (reimportFields !== undefined) {
+             // TODO: replace .append with .set
+             localVarFormParams.append('reimport_fields', reimportFields as any);
+        }
+
+        requestContext.setBody(localVarFormParams);
+
+        if(!useForm) {
+            const contentType = ObjectSerializer.getPreferredMediaType([
+                "multipart/form-data"
+            ]);
+            requestContext.setHeaderParam("Content-Type", contentType);
+        }
 
         let authMethod: SecurityAuthentication | undefined;
         // Apply auth methods
@@ -2328,60 +2683,8 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
             await defaultAuth?.applySecurityAuthentication(requestContext);
         }
 
-        return requestContext;
-    }
-
-    /**
-     * Updates the configuration of an existing webhook.
-     * Update a webhook
-     * @param webhookId 
-     * @param data 
-     */
-    public async updateWebhook(webhookId: string, data: UpdateWebhookData, _options?: Configuration): Promise<RequestContext> {
-        let _config = _options || this.configuration;
-
-        // verify required parameter 'webhookId' is not null or undefined
-        if (webhookId === null || webhookId === undefined) {
-            throw new RequiredError("Client", "updateWebhook", "webhookId");
-        }
-
-
-        // verify required parameter 'data' is not null or undefined
-        if (data === null || data === undefined) {
-            throw new RequiredError("Client", "updateWebhook", "data");
-        }
-
-
-        // Path Params
-        const localVarPath = '/webhooks/{webhook_id}'
-            .replace('{' + 'webhook_id' + '}', encodeURIComponent(String(webhookId)));
-
-        // Make Request Context
-        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
-        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
-
-
-        // Body Params
-        const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json"
-        ]);
-        requestContext.setHeaderParam("Content-Type", contentType);
-        const serializedBody = ObjectSerializer.stringify(
-            ObjectSerializer.serialize(data, "UpdateWebhookData", ""),
-            contentType
-        );
-        requestContext.setBody(serializedBody);
-
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["api_token_basic"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
-        
-        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
-        if (defaultAuth?.applySecurityAuthentication) {
-            await defaultAuth?.applySecurityAuthentication(requestContext);
+        if (_config.validateRequests !== false) {
+            validateRequest("uploadTemplateDocument", requestContext);
         }
 
         return requestContext;
@@ -2395,210 +2698,110 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to addFieldsToTemplate
-     * @throws ApiException if the response code was not in [200, 299]
-     */
-     public async addFieldsToTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplateAddFieldsResponse >> {
-        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: TemplateAddFieldsResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplateAddFieldsResponse", ""
-            ) as TemplateAddFieldsResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: TemplateAddFieldsResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplateAddFieldsResponse", ""
-            ) as TemplateAddFieldsResponse;
-            throw new ApiException<TemplateAddFieldsResponse>(response.httpStatusCode, "add fields error", body, response.headers);
-        }
-
-        // Work around for missing responses in specification, e.g. for petstore.yaml
-        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: TemplateAddFieldsResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplateAddFieldsResponse", ""
-            ) as TemplateAddFieldsResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-
-        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
-    }
-
-    /**
-     * Unwraps the actual response sent by the server from the response context and deserializes the response content
-     * to the expected objects
-     *
-     * @params response Response returned by the server for a request to batchGeneratePdfs
-     * @throws ApiException if the response code was not in [200, 299]
-     */
-     public async batchGeneratePdfsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<BatchGeneratePdfs201Response >> {
-        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("402", response.httpStatusCode)) {
-            const body: BatchGeneratePdfs201Response = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "BatchGeneratePdfs201Response", ""
-            ) as BatchGeneratePdfs201Response;
-            throw new ApiException<BatchGeneratePdfs201Response>(response.httpStatusCode, "insufficient credits", body, response.headers);
-        }
-        if (isCodeInRange("403", response.httpStatusCode)) {
-            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ForbiddenErrorResponse", ""
-            ) as ForbiddenErrorResponse;
-            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "account suspended", body, response.headers);
-        }
-        if (isCodeInRange("201", response.httpStatusCode)) {
-            const body: BatchGeneratePdfs201Response = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "BatchGeneratePdfs201Response", ""
-            ) as BatchGeneratePdfs201Response;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: BatchGeneratePdfs201Response = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "BatchGeneratePdfs201Response", ""
-            ) as BatchGeneratePdfs201Response;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("401", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
-        }
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: ErrorOrMultipleErrorsResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorOrMultipleErrorsResponse", ""
-            ) as ErrorOrMultipleErrorsResponse;
-            throw new ApiException<ErrorOrMultipleErrorsResponse>(response.httpStatusCode, "array of arrays", body, response.headers);
-        }
-        if (isCodeInRange("400", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid JSON", body, response.headers);
-        }
-
-        // Work around for missing responses in specification, e.g. for petstore.yaml
-        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: BatchGeneratePdfs201Response = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "BatchGeneratePdfs201Response", ""
-            ) as BatchGeneratePdfs201Response;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-
-        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
-    }
-
-    /**
-     * Unwraps the actual response sent by the server from the response context and deserializes the response content
-     * to the expected objects
-     *
-     * @params response Response returned by the server for a request to combinePdfs
-     * @throws ApiException if the response code was not in [200, 299]
-     */
-     public async combinePdfsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CreateCombinedSubmissionResponse >> {
-        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("402", response.httpStatusCode)) {
-            const body: CreateCombinedSubmissionResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateCombinedSubmissionResponse", ""
-            ) as CreateCombinedSubmissionResponse;
-            throw new ApiException<CreateCombinedSubmissionResponse>(response.httpStatusCode, "insufficient credits", body, response.headers);
-        }
-        if (isCodeInRange("403", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "test API token used to delete custom files", body, response.headers);
-        }
-        if (isCodeInRange("201", response.httpStatusCode)) {
-            const body: CreateCombinedSubmissionResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateCombinedSubmissionResponse", ""
-            ) as CreateCombinedSubmissionResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: MultipleErrorsResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "MultipleErrorsResponse", ""
-            ) as MultipleErrorsResponse;
-            throw new ApiException<MultipleErrorsResponse>(response.httpStatusCode, "invalid request", body, response.headers);
-        }
-        if (isCodeInRange("400", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid JSON", body, response.headers);
-        }
-        if (isCodeInRange("401", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
-        }
-
-        // Work around for missing responses in specification, e.g. for petstore.yaml
-        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: CreateCombinedSubmissionResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateCombinedSubmissionResponse", ""
-            ) as CreateCombinedSubmissionResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-
-        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
-    }
-
-    /**
-     * Unwraps the actual response sent by the server from the response context and deserializes the response content
-     * to the expected objects
-     *
      * @params response Response returned by the server for a request to copyTemplate
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async copyTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplatePreview >> {
+     public async copyTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
-        if (isCodeInRange("403", response.httpStatusCode)) {
-            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ForbiddenErrorResponse", ""
-            ) as ForbiddenErrorResponse;
-            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid copy", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder not found", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
+                "Template", ""
+            ) as Template;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to createCombinedPdf
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async createCombinedPdfWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CombinedPdf >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: CombinedPdf = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "CombinedPdf", ""
+            ) as CombinedPdf;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid source PDFs", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "not allowed", body, response.headers);
+        }
+        if (isCodeInRange("402", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "not enough credits", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: CombinedPdf = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "CombinedPdf", ""
+            ) as CombinedPdf;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -2612,115 +2815,36 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to createCustomFileFromUpload
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async createCustomFileFromUploadWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CreateCustomFileResponse >> {
+     public async createCustomFileFromUploadWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CustomFile >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("201", response.httpStatusCode)) {
-            const body: CreateCustomFileResponse = ObjectSerializer.deserialize(
+            const body: CustomFile = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateCustomFileResponse", ""
-            ) as CreateCustomFileResponse;
+                "CustomFile", ""
+            ) as CustomFile;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("401", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
-        }
-
-        // Work around for missing responses in specification, e.g. for petstore.yaml
-        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: CreateCustomFileResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateCustomFileResponse", ""
-            ) as CreateCustomFileResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-
-        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
-    }
-
-    /**
-     * Unwraps the actual response sent by the server from the response context and deserializes the response content
-     * to the expected objects
-     *
-     * @params response Response returned by the server for a request to createDataRequestEvent
-     * @throws ApiException if the response code was not in [200, 299]
-     */
-     public async createDataRequestEventWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CreateSubmissionDataRequestEventResponse >> {
-        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("201", response.httpStatusCode)) {
-            const body: CreateSubmissionDataRequestEventResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateSubmissionDataRequestEventResponse", ""
-            ) as CreateSubmissionDataRequestEventResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("401", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
-        }
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: MultipleErrorsResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "MultipleErrorsResponse", ""
-            ) as MultipleErrorsResponse;
-            throw new ApiException<MultipleErrorsResponse>(response.httpStatusCode, "message recipient must not be blank", body, response.headers);
-        }
-
-        // Work around for missing responses in specification, e.g. for petstore.yaml
-        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: CreateSubmissionDataRequestEventResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateSubmissionDataRequestEventResponse", ""
-            ) as CreateSubmissionDataRequestEventResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-
-        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
-    }
-
-    /**
-     * Unwraps the actual response sent by the server from the response context and deserializes the response content
-     * to the expected objects
-     *
-     * @params response Response returned by the server for a request to createDataRequestToken
-     * @throws ApiException if the response code was not in [200, 299]
-     */
-     public async createDataRequestTokenWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CreateSubmissionDataRequestTokenResponse >> {
-        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("201", response.httpStatusCode)) {
-            const body: CreateSubmissionDataRequestTokenResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateSubmissionDataRequestTokenResponse", ""
-            ) as CreateSubmissionDataRequestTokenResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("401", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
         }
         if (isCodeInRange("422", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid request", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid custom file", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: CreateSubmissionDataRequestTokenResponse = ObjectSerializer.deserialize(
+            const body: CustomFile = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateSubmissionDataRequestTokenResponse", ""
-            ) as CreateSubmissionDataRequestTokenResponse;
+                "CustomFile", ""
+            ) as CustomFile;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -2736,26 +2860,69 @@ export class ClientResponseProcessor {
      */
      public async createFolderWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Folder >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: MultipleErrorsResponse = ObjectSerializer.deserialize(
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: Folder = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "MultipleErrorsResponse", ""
-            ) as MultipleErrorsResponse;
-            throw new ApiException<MultipleErrorsResponse>(response.httpStatusCode, "name already exist", body, response.headers);
+                "Folder", ""
+            ) as Folder;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid folder", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Folder = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Folder", ""
+            ) as Folder;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to createSignatureRequestEvent
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async createSignatureRequestEventWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SignatureRequestEvent >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: SignatureRequestEvent = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "SignatureRequestEvent", ""
+            ) as SignatureRequestEvent;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid event", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "parent folder doesn\&#39;t exist", body, response.headers);
-        }
-        if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: Folder = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "Folder", ""
-            ) as Folder;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "signature request not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -2767,10 +2934,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: Folder = ObjectSerializer.deserialize(
+            const body: SignatureRequestEvent = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Folder", ""
-            ) as Folder;
+                "SignatureRequestEvent", ""
+            ) as SignatureRequestEvent;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -2781,24 +2948,45 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to createHtmlTemplate
+     * @params response Response returned by the server for a request to createSignatureRequestToken
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async createHtmlTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplatePreview >> {
+     public async createSignatureRequestTokenWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SignatureRequestToken >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("201", response.httpStatusCode)) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
+            const body: SignatureRequestToken = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
+                "SignatureRequestToken", ""
+            ) as SignatureRequestToken;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("403", response.httpStatusCode)) {
-            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
+            const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ForbiddenErrorResponse", ""
-            ) as ForbiddenErrorResponse;
-            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "test API token on a live signature request", body, response.headers);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "signature request finished", body, response.headers);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid token request", body, response.headers);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "signature request not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -2810,10 +2998,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
+            const body: SignatureRequestToken = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
+                "SignatureRequestToken", ""
+            ) as SignatureRequestToken;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -2824,24 +3012,45 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to createPdfTemplate
+     * @params response Response returned by the server for a request to createSubmission
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async createPdfTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplatePreview >> {
+     public async createSubmissionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Submission >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("201", response.httpStatusCode)) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
+            const body: Submission = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
+                "Submission", ""
+            ) as Submission;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
-        if (isCodeInRange("403", response.httpStatusCode)) {
-            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ForbiddenErrorResponse", ""
-            ) as ForbiddenErrorResponse;
-            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid data", body, response.headers);
+        }
+        if (isCodeInRange("402", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "not enough credits", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "the account is suspended", body, response.headers);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -2853,10 +3062,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
+            const body: Submission = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
+                "Submission", ""
+            ) as Submission;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -2867,17 +3076,38 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to createPdfTemplateFromUpload
+     * @params response Response returned by the server for a request to createSubmissionBatch
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async createPdfTemplateFromUploadWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplatePreview >> {
+     public async createSubmissionBatchWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SubmissionBatch >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("201", response.httpStatusCode)) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
+            const body: SubmissionBatch = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
+                "SubmissionBatch", ""
+            ) as SubmissionBatch;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid data", body, response.headers);
+        }
+        if (isCodeInRange("402", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "not enough credits", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "account suspended", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -2886,20 +3116,63 @@ export class ClientResponseProcessor {
             ) as ErrorResponse;
             throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
         }
-        if (isCodeInRange("403", response.httpStatusCode)) {
-            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: SubmissionBatch = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ForbiddenErrorResponse", ""
-            ) as ForbiddenErrorResponse;
-            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
+                "SubmissionBatch", ""
+            ) as SubmissionBatch;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to createTemplate
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async createTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: Template = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Template", ""
+            ) as Template;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid template", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -2923,11 +3196,11 @@ export class ClientResponseProcessor {
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: MultipleErrorsResponse = ObjectSerializer.deserialize(
+            const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "MultipleErrorsResponse", ""
-            ) as MultipleErrorsResponse;
-            throw new ApiException<MultipleErrorsResponse>(response.httpStatusCode, "invalid parameters", body, response.headers);
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid webhook", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -2953,31 +3226,81 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to deleteFolder
+     * @params response Response returned by the server for a request to deleteCustomFile
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async deleteFolderWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Folder >> {
+     public async deleteCustomFileWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CustomFile >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: CustomFile = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "CustomFile", ""
+            ) as CustomFile;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "test API token", body, response.headers);
+        }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder doesn\&#39;t exist", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "custom file not found", body, response.headers);
         }
-        if (isCodeInRange("422", response.httpStatusCode)) {
+        if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder has contents", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
         }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: CustomFile = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "CustomFile", ""
+            ) as CustomFile;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to deleteFolder
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async deleteFolderWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Folder >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Folder = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Folder", ""
             ) as Folder;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder is not empty", body, response.headers);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3006,14 +3329,21 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to deleteTemplate
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async deleteTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplateDeleteResponse >> {
+     public async deleteTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: TemplateDeleteResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplateDeleteResponse", ""
-            ) as TemplateDeleteResponse;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template is locked", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3021,6 +3351,13 @@ export class ClientResponseProcessor {
                 "ErrorResponse", ""
             ) as ErrorResponse;
             throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid version", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3032,10 +3369,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: TemplateDeleteResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplateDeleteResponse", ""
-            ) as TemplateDeleteResponse;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3089,31 +3426,31 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to expireCombinedSubmission
+     * @params response Response returned by the server for a request to expireCombinedPdf
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async expireCombinedSubmissionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CombinedSubmission >> {
+     public async expireCombinedPdfWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CombinedPdf >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: CombinedSubmission = ObjectSerializer.deserialize(
+            const body: CombinedPdf = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "CombinedSubmission", ""
-            ) as CombinedSubmission;
+                "CombinedPdf", ""
+            ) as CombinedPdf;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("404", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "combined submission not found", body, response.headers);
         }
         if (isCodeInRange("403", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "test API token used", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "test API token", body, response.headers);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "combined PDF not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3125,10 +3462,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: CombinedSubmission = ObjectSerializer.deserialize(
+            const body: CombinedPdf = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "CombinedSubmission", ""
-            ) as CombinedSubmission;
+                "CombinedPdf", ""
+            ) as CombinedPdf;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3142,14 +3479,21 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to expireSubmission
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async expireSubmissionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SubmissionPreview >> {
+     public async expireSubmissionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Submission >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: SubmissionPreview = ObjectSerializer.deserialize(
+            const body: Submission = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SubmissionPreview", ""
-            ) as SubmissionPreview;
+                "Submission", ""
+            ) as Submission;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "test API token", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3165,20 +3509,13 @@ export class ClientResponseProcessor {
             ) as ErrorResponse;
             throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
         }
-        if (isCodeInRange("403", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "test API token used", body, response.headers);
-        }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: SubmissionPreview = ObjectSerializer.deserialize(
+            const body: Submission = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SubmissionPreview", ""
-            ) as SubmissionPreview;
+                "Submission", ""
+            ) as Submission;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3189,74 +3526,24 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to generatePdf
+     * @params response Response returned by the server for a request to generateSubmissionPreview
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async generatePdfWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CreateSubmissionResponse >> {
-        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("402", response.httpStatusCode)) {
-            const body: CreateSubmissionResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateSubmissionResponse", ""
-            ) as CreateSubmissionResponse;
-            throw new ApiException<CreateSubmissionResponse>(response.httpStatusCode, "insufficient credits", body, response.headers);
-        }
-        if (isCodeInRange("201", response.httpStatusCode)) {
-            const body: CreateSubmissionResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateSubmissionResponse", ""
-            ) as CreateSubmissionResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: Submission422Response = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "Submission422Response", ""
-            ) as Submission422Response;
-            throw new ApiException<Submission422Response>(response.httpStatusCode, "invalid request", body, response.headers);
-        }
-        if (isCodeInRange("403", response.httpStatusCode)) {
-            const body: ForbiddenErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ForbiddenErrorResponse", ""
-            ) as ForbiddenErrorResponse;
-            throw new ApiException<ForbiddenErrorResponse>(response.httpStatusCode, "live data requests need Starter or higher", body, response.headers);
-        }
-        if (isCodeInRange("401", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
-        }
-
-        // Work around for missing responses in specification, e.g. for petstore.yaml
-        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: CreateSubmissionResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateSubmissionResponse", ""
-            ) as CreateSubmissionResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-
-        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
-    }
-
-    /**
-     * Unwraps the actual response sent by the server from the response context and deserializes the response content
-     * to the expected objects
-     *
-     * @params response Response returned by the server for a request to generatePreview
-     * @throws ApiException if the response code was not in [200, 299]
-     */
-     public async generatePreviewWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SuccessErrorResponse >> {
+     public async generateSubmissionPreviewWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Submission >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: SuccessErrorResponse = ObjectSerializer.deserialize(
+            const body: Submission = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessErrorResponse", ""
-            ) as SuccessErrorResponse;
+                "Submission", ""
+            ) as Submission;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "preview not possible", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3265,20 +3552,20 @@ export class ClientResponseProcessor {
             ) as ErrorResponse;
             throw new ApiException<ErrorResponse>(response.httpStatusCode, "submission not found", body, response.headers);
         }
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: SuccessErrorResponse = ObjectSerializer.deserialize(
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessErrorResponse", ""
-            ) as SuccessErrorResponse;
-            throw new ApiException<SuccessErrorResponse>(response.httpStatusCode, "error requesting preview", body, response.headers);
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: SuccessErrorResponse = ObjectSerializer.deserialize(
+            const body: Submission = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessErrorResponse", ""
-            ) as SuccessErrorResponse;
+                "Submission", ""
+            ) as Submission;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3289,16 +3576,16 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to getCombinedSubmission
+     * @params response Response returned by the server for a request to getCombinedPdf
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getCombinedSubmissionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CombinedSubmission >> {
+     public async getCombinedPdfWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CombinedPdf >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: CombinedSubmission = ObjectSerializer.deserialize(
+            const body: CombinedPdf = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "CombinedSubmission", ""
-            ) as CombinedSubmission;
+                "CombinedPdf", ""
+            ) as CombinedPdf;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
@@ -3306,7 +3593,7 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "combined submission not found", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "combined PDF not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3318,10 +3605,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: CombinedSubmission = ObjectSerializer.deserialize(
+            const body: CombinedPdf = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "CombinedSubmission", ""
-            ) as CombinedSubmission;
+                "CombinedPdf", ""
+            ) as CombinedPdf;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3332,16 +3619,16 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to getDataRequest
+     * @params response Response returned by the server for a request to getCustomFile
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getDataRequestWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SubmissionDataRequestShow >> {
+     public async getCustomFileWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CustomFile >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: SubmissionDataRequestShow = ObjectSerializer.deserialize(
+            const body: CustomFile = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SubmissionDataRequestShow", ""
-            ) as SubmissionDataRequestShow;
+                "CustomFile", ""
+            ) as CustomFile;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
@@ -3349,7 +3636,7 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "submission data request not found", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "custom file not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3361,10 +3648,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: SubmissionDataRequestShow = ObjectSerializer.deserialize(
+            const body: CustomFile = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SubmissionDataRequestShow", ""
-            ) as SubmissionDataRequestShow;
+                "CustomFile", ""
+            ) as CustomFile;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3375,16 +3662,16 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to getFullTemplate
+     * @params response Response returned by the server for a request to getFolder
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getFullTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
+     public async getFolderWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Folder >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: Template = ObjectSerializer.deserialize(
+            const body: Folder = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Template", ""
-            ) as Template;
+                "Folder", ""
+            ) as Folder;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
@@ -3392,7 +3679,7 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3404,10 +3691,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: Template = ObjectSerializer.deserialize(
+            const body: Folder = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Template", ""
-            ) as Template;
+                "Folder", ""
+            ) as Folder;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3421,13 +3708,13 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to getPresignUrl
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getPresignUrlWithHttpInfo(response: ResponseContext): Promise<HttpInfo<UploadPresignResponse >> {
+     public async getPresignUrlWithHttpInfo(response: ResponseContext): Promise<HttpInfo<UploadPresign >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: UploadPresignResponse = ObjectSerializer.deserialize(
+            const body: UploadPresign = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "UploadPresignResponse", ""
-            ) as UploadPresignResponse;
+                "UploadPresign", ""
+            ) as UploadPresign;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
@@ -3440,10 +3727,53 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: UploadPresignResponse = ObjectSerializer.deserialize(
+            const body: UploadPresign = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "UploadPresignResponse", ""
-            ) as UploadPresignResponse;
+                "UploadPresign", ""
+            ) as UploadPresign;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to getSignatureRequest
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async getSignatureRequestWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SignatureRequest >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: SignatureRequest = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "SignatureRequest", ""
+            ) as SignatureRequest;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "signature request not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: SignatureRequest = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "SignatureRequest", ""
+            ) as SignatureRequest;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3500,13 +3830,13 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to getSubmissionBatch
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getSubmissionBatchWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SubmissionBatchWithSubmissions >> {
+     public async getSubmissionBatchWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SubmissionBatch >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: SubmissionBatchWithSubmissions = ObjectSerializer.deserialize(
+            const body: SubmissionBatch = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SubmissionBatchWithSubmissions", ""
-            ) as SubmissionBatchWithSubmissions;
+                "SubmissionBatch", ""
+            ) as SubmissionBatch;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
@@ -3514,7 +3844,7 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "submission batch not found", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "batch not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3526,10 +3856,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: SubmissionBatchWithSubmissions = ObjectSerializer.deserialize(
+            const body: SubmissionBatch = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SubmissionBatchWithSubmissions", ""
-            ) as SubmissionBatchWithSubmissions;
+                "SubmissionBatch", ""
+            ) as SubmissionBatch;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3543,56 +3873,13 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to getTemplate
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplatePreview >> {
+     public async getTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("404", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
-        }
-        if (isCodeInRange("401", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
-        }
-
-        // Work around for missing responses in specification, e.g. for petstore.yaml
-        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-
-        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
-    }
-
-    /**
-     * Unwraps the actual response sent by the server from the response context and deserializes the response content
-     * to the expected objects
-     *
-     * @params response Response returned by the server for a request to getTemplateModelCode
-     * @throws ApiException if the response code was not in [200, 299]
-     */
-     public async getTemplateModelCodeWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplateModelCodeResponse >> {
-        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: TemplateModelCodeResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplateModelCodeResponse", ""
-            ) as TemplateModelCodeResponse;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
@@ -3607,7 +3894,7 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "unknown language", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid version", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3619,10 +3906,60 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: TemplateModelCodeResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplateModelCodeResponse", ""
-            ) as TemplateModelCodeResponse;
+                "Template", ""
+            ) as Template;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to getTemplateModelCode
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async getTemplateModelCodeWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplateModelCode >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: TemplateModelCode = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "TemplateModelCode", ""
+            ) as TemplateModelCode;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "unknown language", body, response.headers);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: TemplateModelCode = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "TemplateModelCode", ""
+            ) as TemplateModelCode;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3636,13 +3973,13 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to getTemplateSchema
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getTemplateSchemaWithHttpInfo(response: ResponseContext): Promise<HttpInfo<JsonSchema >> {
+     public async getTemplateSchemaWithHttpInfo(response: ResponseContext): Promise<HttpInfo<{ [key: string]: any; } >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: JsonSchema = ObjectSerializer.deserialize(
+            const body: { [key: string]: any; } = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "JsonSchema", ""
-            ) as JsonSchema;
+                "{ [key: string]: any; }", ""
+            ) as { [key: string]: any; };
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
@@ -3662,10 +3999,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: JsonSchema = ObjectSerializer.deserialize(
+            const body: { [key: string]: any; } = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "JsonSchema", ""
-            ) as JsonSchema;
+                "{ [key: string]: any; }", ""
+            ) as { [key: string]: any; };
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3719,17 +4056,24 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to listCombinedSubmissions
+     * @params response Response returned by the server for a request to listCombinedPdfs
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async listCombinedSubmissionsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<CombinedSubmission> >> {
+     public async listCombinedPdfsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CombinedPdfList >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: Array<CombinedSubmission> = ObjectSerializer.deserialize(
+            const body: CombinedPdfList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<CombinedSubmission>", ""
-            ) as Array<CombinedSubmission>;
+                "CombinedPdfList", ""
+            ) as CombinedPdfList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid query parameters", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3741,10 +4085,53 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: Array<CombinedSubmission> = ObjectSerializer.deserialize(
+            const body: CombinedPdfList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<CombinedSubmission>", ""
-            ) as Array<CombinedSubmission>;
+                "CombinedPdfList", ""
+            ) as CombinedPdfList;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to listCustomFiles
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async listCustomFilesWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CustomFileList >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: CustomFileList = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "CustomFileList", ""
+            ) as CustomFileList;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid query parameters", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: CustomFileList = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "CustomFileList", ""
+            ) as CustomFileList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3758,14 +4145,21 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to listFolders
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async listFoldersWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<Folder> >> {
+     public async listFoldersWithHttpInfo(response: ResponseContext): Promise<HttpInfo<FolderList >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: Array<Folder> = ObjectSerializer.deserialize(
+            const body: FolderList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<Folder>", ""
-            ) as Array<Folder>;
+                "FolderList", ""
+            ) as FolderList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid query parameters", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3777,10 +4171,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: Array<Folder> = ObjectSerializer.deserialize(
+            const body: FolderList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<Folder>", ""
-            ) as Array<Folder>;
+                "FolderList", ""
+            ) as FolderList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3794,13 +4188,13 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to listSubmissions
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async listSubmissionsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<ListSubmissionsResponse >> {
+     public async listSubmissionsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SubmissionList >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: ListSubmissionsResponse = ObjectSerializer.deserialize(
+            const body: SubmissionList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ListSubmissionsResponse", ""
-            ) as ListSubmissionsResponse;
+                "SubmissionList", ""
+            ) as SubmissionList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("422", response.httpStatusCode)) {
@@ -3808,7 +4202,7 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid type", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid query parameters", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3820,10 +4214,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: ListSubmissionsResponse = ObjectSerializer.deserialize(
+            const body: SubmissionList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ListSubmissionsResponse", ""
-            ) as ListSubmissionsResponse;
+                "SubmissionList", ""
+            ) as SubmissionList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3837,13 +4231,13 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to listTemplateSubmissions
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async listTemplateSubmissionsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<ListSubmissionsResponse >> {
+     public async listTemplateSubmissionsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SubmissionList >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: ListSubmissionsResponse = ObjectSerializer.deserialize(
+            const body: SubmissionList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ListSubmissionsResponse", ""
-            ) as ListSubmissionsResponse;
+                "SubmissionList", ""
+            ) as SubmissionList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
@@ -3851,15 +4245,29 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid template id", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid query parameters", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: ListSubmissionsResponse = ObjectSerializer.deserialize(
+            const body: SubmissionList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ListSubmissionsResponse", ""
-            ) as ListSubmissionsResponse;
+                "SubmissionList", ""
+            ) as SubmissionList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3873,21 +4281,21 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to listTemplates
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async listTemplatesWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<TemplatePreview> >> {
+     public async listTemplatesWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplateSummaryList >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: Array<TemplatePreview> = ObjectSerializer.deserialize(
+            const body: TemplateSummaryList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<TemplatePreview>", ""
-            ) as Array<TemplatePreview>;
+                "TemplateSummaryList", ""
+            ) as TemplateSummaryList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
-        if (isCodeInRange("404", response.httpStatusCode)) {
+        if (isCodeInRange("422", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "filter templates by invalid folder id", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid query parameters", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3899,10 +4307,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: Array<TemplatePreview> = ObjectSerializer.deserialize(
+            const body: TemplateSummaryList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<TemplatePreview>", ""
-            ) as Array<TemplatePreview>;
+                "TemplateSummaryList", ""
+            ) as TemplateSummaryList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3916,14 +4324,21 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to listWebhooks
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async listWebhooksWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Array<Webhook> >> {
+     public async listWebhooksWithHttpInfo(response: ResponseContext): Promise<HttpInfo<WebhookList >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: Array<Webhook> = ObjectSerializer.deserialize(
+            const body: WebhookList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<Webhook>", ""
-            ) as Array<Webhook>;
+                "WebhookList", ""
+            ) as WebhookList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "unknown event type", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -3935,10 +4350,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: Array<Webhook> = ObjectSerializer.deserialize(
+            const body: WebhookList = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "Array<Webhook>", ""
-            ) as Array<Webhook>;
+                "WebhookList", ""
+            ) as WebhookList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -3949,18 +4364,11 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to moveFolderToFolder
+     * @params response Response returned by the server for a request to moveFolder
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async moveFolderToFolderWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Folder >> {
+     public async moveFolderWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Folder >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("404", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "parent folder doesn\&#39;t exist", body, response.headers);
-        }
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Folder = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
@@ -3968,41 +4376,12 @@ export class ClientResponseProcessor {
             ) as Folder;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
-        if (isCodeInRange("401", response.httpStatusCode)) {
+        if (isCodeInRange("422", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
-        }
-
-        // Work around for missing responses in specification, e.g. for petstore.yaml
-        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: Folder = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "Folder", ""
-            ) as Folder;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-
-        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
-    }
-
-    /**
-     * Unwraps the actual response sent by the server from the response context and deserializes the response content
-     * to the expected objects
-     *
-     * @params response Response returned by the server for a request to moveTemplateToFolder
-     * @throws ApiException if the response code was not in [200, 299]
-     */
-     public async moveTemplateToFolderWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplatePreview >> {
-        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid move", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -4011,13 +4390,20 @@ export class ClientResponseProcessor {
             ) as ErrorResponse;
             throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder not found", body, response.headers);
         }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: TemplatePreview = ObjectSerializer.deserialize(
+            const body: Folder = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePreview", ""
-            ) as TemplatePreview;
+                "Folder", ""
+            ) as Folder;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -4028,24 +4414,24 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
-     * @params response Response returned by the server for a request to publishTemplateVersion
+     * @params response Response returned by the server for a request to moveTemplate
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async publishTemplateVersionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplatePublishVersionResponse >> {
+     public async moveTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: TemplatePublishVersionResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePublishVersionResponse", ""
-            ) as TemplatePublishVersionResponse;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
         if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: SuccessMultipleErrorsResponse = ObjectSerializer.deserialize(
+            const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessMultipleErrorsResponse", ""
-            ) as SuccessMultipleErrorsResponse;
-            throw new ApiException<SuccessMultipleErrorsResponse>(response.httpStatusCode, "invalid version type", body, response.headers);
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid move", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -4064,10 +4450,67 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: TemplatePublishVersionResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "TemplatePublishVersionResponse", ""
-            ) as TemplatePublishVersionResponse;
+                "Template", ""
+            ) as Template;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to publishTemplateVersion
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async publishTemplateVersionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<TemplateVersion >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: TemplateVersion = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "TemplateVersion", ""
+            ) as TemplateVersion;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid version type", body, response.headers);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "published at the same time", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: TemplateVersion = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "TemplateVersion", ""
+            ) as TemplateVersion;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -4083,26 +4526,26 @@ export class ClientResponseProcessor {
      */
      public async renameFolderWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Folder >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: MultipleErrorsResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "MultipleErrorsResponse", ""
-            ) as MultipleErrorsResponse;
-            throw new ApiException<MultipleErrorsResponse>(response.httpStatusCode, "name already exist", body, response.headers);
-        }
-        if (isCodeInRange("404", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder doesn\&#39;t belong to me", body, response.headers);
-        }
         if (isCodeInRange("200", response.httpStatusCode)) {
             const body: Folder = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Folder", ""
             ) as Folder;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "name already exists", body, response.headers);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -4131,28 +4574,35 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to restoreTemplateVersion
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async restoreTemplateVersionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SuccessErrorResponse >> {
+     public async restoreTemplateVersionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: SuccessErrorResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessErrorResponse", ""
-            ) as SuccessErrorResponse;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: SuccessMultipleErrorsResponse = ObjectSerializer.deserialize(
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessMultipleErrorsResponse", ""
-            ) as SuccessMultipleErrorsResponse;
-            throw new ApiException<SuccessMultipleErrorsResponse>(response.httpStatusCode, "draft version not allowed", body, response.headers);
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template is locked", body, response.headers);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "unknown version", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
-            const body: SuccessMultipleErrorsResponse = ObjectSerializer.deserialize(
+            const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessMultipleErrorsResponse", ""
-            ) as SuccessMultipleErrorsResponse;
-            throw new ApiException<SuccessMultipleErrorsResponse>(response.httpStatusCode, "template version not found", body, response.headers);
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -4164,10 +4614,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: SuccessErrorResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessErrorResponse", ""
-            ) as SuccessErrorResponse;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -4181,64 +4631,14 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to testAuthentication
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async testAuthenticationWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SuccessErrorResponse >> {
+     public async testAuthenticationWithHttpInfo(response: ResponseContext): Promise<HttpInfo<AuthenticationCheck >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: SuccessErrorResponse = ObjectSerializer.deserialize(
+            const body: AuthenticationCheck = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessErrorResponse", ""
-            ) as SuccessErrorResponse;
+                "AuthenticationCheck", ""
+            ) as AuthenticationCheck;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("401", response.httpStatusCode)) {
-            const body: SuccessErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessErrorResponse", ""
-            ) as SuccessErrorResponse;
-            throw new ApiException<SuccessErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
-        }
-
-        // Work around for missing responses in specification, e.g. for petstore.yaml
-        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: SuccessErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessErrorResponse", ""
-            ) as SuccessErrorResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-
-        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
-    }
-
-    /**
-     * Unwraps the actual response sent by the server from the response context and deserializes the response content
-     * to the expected objects
-     *
-     * @params response Response returned by the server for a request to updateDataRequest
-     * @throws ApiException if the response code was not in [200, 299]
-     */
-     public async updateDataRequestWithHttpInfo(response: ResponseContext): Promise<HttpInfo<CreateSubmissionDataRequestResponse >> {
-        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: CreateSubmissionDataRequestResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateSubmissionDataRequestResponse", ""
-            ) as CreateSubmissionDataRequestResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("422", response.httpStatusCode)) {
-            const body: MultipleErrorsResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "MultipleErrorsResponse", ""
-            ) as MultipleErrorsResponse;
-            throw new ApiException<MultipleErrorsResponse>(response.httpStatusCode, "invalid request", body, response.headers);
-        }
-        if (isCodeInRange("404", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "submission data request not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -4250,10 +4650,67 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: CreateSubmissionDataRequestResponse = ObjectSerializer.deserialize(
+            const body: AuthenticationCheck = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "CreateSubmissionDataRequestResponse", ""
-            ) as CreateSubmissionDataRequestResponse;
+                "AuthenticationCheck", ""
+            ) as AuthenticationCheck;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to updateSignatureRequest
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async updateSignatureRequestWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SignatureRequest >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: SignatureRequest = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "SignatureRequest", ""
+            ) as SignatureRequest;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "signature request completed", body, response.headers);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid request", body, response.headers);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "signature request not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: SignatureRequest = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "SignatureRequest", ""
+            ) as SignatureRequest;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -4267,29 +4724,50 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to updateTemplate
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async updateTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SuccessMultipleErrorsResponse >> {
+     public async updateTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: SuccessMultipleErrorsResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessMultipleErrorsResponse", ""
-            ) as SuccessMultipleErrorsResponse;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template is locked", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ErrorResponse", ""
             ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "folder not found", body, response.headers);
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid update", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: SuccessMultipleErrorsResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessMultipleErrorsResponse", ""
-            ) as SuccessMultipleErrorsResponse;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -4303,14 +4781,35 @@ export class ClientResponseProcessor {
      * @params response Response returned by the server for a request to updateTemplateDocument
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async updateTemplateDocumentWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SuccessMultipleErrorsResponse >> {
+     public async updateTemplateDocumentWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: SuccessMultipleErrorsResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessMultipleErrorsResponse", ""
-            ) as SuccessMultipleErrorsResponse;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template is locked, so its fields can\&#39;t be re-imported", body, response.headers);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "not a PDF template", body, response.headers);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
         }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
@@ -4322,46 +4821,10 @@ export class ClientResponseProcessor {
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: SuccessMultipleErrorsResponse = ObjectSerializer.deserialize(
+            const body: Template = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessMultipleErrorsResponse", ""
-            ) as SuccessMultipleErrorsResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-
-        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
-    }
-
-    /**
-     * Unwraps the actual response sent by the server from the response context and deserializes the response content
-     * to the expected objects
-     *
-     * @params response Response returned by the server for a request to updateTemplateDocumentFromUpload
-     * @throws ApiException if the response code was not in [200, 299]
-     */
-     public async updateTemplateDocumentFromUploadWithHttpInfo(response: ResponseContext): Promise<HttpInfo<SuccessMultipleErrorsResponse >> {
-        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
-        if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: SuccessMultipleErrorsResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessMultipleErrorsResponse", ""
-            ) as SuccessMultipleErrorsResponse;
-            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
-        }
-        if (isCodeInRange("401", response.httpStatusCode)) {
-            const body: ErrorResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "ErrorResponse", ""
-            ) as ErrorResponse;
-            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
-        }
-
-        // Work around for missing responses in specification, e.g. for petstore.yaml
-        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: SuccessMultipleErrorsResponse = ObjectSerializer.deserialize(
-                ObjectSerializer.parse(await response.body.text(), contentType),
-                "SuccessMultipleErrorsResponse", ""
-            ) as SuccessMultipleErrorsResponse;
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -4391,6 +4854,13 @@ export class ClientResponseProcessor {
             ) as ErrorResponse;
             throw new ApiException<ErrorResponse>(response.httpStatusCode, "webhook not found", body, response.headers);
         }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid webhook", body, response.headers);
+        }
         if (isCodeInRange("401", response.httpStatusCode)) {
             const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
@@ -4405,6 +4875,106 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "Webhook", ""
             ) as Webhook;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to uploadTemplate
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async uploadTemplateWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: Template = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Template", ""
+            ) as Template;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid upload", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "the plan\&#39;s template limit is reached", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Template = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Template", ""
+            ) as Template;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to uploadTemplateDocument
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async uploadTemplateDocumentWithHttpInfo(response: ResponseContext): Promise<HttpInfo<Template >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: Template = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Template", ""
+            ) as Template;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "not a PDF template", body, response.headers);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: Template = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "Template", ""
+            ) as Template;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 

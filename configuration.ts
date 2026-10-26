@@ -9,6 +9,11 @@ export interface Configuration<M = Middleware> {
     readonly httpApi: HttpLibrary;
     readonly middleware: M[];
     readonly authMethods: AuthMethods;
+    /**
+     * Check each request against the API's request schemas before sending it, and reject one the API would reject
+     * with a ValidationError that has the API's error details. Default true.
+     */
+    readonly validateRequests?: boolean;
 }
 
 // Additional option specific to middleware merge strategy
@@ -62,6 +67,11 @@ export interface ConfigurationParameters {
      * `./auth/auth`
      */
     authMethods?: AuthMethodsConfiguration
+    /**
+     * Check each request against the API's request schemas before sending it, and reject one the API would reject
+     * with a ValidationError that has the API's error details. Default true.
+     */
+    validateRequests?: boolean
 }
 
 /**
@@ -83,7 +93,8 @@ export function createConfiguration(conf: ConfigurationParameters = {}): Configu
         baseServer: conf.baseServer !== undefined ? conf.baseServer : server1,
         httpApi: conf.httpApi || new DefaultHttpLibrary(),
         middleware: conf.middleware || [],
-        authMethods: configureAuthMethods(conf.authMethods)
+        authMethods: configureAuthMethods(conf.authMethods),
+        validateRequests: conf.validateRequests
     };
     if (conf.promiseMiddleware) {
         conf.promiseMiddleware.forEach(
@@ -104,6 +115,7 @@ export function mergeConfiguration(conf: Configuration, options?: ConfigurationO
         baseServer: options.baseServer || conf.baseServer,
         httpApi: options.httpApi || conf.httpApi,
         authMethods: options.authMethods || conf.authMethods,
+        validateRequests: options.validateRequests ?? conf.validateRequests,
         middleware: mergeMiddleware(conf.middleware, options?.middleware, options?.middlewareMergeStrategy),
     };
 }

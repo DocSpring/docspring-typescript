@@ -3,64 +3,134 @@ import { Configuration, ConfigurationOptions, mergeConfiguration } from '../conf
 import type { Middleware } from '../middleware';
 import { Observable, of, from } from '../rxjsStub';
 import {mergeMap, map} from  '../rxjsStub';
-import { AddFieldsData } from '../models/AddFieldsData';
-import { BatchGeneratePdfs201Response } from '../models/BatchGeneratePdfs201Response';
-import { CombinePdfsData } from '../models/CombinePdfsData';
-import { CombinedSubmission } from '../models/CombinedSubmission';
-import { CombinedSubmissionAction } from '../models/CombinedSubmissionAction';
-import { CopyTemplateOptions } from '../models/CopyTemplateOptions';
-import { CreateCombinedSubmissionResponse } from '../models/CreateCombinedSubmissionResponse';
-import { CreateCustomFileData } from '../models/CreateCustomFileData';
-import { CreateCustomFileResponse } from '../models/CreateCustomFileResponse';
-import { CreateFolderData } from '../models/CreateFolderData';
-import { CreateHtmlTemplate } from '../models/CreateHtmlTemplate';
-import { CreatePdfSubmissionData } from '../models/CreatePdfSubmissionData';
-import { CreatePdfTemplate } from '../models/CreatePdfTemplate';
-import { CreateSubmissionDataRequestData } from '../models/CreateSubmissionDataRequestData';
-import { CreateSubmissionDataRequestEventRequest } from '../models/CreateSubmissionDataRequestEventRequest';
-import { CreateSubmissionDataRequestEventResponse } from '../models/CreateSubmissionDataRequestEventResponse';
-import { CreateSubmissionDataRequestResponse } from '../models/CreateSubmissionDataRequestResponse';
-import { CreateSubmissionDataRequestTokenResponse } from '../models/CreateSubmissionDataRequestTokenResponse';
-import { CreateSubmissionResponse } from '../models/CreateSubmissionResponse';
-import { CreateWebhookData } from '../models/CreateWebhookData';
+import { AiFieldNamingLanguage } from '../models/AiFieldNamingLanguage';
+import { AuthenticationCheck } from '../models/AuthenticationCheck';
+import { BarcodeSymbology } from '../models/BarcodeSymbology';
+import { CheckCharacter } from '../models/CheckCharacter';
+import { CombinedFieldType } from '../models/CombinedFieldType';
+import { CombinedPdf } from '../models/CombinedPdf';
+import { CombinedPdfFiles } from '../models/CombinedPdfFiles';
+import { CombinedPdfList } from '../models/CombinedPdfList';
+import { CombinedPdfSource } from '../models/CombinedPdfSource';
+import { CombinedPdfSourceInput } from '../models/CombinedPdfSourceInput';
+import { CombinedPdfSourcePdf } from '../models/CombinedPdfSourcePdf';
+import { CombinedPdfSourceType } from '../models/CombinedPdfSourceType';
+import { CombinedPdfState } from '../models/CombinedPdfState';
+import { CopyTemplateRequest } from '../models/CopyTemplateRequest';
+import { CreateCombinedPdfRequest } from '../models/CreateCombinedPdfRequest';
+import { CreateCustomFileFromUploadRequest } from '../models/CreateCustomFileFromUploadRequest';
+import { CreateFolderRequest } from '../models/CreateFolderRequest';
+import { CreateSignatureRequestEventRequest } from '../models/CreateSignatureRequestEventRequest';
+import { CreateSignatureRequestTokenRequest } from '../models/CreateSignatureRequestTokenRequest';
+import { CreateSubmissionBatchRequest } from '../models/CreateSubmissionBatchRequest';
+import { CreateSubmissionRequest } from '../models/CreateSubmissionRequest';
+import { CreateTemplateRequest } from '../models/CreateTemplateRequest';
+import { CreateWebhookRequest } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
-import { ErrorOrMultipleErrorsResponse } from '../models/ErrorOrMultipleErrorsResponse';
+import { CustomFileList } from '../models/CustomFileList';
+import { CustomFileSourcePdf } from '../models/CustomFileSourcePdf';
+import { ErrorCode } from '../models/ErrorCode';
+import { ErrorDetail } from '../models/ErrorDetail';
+import { ErrorInfo } from '../models/ErrorInfo';
 import { ErrorResponse } from '../models/ErrorResponse';
+import { ExpirationInterval } from '../models/ExpirationInterval';
+import { FieldComparisonCondition } from '../models/FieldComparisonCondition';
+import { FieldComparisonOperator } from '../models/FieldComparisonOperator';
+import { FieldDisplayType } from '../models/FieldDisplayType';
+import { FieldEqualsCondition } from '../models/FieldEqualsCondition';
+import { FieldEqualsOperator } from '../models/FieldEqualsOperator';
+import { FieldInCondition } from '../models/FieldInCondition';
+import { FieldOverride } from '../models/FieldOverride';
+import { FieldPresenceCondition } from '../models/FieldPresenceCondition';
+import { FieldPresenceOperator } from '../models/FieldPresenceOperator';
+import { FieldRangeCondition } from '../models/FieldRangeCondition';
+import { FieldReimportState } from '../models/FieldReimportState';
+import { FieldSetupLogic } from '../models/FieldSetupLogic';
+import { FieldSetupNaming } from '../models/FieldSetupNaming';
+import { FieldSetupSource } from '../models/FieldSetupSource';
 import { Folder } from '../models/Folder';
-import { ForbiddenErrorResponse } from '../models/ForbiddenErrorResponse';
-import { JsonSchema } from '../models/JsonSchema';
-import { ListSubmissionsResponse } from '../models/ListSubmissionsResponse';
-import { MoveFolderData } from '../models/MoveFolderData';
-import { MoveTemplateData } from '../models/MoveTemplateData';
-import { MultipleErrorsResponse } from '../models/MultipleErrorsResponse';
-import { PublishVersionData } from '../models/PublishVersionData';
-import { RenameFolderData } from '../models/RenameFolderData';
-import { RestoreVersionData } from '../models/RestoreVersionData';
+import { FolderList } from '../models/FolderList';
+import { GeneratedFile } from '../models/GeneratedFile';
+import { GeneratedFileState } from '../models/GeneratedFileState';
+import { HtmlEngineOptions } from '../models/HtmlEngineOptions';
+import { HtmlEngineOptionsInput } from '../models/HtmlEngineOptionsInput';
+import { ImageGravity } from '../models/ImageGravity';
+import { ImageScaleType } from '../models/ImageScaleType';
+import { ModelCodeLanguage } from '../models/ModelCodeLanguage';
+import { MoveFolderRequest } from '../models/MoveFolderRequest';
+import { MoveTemplateRequest } from '../models/MoveTemplateRequest';
+import { NumberConditionType } from '../models/NumberConditionType';
+import { PageFormat } from '../models/PageFormat';
+import { PublishTemplateVersionRequest } from '../models/PublishTemplateVersionRequest';
+import { RenameFolderRequest } from '../models/RenameFolderRequest';
+import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
+import { ShapeType } from '../models/ShapeType';
+import { SignatureRequest } from '../models/SignatureRequest';
+import { SignatureRequestAuthSecondFactorType } from '../models/SignatureRequestAuthSecondFactorType';
+import { SignatureRequestAuthType } from '../models/SignatureRequestAuthType';
+import { SignatureRequestEvent } from '../models/SignatureRequestEvent';
+import { SignatureRequestEventType } from '../models/SignatureRequestEventType';
+import { SignatureRequestInput } from '../models/SignatureRequestInput';
+import { SignatureRequestMessageType } from '../models/SignatureRequestMessageType';
+import { SignatureRequestState } from '../models/SignatureRequestState';
+import { SignatureRequestToken } from '../models/SignatureRequestToken';
+import { SignatureRequestTokenType } from '../models/SignatureRequestTokenType';
+import { StringConditionType } from '../models/StringConditionType';
 import { Submission } from '../models/Submission';
-import { Submission422Response } from '../models/Submission422Response';
 import { SubmissionAction } from '../models/SubmissionAction';
+import { SubmissionActionState } from '../models/SubmissionActionState';
+import { SubmissionActionType } from '../models/SubmissionActionType';
 import { SubmissionBatch } from '../models/SubmissionBatch';
-import { SubmissionBatchData } from '../models/SubmissionBatchData';
-import { SubmissionBatchWithSubmissions } from '../models/SubmissionBatchWithSubmissions';
-import { SubmissionDataRequest } from '../models/SubmissionDataRequest';
-import { SubmissionDataRequestEvent } from '../models/SubmissionDataRequestEvent';
-import { SubmissionDataRequestShow } from '../models/SubmissionDataRequestShow';
-import { SubmissionDataRequestToken } from '../models/SubmissionDataRequestToken';
-import { SubmissionPreview } from '../models/SubmissionPreview';
-import { SuccessErrorResponse } from '../models/SuccessErrorResponse';
-import { SuccessMultipleErrorsResponse } from '../models/SuccessMultipleErrorsResponse';
+import { SubmissionBatchState } from '../models/SubmissionBatchState';
+import { SubmissionFiles } from '../models/SubmissionFiles';
+import { SubmissionInput } from '../models/SubmissionInput';
+import { SubmissionList } from '../models/SubmissionList';
+import { SubmissionSource } from '../models/SubmissionSource';
+import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
+import { SubmissionState } from '../models/SubmissionState';
 import { Template } from '../models/Template';
-import { TemplateAddFieldsResponse } from '../models/TemplateAddFieldsResponse';
-import { TemplateDeleteResponse } from '../models/TemplateDeleteResponse';
-import { TemplateModelCodeResponse } from '../models/TemplateModelCodeResponse';
-import { TemplatePreview } from '../models/TemplatePreview';
-import { TemplatePublishVersionResponse } from '../models/TemplatePublishVersionResponse';
-import { UpdateHtmlTemplate } from '../models/UpdateHtmlTemplate';
-import { UpdatePdfTemplate } from '../models/UpdatePdfTemplate';
-import { UpdateSubmissionDataRequestData } from '../models/UpdateSubmissionDataRequestData';
-import { UpdateWebhookData } from '../models/UpdateWebhookData';
-import { UploadPresignResponse } from '../models/UploadPresignResponse';
+import { TemplateActor } from '../models/TemplateActor';
+import { TemplateActorType } from '../models/TemplateActorType';
+import { TemplateDefaults } from '../models/TemplateDefaults';
+import { TemplateDefaultsInput } from '../models/TemplateDefaultsInput';
+import { TemplateDocument } from '../models/TemplateDocument';
+import { TemplateDocumentState } from '../models/TemplateDocumentState';
+import { TemplateFieldDependency } from '../models/TemplateFieldDependency';
+import { TemplateFieldDependencyAction } from '../models/TemplateFieldDependencyAction';
+import { TemplateFieldDependencyCondition } from '../models/TemplateFieldDependencyCondition';
+import { TemplateFieldDependencyConditionInput } from '../models/TemplateFieldDependencyConditionInput';
+import { TemplateFieldDependencyInput } from '../models/TemplateFieldDependencyInput';
+import { TemplateFieldDependencyMatch } from '../models/TemplateFieldDependencyMatch';
+import { TemplateFieldDependencyOperator } from '../models/TemplateFieldDependencyOperator';
+import { TemplateFieldLogicStatus } from '../models/TemplateFieldLogicStatus';
+import { TemplateFormMode } from '../models/TemplateFormMode';
+import { TemplateModelCode } from '../models/TemplateModelCode';
+import { TemplatePageAiError } from '../models/TemplatePageAiError';
+import { TemplatePageAiNamingStatus } from '../models/TemplatePageAiNamingStatus';
+import { TemplatePageFieldsStatus } from '../models/TemplatePageFieldsStatus';
+import { TemplatePageImageStatus } from '../models/TemplatePageImageStatus';
+import { TemplatePageProcessingStatus } from '../models/TemplatePageProcessingStatus';
+import { TemplateSourcePdf } from '../models/TemplateSourcePdf';
+import { TemplateSummary } from '../models/TemplateSummary';
+import { TemplateSummaryList } from '../models/TemplateSummaryList';
+import { TemplateType } from '../models/TemplateType';
+import { TemplateVersion } from '../models/TemplateVersion';
+import { TemplateVersionType } from '../models/TemplateVersionType';
+import { TextAlignment } from '../models/TextAlignment';
+import { TextOverflow } from '../models/TextOverflow';
+import { TextVerticalAlignment } from '../models/TextVerticalAlignment';
+import { Typeface } from '../models/Typeface';
+import { UpdateSignatureRequestRequest } from '../models/UpdateSignatureRequestRequest';
+import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
+import { UpdateTemplateRequest } from '../models/UpdateTemplateRequest';
+import { UpdateWebhookRequest } from '../models/UpdateWebhookRequest';
+import { UploadMethod } from '../models/UploadMethod';
+import { UploadPresign } from '../models/UploadPresign';
+import { UrlSourcePdf } from '../models/UrlSourcePdf';
 import { Webhook } from '../models/Webhook';
+import { WebhookEventType } from '../models/WebhookEventType';
+import { WebhookList } from '../models/WebhookList';
+import { WebhookMode } from '../models/WebhookMode';
 
 import { ClientRequestFactory, ClientResponseProcessor} from "../apis/Client";
 export class ObservableClient {
@@ -79,121 +149,15 @@ export class ObservableClient {
     }
 
     /**
-     * Adds fields to a PDF template. Configure field types, positions, defaults, and formatting options. 
-     * Add new fields to a Template
-     * @param templateId
-     * @param data
-     */
-    public addFieldsToTemplateWithHttpInfo(templateId: string, data: AddFieldsData, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateAddFieldsResponse>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.addFieldsToTemplate(templateId, data, _config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.addFieldsToTemplateWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * Adds fields to a PDF template. Configure field types, positions, defaults, and formatting options. 
-     * Add new fields to a Template
-     * @param templateId
-     * @param data
-     */
-    public addFieldsToTemplate(templateId: string, data: AddFieldsData, _options?: ConfigurationOptions): Observable<TemplateAddFieldsResponse> {
-        return this.addFieldsToTemplateWithHttpInfo(templateId, data, _options).pipe(map((apiResponse: HttpInfo<TemplateAddFieldsResponse>) => apiResponse.data));
-    }
-
-    /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  Live PDFs use credits. If any live submission is waiting for credits, the API returns 402 and the others are still processed: check each submission\'s `state`. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
-     * Generate multiple PDFs
-     * @param data
-     * @param [wait] Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     */
-    public batchGeneratePdfsWithHttpInfo(data: SubmissionBatchData, wait?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<BatchGeneratePdfs201Response>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.batchGeneratePdfs(data, wait, _config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.batchGeneratePdfsWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * Generates up to 50 PDFs in a single request. Each submission can use a different template and data. Supports both synchronous (wait for all PDFs) and asynchronous processing. More efficient than individual requests when creating multiple PDFs.  Live PDFs use credits. If any live submission is waiting for credits, the API returns 402 and the others are still processed: check each submission\'s `state`. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Batch Generate PDFs](https://docspring.com/docs/api-guide/generate-pdfs/batch-generate-pdfs/) - Request format, responses, and limits 
-     * Generate multiple PDFs
-     * @param data
-     * @param [wait] Wait for submission batch to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     */
-    public batchGeneratePdfs(data: SubmissionBatchData, wait?: boolean, _options?: ConfigurationOptions): Observable<BatchGeneratePdfs201Response> {
-        return this.batchGeneratePdfsWithHttpInfo(data, wait, _options).pipe(map((apiResponse: HttpInfo<BatchGeneratePdfs201Response>) => apiResponse.data));
-    }
-
-    /**
-     * Combines multiple PDFs from various sources into a single PDF file. Supports merging submission PDFs, template PDFs, custom files, other merged PDFs, and PDFs from URLs. Merges the PDFs in the order provided.  Combining uses credits (4 per source PDF, plus 4 per unit of the combined PDF), even with a test API token or watermarked source PDFs. If your balance can\'t cover it, the API returns 402 and the combined submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/). 
-     * Merge submission PDFs, template PDFs, or custom files
-     * @param data
-     */
-    public combinePdfsWithHttpInfo(data: CombinePdfsData, _options?: ConfigurationOptions): Observable<HttpInfo<CreateCombinedSubmissionResponse>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.combinePdfs(data, _config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.combinePdfsWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * Combines multiple PDFs from various sources into a single PDF file. Supports merging submission PDFs, template PDFs, custom files, other merged PDFs, and PDFs from URLs. Merges the PDFs in the order provided.  Combining uses credits (4 per source PDF, plus 4 per unit of the combined PDF), even with a test API token or watermarked source PDFs. If your balance can\'t cover it, the API returns 402 and the combined submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/). 
-     * Merge submission PDFs, template PDFs, or custom files
-     * @param data
-     */
-    public combinePdfs(data: CombinePdfsData, _options?: ConfigurationOptions): Observable<CreateCombinedSubmissionResponse> {
-        return this.combinePdfsWithHttpInfo(data, _options).pipe(map((apiResponse: HttpInfo<CreateCombinedSubmissionResponse>) => apiResponse.data));
-    }
-
-    /**
-     * Creates a copy of an existing template with all its fields and configuration. Optionally specify a new name and target folder. The copied template starts as a new draft that can be modified independently of the original. 
+     * Copies a template (its draft, or a published version) into a new template.
      * Copy a template
-     * @param templateId
-     * @param [options]
+     * @param templateId The template's ID.
+     * @param [body] Settings for the copy.
      */
-    public copyTemplateWithHttpInfo(templateId: string, options?: CopyTemplateOptions, _options?: ConfigurationOptions): Observable<HttpInfo<TemplatePreview>> {
+    public copyTemplateWithHttpInfo(templateId: string, body?: CopyTemplateRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.copyTemplate(templateId, options, _config);
+        const requestContextPromise = this.requestFactory.copyTemplate(templateId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -211,24 +175,60 @@ export class ObservableClient {
     }
 
     /**
-     * Creates a copy of an existing template with all its fields and configuration. Optionally specify a new name and target folder. The copied template starts as a new draft that can be modified independently of the original. 
+     * Copies a template (its draft, or a published version) into a new template.
      * Copy a template
-     * @param templateId
-     * @param [options]
+     * @param templateId The template's ID.
+     * @param [body] Settings for the copy.
      */
-    public copyTemplate(templateId: string, options?: CopyTemplateOptions, _options?: ConfigurationOptions): Observable<TemplatePreview> {
-        return this.copyTemplateWithHttpInfo(templateId, options, _options).pipe(map((apiResponse: HttpInfo<TemplatePreview>) => apiResponse.data));
+    public copyTemplate(templateId: string, body?: CopyTemplateRequest, _options?: ConfigurationOptions): Observable<Template> {
+        return this.copyTemplateWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
-     * The Custom Files API endpoint allows you to upload PDFs to DocSpring and then merge them with other PDFs. First upload your file using the presigned URL endpoint, then use the returned cache_id to create the custom file. 
-     * Create a new custom file from a cached S3 upload
-     * @param data
+     * Merges PDFs into one: submissions, other combined PDFs, templates, custom files (POST /custom_files) and PDFs from URLs, in the order of `source_pdfs`. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /combined_pdfs/{combined_pdf_id} until `state` isn't `pending`.  A template source merges the template's processed PDF by default: the PDF submissions are filled in on, decrypted and with its form fields removed. Pass `processed: false` to merge the PDF as it was uploaded. 
+     * Combine PDFs
+     * @param body The PDFs to merge, and the combined PDF's settings.
+     * @param [wait] Wait until the PDF has been generated before responding. Default true on sync.api hosts.
      */
-    public createCustomFileFromUploadWithHttpInfo(data: CreateCustomFileData, _options?: ConfigurationOptions): Observable<HttpInfo<CreateCustomFileResponse>> {
+    public createCombinedPdfWithHttpInfo(body: CreateCombinedPdfRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<CombinedPdf>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createCustomFileFromUpload(data, _config);
+        const requestContextPromise = this.requestFactory.createCombinedPdf(body, wait, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createCombinedPdfWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Merges PDFs into one: submissions, other combined PDFs, templates, custom files (POST /custom_files) and PDFs from URLs, in the order of `source_pdfs`. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /combined_pdfs/{combined_pdf_id} until `state` isn't `pending`.  A template source merges the template's processed PDF by default: the PDF submissions are filled in on, decrypted and with its form fields removed. Pass `processed: false` to merge the PDF as it was uploaded. 
+     * Combine PDFs
+     * @param body The PDFs to merge, and the combined PDF's settings.
+     * @param [wait] Wait until the PDF has been generated before responding. Default true on sync.api hosts.
+     */
+    public createCombinedPdf(body: CreateCombinedPdfRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<CombinedPdf> {
+        return this.createCombinedPdfWithHttpInfo(body, wait, _options).pipe(map((apiResponse: HttpInfo<CombinedPdf>) => apiResponse.data));
+    }
+
+    /**
+     * Creates a custom file from a PDF you uploaded, so you can merge it with other PDFs. Upload the file with the presigned upload (GET /uploads/presign) first, then pass its `fields.key` as `cache_id`. 
+     * Create a custom file from an upload
+     * @param body The uploaded file to create the custom file from.
+     */
+    public createCustomFileFromUploadWithHttpInfo(body: CreateCustomFileFromUploadRequest, _options?: ConfigurationOptions): Observable<HttpInfo<CustomFile>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.createCustomFileFromUpload(body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -246,95 +246,23 @@ export class ObservableClient {
     }
 
     /**
-     * The Custom Files API endpoint allows you to upload PDFs to DocSpring and then merge them with other PDFs. First upload your file using the presigned URL endpoint, then use the returned cache_id to create the custom file. 
-     * Create a new custom file from a cached S3 upload
-     * @param data
+     * Creates a custom file from a PDF you uploaded, so you can merge it with other PDFs. Upload the file with the presigned upload (GET /uploads/presign) first, then pass its `fields.key` as `cache_id`. 
+     * Create a custom file from an upload
+     * @param body The uploaded file to create the custom file from.
      */
-    public createCustomFileFromUpload(data: CreateCustomFileData, _options?: ConfigurationOptions): Observable<CreateCustomFileResponse> {
-        return this.createCustomFileFromUploadWithHttpInfo(data, _options).pipe(map((apiResponse: HttpInfo<CreateCustomFileResponse>) => apiResponse.data));
+    public createCustomFileFromUpload(body: CreateCustomFileFromUploadRequest, _options?: ConfigurationOptions): Observable<CustomFile> {
+        return this.createCustomFileFromUploadWithHttpInfo(body, _options).pipe(map((apiResponse: HttpInfo<CustomFile>) => apiResponse.data));
     }
 
     /**
-     * Records user notification events for data requests. Use this to create an audit trail showing when and how users were notified about data request forms. Supports email, SMS, and other notification types. Records the notification time for compliance tracking.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - User notification workflow 
-     * Create a new event for emailing a signee a request for signature
-     * @param dataRequestId
-     * @param event
-     */
-    public createDataRequestEventWithHttpInfo(dataRequestId: string, event: CreateSubmissionDataRequestEventRequest, _options?: ConfigurationOptions): Observable<HttpInfo<CreateSubmissionDataRequestEventResponse>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.createDataRequestEvent(dataRequestId, event, _config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createDataRequestEventWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * Records user notification events for data requests. Use this to create an audit trail showing when and how users were notified about data request forms. Supports email, SMS, and other notification types. Records the notification time for compliance tracking.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - User notification workflow 
-     * Create a new event for emailing a signee a request for signature
-     * @param dataRequestId
-     * @param event
-     */
-    public createDataRequestEvent(dataRequestId: string, event: CreateSubmissionDataRequestEventRequest, _options?: ConfigurationOptions): Observable<CreateSubmissionDataRequestEventResponse> {
-        return this.createDataRequestEventWithHttpInfo(dataRequestId, event, _options).pipe(map((apiResponse: HttpInfo<CreateSubmissionDataRequestEventResponse>) => apiResponse.data));
-    }
-
-    /**
-     * Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
-     * Create a new data request token for form authentication
-     * @param dataRequestId
-     * @param [type]
-     */
-    public createDataRequestTokenWithHttpInfo(dataRequestId: string, type?: 'api' | 'email', _options?: ConfigurationOptions): Observable<HttpInfo<CreateSubmissionDataRequestTokenResponse>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.createDataRequestToken(dataRequestId, type, _config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createDataRequestTokenWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * Creates an authentication token for accessing a data request form. Returns a token and a pre-authenticated URL for the data request form. The token remains valid until the data request is completed.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) 
-     * Create a new data request token for form authentication
-     * @param dataRequestId
-     * @param [type]
-     */
-    public createDataRequestToken(dataRequestId: string, type?: 'api' | 'email', _options?: ConfigurationOptions): Observable<CreateSubmissionDataRequestTokenResponse> {
-        return this.createDataRequestTokenWithHttpInfo(dataRequestId, type, _options).pipe(map((apiResponse: HttpInfo<CreateSubmissionDataRequestTokenResponse>) => apiResponse.data));
-    }
-
-    /**
-     * Creates a new folder for organizing templates. Folders can be nested within other folders by providing a `parent_folder_id`. Folder names must be unique within the same parent. 
+     * Creates a folder for organizing templates. Pass `parent_folder_id` to create it inside another folder. Folder names are unique within their parent folder. 
      * Create a folder
-     * @param data
+     * @param body The folder to create.
      */
-    public createFolderWithHttpInfo(data: CreateFolderData, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
+    public createFolderWithHttpInfo(body: CreateFolderRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createFolder(data, _config);
+        const requestContextPromise = this.requestFactory.createFolder(body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -352,23 +280,24 @@ export class ObservableClient {
     }
 
     /**
-     * Creates a new folder for organizing templates. Folders can be nested within other folders by providing a `parent_folder_id`. Folder names must be unique within the same parent. 
+     * Creates a folder for organizing templates. Pass `parent_folder_id` to create it inside another folder. Folder names are unique within their parent folder. 
      * Create a folder
-     * @param data
+     * @param body The folder to create.
      */
-    public createFolder(data: CreateFolderData, _options?: ConfigurationOptions): Observable<Folder> {
-        return this.createFolderWithHttpInfo(data, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
+    public createFolder(body: CreateFolderRequest, _options?: ConfigurationOptions): Observable<Folder> {
+        return this.createFolderWithHttpInfo(body, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
     }
 
     /**
-     * Creates a new HTML template using HTML, CSS/SCSS, and Liquid templating. Allows complete control over PDF layout and styling. Supports headers, footers, and dynamic content using Liquid syntax for field values, conditions, loops, and filters. 
-     * Create a new HTML template
-     * @param data
+     * Records something that happened outside DocSpring in the signature request's audit trail: you sent the request to the person (`send_request`). The audit trail shows it as reported by your account. 
+     * Record a signature request event
+     * @param signatureRequestId The signature request's ID.
+     * @param body The event to record.
      */
-    public createHtmlTemplateWithHttpInfo(data: CreateHtmlTemplate, _options?: ConfigurationOptions): Observable<HttpInfo<TemplatePreview>> {
+    public createSignatureRequestEventWithHttpInfo(signatureRequestId: string, body: CreateSignatureRequestEventRequest, _options?: ConfigurationOptions): Observable<HttpInfo<SignatureRequestEvent>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createHtmlTemplate(data, _config);
+        const requestContextPromise = this.requestFactory.createSignatureRequestEvent(signatureRequestId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -381,32 +310,30 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createHtmlTemplateWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createSignatureRequestEventWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Creates a new HTML template using HTML, CSS/SCSS, and Liquid templating. Allows complete control over PDF layout and styling. Supports headers, footers, and dynamic content using Liquid syntax for field values, conditions, loops, and filters. 
-     * Create a new HTML template
-     * @param data
+     * Records something that happened outside DocSpring in the signature request's audit trail: you sent the request to the person (`send_request`). The audit trail shows it as reported by your account. 
+     * Record a signature request event
+     * @param signatureRequestId The signature request's ID.
+     * @param body The event to record.
      */
-    public createHtmlTemplate(data: CreateHtmlTemplate, _options?: ConfigurationOptions): Observable<TemplatePreview> {
-        return this.createHtmlTemplateWithHttpInfo(data, _options).pipe(map((apiResponse: HttpInfo<TemplatePreview>) => apiResponse.data));
+    public createSignatureRequestEvent(signatureRequestId: string, body: CreateSignatureRequestEventRequest, _options?: ConfigurationOptions): Observable<SignatureRequestEvent> {
+        return this.createSignatureRequestEventWithHttpInfo(signatureRequestId, body, _options).pipe(map((apiResponse: HttpInfo<SignatureRequestEvent>) => apiResponse.data));
     }
 
     /**
-     * Creates a new PDF template by uploading a PDF file. The uploaded PDF becomes the foundation for your template, and you can then add fillable fields using the template editor. Use the wait parameter to control whether the request waits for document processing to complete. 
-     * Create a new PDF template with a form POST file upload
-     * @param templateDocument
-     * @param templateName
-     * @param [wait] Wait for template document to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     * @param [templateDescription]
-     * @param [templateParentFolderId]
+     * Creates a token that opens the signature request without signing in, in a form embedded in your app or from a link you send. The response is the only time the token's secret is returned. The link works for 24 hours, or 7 days for an `email` token, and a signing page that opened in time keeps working for 7 more days. A test API token can't create a token for a live signature request. 
+     * Create a signature request token
+     * @param signatureRequestId The signature request's ID.
+     * @param [body] The kind of link to make. Send no body for an `api` token.
      */
-    public createPdfTemplateWithHttpInfo(templateDocument: HttpFile, templateName: string, wait?: boolean, templateDescription?: string, templateParentFolderId?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplatePreview>> {
+    public createSignatureRequestTokenWithHttpInfo(signatureRequestId: string, body?: CreateSignatureRequestTokenRequest, _options?: ConfigurationOptions): Observable<HttpInfo<SignatureRequestToken>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createPdfTemplate(templateDocument, templateName, wait, templateDescription, templateParentFolderId, _config);
+        const requestContextPromise = this.requestFactory.createSignatureRequestToken(signatureRequestId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -419,32 +346,32 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createPdfTemplateWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createSignatureRequestTokenWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Creates a new PDF template by uploading a PDF file. The uploaded PDF becomes the foundation for your template, and you can then add fillable fields using the template editor. Use the wait parameter to control whether the request waits for document processing to complete. 
-     * Create a new PDF template with a form POST file upload
-     * @param templateDocument
-     * @param templateName
-     * @param [wait] Wait for template document to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
-     * @param [templateDescription]
-     * @param [templateParentFolderId]
+     * Creates a token that opens the signature request without signing in, in a form embedded in your app or from a link you send. The response is the only time the token's secret is returned. The link works for 24 hours, or 7 days for an `email` token, and a signing page that opened in time keeps working for 7 more days. A test API token can't create a token for a live signature request. 
+     * Create a signature request token
+     * @param signatureRequestId The signature request's ID.
+     * @param [body] The kind of link to make. Send no body for an `api` token.
      */
-    public createPdfTemplate(templateDocument: HttpFile, templateName: string, wait?: boolean, templateDescription?: string, templateParentFolderId?: string, _options?: ConfigurationOptions): Observable<TemplatePreview> {
-        return this.createPdfTemplateWithHttpInfo(templateDocument, templateName, wait, templateDescription, templateParentFolderId, _options).pipe(map((apiResponse: HttpInfo<TemplatePreview>) => apiResponse.data));
+    public createSignatureRequestToken(signatureRequestId: string, body?: CreateSignatureRequestTokenRequest, _options?: ConfigurationOptions): Observable<SignatureRequestToken> {
+        return this.createSignatureRequestTokenWithHttpInfo(signatureRequestId, body, _options).pipe(map((apiResponse: HttpInfo<SignatureRequestToken>) => apiResponse.data));
     }
 
     /**
-     * Creates a new PDF template from a file previously uploaded to S3 using a presigned URL. This two-step process allows for more reliable large file uploads by first uploading the file to S3, then creating the template using the cached upload ID. 
-     * Create a new PDF template from a cached S3 file upload
-     * @param data
+     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID. 
+     * Generate a PDF
+     * @param templateId The template's ID.
+     * @param body The submission's data and settings.
+     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * @param [wait] Wait until the PDF has been generated before responding. Default true on sync.api hosts.
      */
-    public createPdfTemplateFromUploadWithHttpInfo(data: CreatePdfTemplate, _options?: ConfigurationOptions): Observable<HttpInfo<TemplatePreview>> {
+    public createSubmissionWithHttpInfo(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createPdfTemplateFromUpload(data, _config);
+        const requestContextPromise = this.requestFactory.createSubmission(templateId, body, version, wait, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -457,28 +384,103 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createPdfTemplateFromUploadWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createSubmissionWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Creates a new PDF template from a file previously uploaded to S3 using a presigned URL. This two-step process allows for more reliable large file uploads by first uploading the file to S3, then creating the template using the cached upload ID. 
-     * Create a new PDF template from a cached S3 file upload
-     * @param data
+     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID. 
+     * Generate a PDF
+     * @param templateId The template's ID.
+     * @param body The submission's data and settings.
+     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * @param [wait] Wait until the PDF has been generated before responding. Default true on sync.api hosts.
      */
-    public createPdfTemplateFromUpload(data: CreatePdfTemplate, _options?: ConfigurationOptions): Observable<TemplatePreview> {
-        return this.createPdfTemplateFromUploadWithHttpInfo(data, _options).pipe(map((apiResponse: HttpInfo<TemplatePreview>) => apiResponse.data));
+    public createSubmission(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, _options?: ConfigurationOptions): Observable<Submission> {
+        return this.createSubmissionWithHttpInfo(templateId, body, version, wait, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
     }
 
     /**
-     * Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+     * Creates up to 50 submissions in one request, from one template or several. The PDFs are only generated when every submission is valid. On sync.api hosts the request waits until every PDF has been generated (unless you pass `wait=false`), otherwise poll GET /submissions/batches/{submission_batch_id} until `processed_at` is set.  When any submission is invalid, nothing is generated and the request returns a 422. Submissions whose data doesn't match their template's fields are still saved with their errors (an `invalid_data` error, with each one's `submission_id` in its details), so you can find them in DocSpring. The other submissions aren't saved. 
+     * Generate PDFs in a batch
+     * @param body The submissions to create, and the settings they share.
+     * @param [wait] Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts.
+     */
+    public createSubmissionBatchWithHttpInfo(body: CreateSubmissionBatchRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<SubmissionBatch>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.createSubmissionBatch(body, wait, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createSubmissionBatchWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Creates up to 50 submissions in one request, from one template or several. The PDFs are only generated when every submission is valid. On sync.api hosts the request waits until every PDF has been generated (unless you pass `wait=false`), otherwise poll GET /submissions/batches/{submission_batch_id} until `processed_at` is set.  When any submission is invalid, nothing is generated and the request returns a 422. Submissions whose data doesn't match their template's fields are still saved with their errors (an `invalid_data` error, with each one's `submission_id` in its details), so you can find them in DocSpring. The other submissions aren't saved. 
+     * Generate PDFs in a batch
+     * @param body The submissions to create, and the settings they share.
+     * @param [wait] Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts.
+     */
+    public createSubmissionBatch(body: CreateSubmissionBatchRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<SubmissionBatch> {
+        return this.createSubmissionBatchWithHttpInfo(body, wait, _options).pipe(map((apiResponse: HttpInfo<SubmissionBatch>) => apiResponse.data));
+    }
+
+    /**
+     * Creates an HTML template, or a PDF template from a PDF you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. To send the PDF with the request instead, use POST /templates/upload.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+     * Create a template
+     * @param body The template to create.
+     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     */
+    public createTemplateWithHttpInfo(body: CreateTemplateRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.createTemplate(body, wait, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createTemplateWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Creates an HTML template, or a PDF template from a PDF you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. To send the PDF with the request instead, use POST /templates/upload.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+     * Create a template
+     * @param body The template to create.
+     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     */
+    public createTemplate(body: CreateTemplateRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<Template> {
+        return this.createTemplateWithHttpInfo(body, wait, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    }
+
+    /**
+     * Creates a webhook that sends a POST request to your endpoint whenever a subscribed event happens. Scope it to API tokens, templates or folders to receive only their events. 
      * Create a webhook
-     * @param data
+     * @param body The webhook to create.
      */
-    public createWebhookWithHttpInfo(data: CreateWebhookData, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
+    public createWebhookWithHttpInfo(body: CreateWebhookRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createWebhook(data, _config);
+        const requestContextPromise = this.requestFactory.createWebhook(body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -496,18 +498,52 @@ export class ObservableClient {
     }
 
     /**
-     * Creates a webhook that delivers a POST request to your endpoint whenever a subscribed event occurs. Optionally scope the webhook to specific API tokens, templates, or folders. 
+     * Creates a webhook that sends a POST request to your endpoint whenever a subscribed event happens. Scope it to API tokens, templates or folders to receive only their events. 
      * Create a webhook
-     * @param data
+     * @param body The webhook to create.
      */
-    public createWebhook(data: CreateWebhookData, _options?: ConfigurationOptions): Observable<Webhook> {
-        return this.createWebhookWithHttpInfo(data, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
+    public createWebhook(body: CreateWebhookRequest, _options?: ConfigurationOptions): Observable<Webhook> {
+        return this.createWebhookWithHttpInfo(body, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
     }
 
     /**
-     * Deletes an empty folder. The folder must not contain any templates or subfolders. Move or delete all contents before attempting to delete the folder. 
+     * Deletes a custom file and returns it. Use a live API token: test tokens can't delete custom files. 
+     * Delete a custom file
+     * @param customFileId The custom file's ID.
+     */
+    public deleteCustomFileWithHttpInfo(customFileId: string, _options?: ConfigurationOptions): Observable<HttpInfo<CustomFile>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.deleteCustomFile(customFileId, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteCustomFileWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Deletes a custom file and returns it. Use a live API token: test tokens can't delete custom files. 
+     * Delete a custom file
+     * @param customFileId The custom file's ID.
+     */
+    public deleteCustomFile(customFileId: string, _options?: ConfigurationOptions): Observable<CustomFile> {
+        return this.deleteCustomFileWithHttpInfo(customFileId, _options).pipe(map((apiResponse: HttpInfo<CustomFile>) => apiResponse.data));
+    }
+
+    /**
+     * Deletes an empty folder and returns it. A folder that still has templates or folders in it can't be deleted. 
      * Delete a folder
-     * @param folderId
+     * @param folderId The folder's ID.
      */
     public deleteFolderWithHttpInfo(folderId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -530,21 +566,21 @@ export class ObservableClient {
     }
 
     /**
-     * Deletes an empty folder. The folder must not contain any templates or subfolders. Move or delete all contents before attempting to delete the folder. 
+     * Deletes an empty folder and returns it. A folder that still has templates or folders in it can't be deleted. 
      * Delete a folder
-     * @param folderId
+     * @param folderId The folder's ID.
      */
     public deleteFolder(folderId: string, _options?: ConfigurationOptions): Observable<Folder> {
         return this.deleteFolderWithHttpInfo(folderId, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
     }
 
     /**
-     * Deletes a template or a specific template version. When no version is specified, deletes the entire template including all versions. When a version is specified, deletes only that version while preserving others. Returns remaining version information. 
+     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. 
      * Delete a template
-     * @param templateId
-     * @param [version]
+     * @param templateId The template's ID.
+     * @param [version] Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted.
      */
-    public deleteTemplateWithHttpInfo(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateDeleteResponse>> {
+    public deleteTemplateWithHttpInfo(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
         const requestContextPromise = this.requestFactory.deleteTemplate(templateId, version, _config);
@@ -565,19 +601,19 @@ export class ObservableClient {
     }
 
     /**
-     * Deletes a template or a specific template version. When no version is specified, deletes the entire template including all versions. When a version is specified, deletes only that version while preserving others. Returns remaining version information. 
+     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. 
      * Delete a template
-     * @param templateId
-     * @param [version]
+     * @param templateId The template's ID.
+     * @param [version] Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted.
      */
-    public deleteTemplate(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<TemplateDeleteResponse> {
-        return this.deleteTemplateWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<TemplateDeleteResponse>) => apiResponse.data));
+    public deleteTemplate(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.deleteTemplateWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
-     * Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+     * Deletes a webhook so it stops receiving events, and returns it.
      * Delete a webhook
-     * @param webhookId
+     * @param webhookId The webhook's ID.
      */
     public deleteWebhookWithHttpInfo(webhookId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -600,23 +636,23 @@ export class ObservableClient {
     }
 
     /**
-     * Permanently deletes a webhook so it stops receiving events, and returns the deleted webhook.
+     * Deletes a webhook so it stops receiving events, and returns it.
      * Delete a webhook
-     * @param webhookId
+     * @param webhookId The webhook's ID.
      */
     public deleteWebhook(webhookId: string, _options?: ConfigurationOptions): Observable<Webhook> {
         return this.deleteWebhookWithHttpInfo(webhookId, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
     }
 
     /**
-     * Expiring a combined submission deletes the PDF from our system. This is useful for invalidating sensitive documents. 
-     * Expire a combined submission
-     * @param combinedSubmissionId
+     * Deletes a combined PDF's PDF and returns the expired combined PDF.
+     * Expire a combined PDF
+     * @param combinedPdfId The combined PDF's ID.
      */
-    public expireCombinedSubmissionWithHttpInfo(combinedSubmissionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<CombinedSubmission>> {
+    public expireCombinedPdfWithHttpInfo(combinedPdfId: string, _options?: ConfigurationOptions): Observable<HttpInfo<CombinedPdf>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.expireCombinedSubmission(combinedSubmissionId, _config);
+        const requestContextPromise = this.requestFactory.expireCombinedPdf(combinedPdfId, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -629,25 +665,25 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.expireCombinedSubmissionWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.expireCombinedPdfWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Expiring a combined submission deletes the PDF from our system. This is useful for invalidating sensitive documents. 
-     * Expire a combined submission
-     * @param combinedSubmissionId
+     * Deletes a combined PDF's PDF and returns the expired combined PDF.
+     * Expire a combined PDF
+     * @param combinedPdfId The combined PDF's ID.
      */
-    public expireCombinedSubmission(combinedSubmissionId: string, _options?: ConfigurationOptions): Observable<CombinedSubmission> {
-        return this.expireCombinedSubmissionWithHttpInfo(combinedSubmissionId, _options).pipe(map((apiResponse: HttpInfo<CombinedSubmission>) => apiResponse.data));
+    public expireCombinedPdf(combinedPdfId: string, _options?: ConfigurationOptions): Observable<CombinedPdf> {
+        return this.expireCombinedPdfWithHttpInfo(combinedPdfId, _options).pipe(map((apiResponse: HttpInfo<CombinedPdf>) => apiResponse.data));
     }
 
     /**
-     * Expiring a PDF submission deletes the PDF and removes the data from our database. This is useful for invalidating sensitive documents after they\'ve been downloaded. You can also [configure a data retention policy for your submissions](https://docspring.com/docs/template-editor/settings/#expire-submissions) so that they automatically expire. 
-     * Expire a PDF submission
-     * @param submissionId
+     * Deletes a submission's data and PDF now, and returns the expired submission.
+     * Expire a submission
+     * @param submissionId The submission's ID.
      */
-    public expireSubmissionWithHttpInfo(submissionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<SubmissionPreview>> {
+    public expireSubmissionWithHttpInfo(submissionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
         const requestContextPromise = this.requestFactory.expireSubmission(submissionId, _config);
@@ -668,25 +704,23 @@ export class ObservableClient {
     }
 
     /**
-     * Expiring a PDF submission deletes the PDF and removes the data from our database. This is useful for invalidating sensitive documents after they\'ve been downloaded. You can also [configure a data retention policy for your submissions](https://docspring.com/docs/template-editor/settings/#expire-submissions) so that they automatically expire. 
-     * Expire a PDF submission
-     * @param submissionId
+     * Deletes a submission's data and PDF now, and returns the expired submission.
+     * Expire a submission
+     * @param submissionId The submission's ID.
      */
-    public expireSubmission(submissionId: string, _options?: ConfigurationOptions): Observable<SubmissionPreview> {
-        return this.expireSubmissionWithHttpInfo(submissionId, _options).pipe(map((apiResponse: HttpInfo<SubmissionPreview>) => apiResponse.data));
+    public expireSubmission(submissionId: string, _options?: ConfigurationOptions): Observable<Submission> {
+        return this.expireSubmissionWithHttpInfo(submissionId, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
     }
 
     /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  Live PDFs use credits; test PDFs (`test: true`) are free and watermarked. If your balance can\'t cover a live PDF, the API returns 402 and the submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
-     * Generate a PDF
-     * @param templateId
-     * @param submission
-     * @param [wait] Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
+     * Generates a preview of a submission's PDF in the background, such as for a submission still waiting for its signature requests. It's in `files.preview` once `preview_generated_at` changes. 
+     * Generate a preview PDF
+     * @param submissionId The submission's ID.
      */
-    public generatePdfWithHttpInfo(templateId: string, submission: CreatePdfSubmissionData, wait?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<CreateSubmissionResponse>> {
+    public generateSubmissionPreviewWithHttpInfo(submissionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.generatePdf(templateId, submission, wait, _config);
+        const requestContextPromise = this.requestFactory.generateSubmissionPreview(submissionId, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -699,30 +733,28 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.generatePdfWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.generateSubmissionPreviewWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Creates a PDF submission by filling in a template with data. Supports both synchronous (default) and asynchronous processing. Add the `wait=false` query parameter to return immediately.  Live PDFs use credits; test PDFs (`test: true`) are free and watermarked. If your balance can\'t cover a live PDF, the API returns 402 and the submission waits in the `insufficient_credits` state until you add credits. See [Credits & Rate Limits](https://docspring.com/docs/api-guide/credits-and-rate-limits/).  See also: - [Customize the PDF Title and Filename](https://docspring.com/docs/api-guide/generate-pdfs/customize-pdf-title-and-filename/) - Set custom metadata - [Handling Truncated Text](https://docspring.com/docs/api-guide/generate-pdfs/handle-truncated-text/) - Handle text that doesn\'t fit in fields 
-     * Generate a PDF
-     * @param templateId
-     * @param submission
-     * @param [wait] Wait for submission to be processed before returning. Set to false to return immediately. Default: true (on sync.* subdomain)
+     * Generates a preview of a submission's PDF in the background, such as for a submission still waiting for its signature requests. It's in `files.preview` once `preview_generated_at` changes. 
+     * Generate a preview PDF
+     * @param submissionId The submission's ID.
      */
-    public generatePdf(templateId: string, submission: CreatePdfSubmissionData, wait?: boolean, _options?: ConfigurationOptions): Observable<CreateSubmissionResponse> {
-        return this.generatePdfWithHttpInfo(templateId, submission, wait, _options).pipe(map((apiResponse: HttpInfo<CreateSubmissionResponse>) => apiResponse.data));
+    public generateSubmissionPreview(submissionId: string, _options?: ConfigurationOptions): Observable<Submission> {
+        return this.generateSubmissionPreviewWithHttpInfo(submissionId, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
     }
 
     /**
-     * Generates a preview PDF for a submission with partially completed data requests. Useful for showing users what the final document will look like before all signatures or data have been collected. The preview includes any data collected so far. 
-     * Generate a preview PDF for partially completed data requests
-     * @param submissionId
+     * Returns a combined PDF, with a temporary link to download it once it has been generated.
+     * Get a combined PDF
+     * @param combinedPdfId The combined PDF's ID.
      */
-    public generatePreviewWithHttpInfo(submissionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<SuccessErrorResponse>> {
+    public getCombinedPdfWithHttpInfo(combinedPdfId: string, _options?: ConfigurationOptions): Observable<HttpInfo<CombinedPdf>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.generatePreview(submissionId, _config);
+        const requestContextPromise = this.requestFactory.getCombinedPdf(combinedPdfId, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -735,28 +767,28 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.generatePreviewWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getCombinedPdfWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Generates a preview PDF for a submission with partially completed data requests. Useful for showing users what the final document will look like before all signatures or data have been collected. The preview includes any data collected so far. 
-     * Generate a preview PDF for partially completed data requests
-     * @param submissionId
+     * Returns a combined PDF, with a temporary link to download it once it has been generated.
+     * Get a combined PDF
+     * @param combinedPdfId The combined PDF's ID.
      */
-    public generatePreview(submissionId: string, _options?: ConfigurationOptions): Observable<SuccessErrorResponse> {
-        return this.generatePreviewWithHttpInfo(submissionId, _options).pipe(map((apiResponse: HttpInfo<SuccessErrorResponse>) => apiResponse.data));
+    public getCombinedPdf(combinedPdfId: string, _options?: ConfigurationOptions): Observable<CombinedPdf> {
+        return this.getCombinedPdfWithHttpInfo(combinedPdfId, _options).pipe(map((apiResponse: HttpInfo<CombinedPdf>) => apiResponse.data));
     }
 
     /**
-     * Retrieves the details and status of a combined submission. Returns processing state, download URL (if processed), metadata, and information about any integrated actions (e.g., S3 uploads).  `insufficient_credits` means the combined submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
-     * Check the status of a combined submission (merged PDFs)
-     * @param combinedSubmissionId
+     * Returns a custom file, with a temporary URL to download it.
+     * Get a custom file
+     * @param customFileId The custom file's ID.
      */
-    public getCombinedSubmissionWithHttpInfo(combinedSubmissionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<CombinedSubmission>> {
+    public getCustomFileWithHttpInfo(customFileId: string, _options?: ConfigurationOptions): Observable<HttpInfo<CustomFile>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.getCombinedSubmission(combinedSubmissionId, _config);
+        const requestContextPromise = this.requestFactory.getCustomFile(customFileId, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -769,28 +801,28 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getCombinedSubmissionWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getCustomFileWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Retrieves the details and status of a combined submission. Returns processing state, download URL (if processed), metadata, and information about any integrated actions (e.g., S3 uploads).  `insufficient_credits` means the combined submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
-     * Check the status of a combined submission (merged PDFs)
-     * @param combinedSubmissionId
+     * Returns a custom file, with a temporary URL to download it.
+     * Get a custom file
+     * @param customFileId The custom file's ID.
      */
-    public getCombinedSubmission(combinedSubmissionId: string, _options?: ConfigurationOptions): Observable<CombinedSubmission> {
-        return this.getCombinedSubmissionWithHttpInfo(combinedSubmissionId, _options).pipe(map((apiResponse: HttpInfo<CombinedSubmission>) => apiResponse.data));
+    public getCustomFile(customFileId: string, _options?: ConfigurationOptions): Observable<CustomFile> {
+        return this.getCustomFileWithHttpInfo(customFileId, _options).pipe(map((apiResponse: HttpInfo<CustomFile>) => apiResponse.data));
     }
 
     /**
-     * Retrieves the details and status of a data request. Returns information about the request state (pending, viewed, completed), authentication details, and metadata. Includes audit information like IP address, browseruser agent, and timestamps.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - Complete guide to data request workflow 
-     * Look up a submission data request
-     * @param dataRequestId
+     * Returns a folder.
+     * Get a folder
+     * @param folderId The folder's ID.
      */
-    public getDataRequestWithHttpInfo(dataRequestId: string, _options?: ConfigurationOptions): Observable<HttpInfo<SubmissionDataRequestShow>> {
+    public getFolderWithHttpInfo(folderId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.getDataRequest(dataRequestId, _config);
+        const requestContextPromise = this.requestFactory.getFolder(folderId, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -803,58 +835,24 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getDataRequestWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getFolderWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Retrieves the details and status of a data request. Returns information about the request state (pending, viewed, completed), authentication details, and metadata. Includes audit information like IP address, browseruser agent, and timestamps.  See also: - [Embedded Data Requests Guide](https://docspring.com/docs/guides/embedded-forms/embedded-data-requests/) - Complete guide to data request workflow 
-     * Look up a submission data request
-     * @param dataRequestId
+     * Returns a folder.
+     * Get a folder
+     * @param folderId The folder's ID.
      */
-    public getDataRequest(dataRequestId: string, _options?: ConfigurationOptions): Observable<SubmissionDataRequestShow> {
-        return this.getDataRequestWithHttpInfo(dataRequestId, _options).pipe(map((apiResponse: HttpInfo<SubmissionDataRequestShow>) => apiResponse.data));
+    public getFolder(folderId: string, _options?: ConfigurationOptions): Observable<Folder> {
+        return this.getFolderWithHttpInfo(folderId, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
     }
 
     /**
-     * Retrieves complete template information including fields, defaults, settings, and HTML/SCSS content. Use this to get all template data needed for automated updates or analysis. Returns more detailed information than the basic `getTemplate` endpoint. 
-     * Fetch the full attributes for a PDF template
-     * @param templateId
+     * Returns a presigned S3 form for uploading a file directly to DocSpring, for files too large to send in a request body. POST the `fields` and the file (as `file`) to `url` as multipart/form-data, then pass `fields.key` as the `cache_id` when you create a custom file. 
+     * Get a presigned URL to upload a file
      */
-    public getFullTemplateWithHttpInfo(templateId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.getFullTemplate(templateId, _config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getFullTemplateWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * Retrieves complete template information including fields, defaults, settings, and HTML/SCSS content. Use this to get all template data needed for automated updates or analysis. Returns more detailed information than the basic `getTemplate` endpoint. 
-     * Fetch the full attributes for a PDF template
-     * @param templateId
-     */
-    public getFullTemplate(templateId: string, _options?: ConfigurationOptions): Observable<Template> {
-        return this.getFullTemplateWithHttpInfo(templateId, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
-    }
-
-    /**
-     * Returns a presigned S3 URL for uploading files directly to our S3 bucket. Use this endpoint to upload large files before creating templates or custom files. S3 will respond with a JSON object that you can include in your DocSpring API request.  Uploaded files can be used to: - [Create templates](https://docspring.com/docs/api/#tag/templates/post/templates?endpoint_variant=create_template_from_cached_upload) - [Update templates](https://docspring.com/docs/api/#tag/templates/put/templates/{template_id}?endpoint_variant=update_template_pdf_with_cached_upload) - [Create custom files](https://docspring.com/docs/api/#tag/custom-files/post/custom_files) and then [merge them with other PDFs](https://docspring.com/docs/api/#tag/combine-pdfs/post/combined_submissions) 
-     * Get a presigned S3 URL for direct file upload
-     */
-    public getPresignUrlWithHttpInfo(_options?: ConfigurationOptions): Observable<HttpInfo<UploadPresignResponse>> {
+    public getPresignUrlWithHttpInfo(_options?: ConfigurationOptions): Observable<HttpInfo<UploadPresign>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
         const requestContextPromise = this.requestFactory.getPresignUrl(_config);
@@ -875,23 +873,56 @@ export class ObservableClient {
     }
 
     /**
-     * Returns a presigned S3 URL for uploading files directly to our S3 bucket. Use this endpoint to upload large files before creating templates or custom files. S3 will respond with a JSON object that you can include in your DocSpring API request.  Uploaded files can be used to: - [Create templates](https://docspring.com/docs/api/#tag/templates/post/templates?endpoint_variant=create_template_from_cached_upload) - [Update templates](https://docspring.com/docs/api/#tag/templates/put/templates/{template_id}?endpoint_variant=update_template_pdf_with_cached_upload) - [Create custom files](https://docspring.com/docs/api/#tag/custom-files/post/custom_files) and then [merge them with other PDFs](https://docspring.com/docs/api/#tag/combine-pdfs/post/combined_submissions) 
-     * Get a presigned S3 URL for direct file upload
+     * Returns a presigned S3 form for uploading a file directly to DocSpring, for files too large to send in a request body. POST the `fields` and the file (as `file`) to `url` as multipart/form-data, then pass `fields.key` as the `cache_id` when you create a custom file. 
+     * Get a presigned URL to upload a file
      */
-    public getPresignUrl(_options?: ConfigurationOptions): Observable<UploadPresignResponse> {
-        return this.getPresignUrlWithHttpInfo(_options).pipe(map((apiResponse: HttpInfo<UploadPresignResponse>) => apiResponse.data));
+    public getPresignUrl(_options?: ConfigurationOptions): Observable<UploadPresign> {
+        return this.getPresignUrlWithHttpInfo(_options).pipe(map((apiResponse: HttpInfo<UploadPresign>) => apiResponse.data));
     }
 
     /**
-     * Retrieves the details and status of a PDF submission. Returns processing state, download URL (if processed), metadata, submission data (optional), and information about any integrated actions. Use this to poll for completion when using asynchronous processing.  `insufficient_credits` means the submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
-     * Check the status of a PDF
-     * @param submissionId
-     * @param [includeData]
+     * Returns a signature request, with the values the person has entered so far.
+     * Get a signature request
+     * @param signatureRequestId The signature request's ID.
      */
-    public getSubmissionWithHttpInfo(submissionId: string, includeData?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
+    public getSignatureRequestWithHttpInfo(signatureRequestId: string, _options?: ConfigurationOptions): Observable<HttpInfo<SignatureRequest>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.getSubmission(submissionId, includeData, _config);
+        const requestContextPromise = this.requestFactory.getSignatureRequest(signatureRequestId, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getSignatureRequestWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Returns a signature request, with the values the person has entered so far.
+     * Get a signature request
+     * @param signatureRequestId The signature request's ID.
+     */
+    public getSignatureRequest(signatureRequestId: string, _options?: ConfigurationOptions): Observable<SignatureRequest> {
+        return this.getSignatureRequestWithHttpInfo(signatureRequestId, _options).pipe(map((apiResponse: HttpInfo<SignatureRequest>) => apiResponse.data));
+    }
+
+    /**
+     * Returns a submission, with its data and links to download its PDF.
+     * Get a submission
+     * @param submissionId The submission's ID.
+     */
+    public getSubmissionWithHttpInfo(submissionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.getSubmission(submissionId, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -909,25 +940,24 @@ export class ObservableClient {
     }
 
     /**
-     * Retrieves the details and status of a PDF submission. Returns processing state, download URL (if processed), metadata, submission data (optional), and information about any integrated actions. Use this to poll for completion when using asynchronous processing.  `insufficient_credits` means the submission is waiting for credits and is processed once you add them. If it\'s still waiting after 30 days, it moves to `error`. 
-     * Check the status of a PDF
-     * @param submissionId
-     * @param [includeData]
+     * Returns a submission, with its data and links to download its PDF.
+     * Get a submission
+     * @param submissionId The submission's ID.
      */
-    public getSubmission(submissionId: string, includeData?: boolean, _options?: ConfigurationOptions): Observable<Submission> {
-        return this.getSubmissionWithHttpInfo(submissionId, includeData, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
+    public getSubmission(submissionId: string, _options?: ConfigurationOptions): Observable<Submission> {
+        return this.getSubmissionWithHttpInfo(submissionId, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
     }
 
     /**
-     * Retrieves the status and results of a batch PDF generation job. Returns processing state, completion statistics, and optionally includes all individual submission details. Use this to poll for completion when using asynchronous batch processing.  Submissions waiting for credits are in the `insufficient_credits` state and count as pending, so the batch stays `pending` until you add credits or they stop waiting after 30 days. 
-     * Check the status of a submission batch job
-     * @param submissionBatchId
-     * @param [includeSubmissions]
+     * Returns a batch with its submissions. The batch has finished once `processed_at` is set: its `state` is `processed` when every PDF was generated, or `error` when any submission failed. 
+     * Get a batch
+     * @param submissionBatchId The batch's ID.
+     * @param [includeData] Include each submission's `data` (null without it).
      */
-    public getSubmissionBatchWithHttpInfo(submissionBatchId: string, includeSubmissions?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<SubmissionBatchWithSubmissions>> {
+    public getSubmissionBatchWithHttpInfo(submissionBatchId: string, includeData?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<SubmissionBatch>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.getSubmissionBatch(submissionBatchId, includeSubmissions, _config);
+        const requestContextPromise = this.requestFactory.getSubmissionBatch(submissionBatchId, includeData, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -945,24 +975,25 @@ export class ObservableClient {
     }
 
     /**
-     * Retrieves the status and results of a batch PDF generation job. Returns processing state, completion statistics, and optionally includes all individual submission details. Use this to poll for completion when using asynchronous batch processing.  Submissions waiting for credits are in the `insufficient_credits` state and count as pending, so the batch stays `pending` until you add credits or they stop waiting after 30 days. 
-     * Check the status of a submission batch job
-     * @param submissionBatchId
-     * @param [includeSubmissions]
+     * Returns a batch with its submissions. The batch has finished once `processed_at` is set: its `state` is `processed` when every PDF was generated, or `error` when any submission failed. 
+     * Get a batch
+     * @param submissionBatchId The batch's ID.
+     * @param [includeData] Include each submission's `data` (null without it).
      */
-    public getSubmissionBatch(submissionBatchId: string, includeSubmissions?: boolean, _options?: ConfigurationOptions): Observable<SubmissionBatchWithSubmissions> {
-        return this.getSubmissionBatchWithHttpInfo(submissionBatchId, includeSubmissions, _options).pipe(map((apiResponse: HttpInfo<SubmissionBatchWithSubmissions>) => apiResponse.data));
+    public getSubmissionBatch(submissionBatchId: string, includeData?: boolean, _options?: ConfigurationOptions): Observable<SubmissionBatch> {
+        return this.getSubmissionBatchWithHttpInfo(submissionBatchId, includeData, _options).pipe(map((apiResponse: HttpInfo<SubmissionBatch>) => apiResponse.data));
     }
 
     /**
-     * Retrieves information about a template including processing status and document URL. Use this to check if template is ready to view in the template editor or generate PDFs. 
-     * Check the status of an uploaded template
-     * @param templateId
+     * Returns a template: its draft, or one of its published versions.
+     * Get a template
+     * @param templateId The template's ID.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
      */
-    public getTemplateWithHttpInfo(templateId: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplatePreview>> {
+    public getTemplateWithHttpInfo(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.getTemplate(templateId, _config);
+        const requestContextPromise = this.requestFactory.getTemplate(templateId, version, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -980,24 +1011,26 @@ export class ObservableClient {
     }
 
     /**
-     * Retrieves information about a template including processing status and document URL. Use this to check if template is ready to view in the template editor or generate PDFs. 
-     * Check the status of an uploaded template
-     * @param templateId
+     * Returns a template: its draft, or one of its published versions.
+     * Get a template
+     * @param templateId The template's ID.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
      */
-    public getTemplate(templateId: string, _options?: ConfigurationOptions): Observable<TemplatePreview> {
-        return this.getTemplateWithHttpInfo(templateId, _options).pipe(map((apiResponse: HttpInfo<TemplatePreview>) => apiResponse.data));
+    public getTemplate(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.getTemplateWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
-     * Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
-     * Generate typed model code for a template
-     * @param templateId
-     * @param lang The language to generate code for
+     * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
+     * Generate typed code for a template's submission data
+     * @param templateId The template's ID.
+     * @param lang The language to generate the code in.
+     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
      */
-    public getTemplateModelCodeWithHttpInfo(templateId: string, lang: 'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go', _options?: ConfigurationOptions): Observable<HttpInfo<TemplateModelCodeResponse>> {
+    public getTemplateModelCodeWithHttpInfo(templateId: string, lang: ModelCodeLanguage, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateModelCode>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.getTemplateModelCode(templateId, lang, _config);
+        const requestContextPromise = this.requestFactory.getTemplateModelCode(templateId, lang, version, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1015,24 +1048,26 @@ export class ObservableClient {
     }
 
     /**
-     * Generates typed model code for a template\'s submission data from its JSON schema, in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go. Build your submission data with the generated types so your app catches mistakes before it calls the API.  `root_type_name` is the type that describes the whole submission data object, qualified with its namespace or package where there is one. Java returns every class in `code`, each under a `// ClassName.java` comment: split them into one file per class.  A template with no named fields returns 422, since there are no types to generate.  See also: - [Generate Model Code](https://docspring.com/docs/template-editor/generate-model-code/) - Use the generated types 
-     * Generate typed model code for a template
-     * @param templateId
-     * @param lang The language to generate code for
+     * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
+     * Generate typed code for a template's submission data
+     * @param templateId The template's ID.
+     * @param lang The language to generate the code in.
+     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
      */
-    public getTemplateModelCode(templateId: string, lang: 'typescript' | 'javascript' | 'ruby' | 'python' | 'php' | 'java' | 'csharp' | 'elixir' | 'go', _options?: ConfigurationOptions): Observable<TemplateModelCodeResponse> {
-        return this.getTemplateModelCodeWithHttpInfo(templateId, lang, _options).pipe(map((apiResponse: HttpInfo<TemplateModelCodeResponse>) => apiResponse.data));
+    public getTemplateModelCode(templateId: string, lang: ModelCodeLanguage, version?: string, _options?: ConfigurationOptions): Observable<TemplateModelCode> {
+        return this.getTemplateModelCodeWithHttpInfo(templateId, lang, version, _options).pipe(map((apiResponse: HttpInfo<TemplateModelCode>) => apiResponse.data));
     }
 
     /**
-     * Retrieves the JSON Schema definition for a template\'s fields. Use this to validate data before submitting it for PDF generation, or to build dynamic forms that match the template\'s field structure and validation requirements.  See also: - [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data 
-     * Fetch the JSON schema for a template
-     * @param templateId
+     * Returns the JSON Schema that a submission's `data` must match. Use it to check data before you create submissions, or to build a form for the template's fields. 
+     * Get the JSON Schema of a template's submission data
+     * @param templateId The template's ID.
+     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
      */
-    public getTemplateSchemaWithHttpInfo(templateId: string, _options?: ConfigurationOptions): Observable<HttpInfo<JsonSchema>> {
+    public getTemplateSchemaWithHttpInfo(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<{ [key: string]: any; }>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.getTemplateSchema(templateId, _config);
+        const requestContextPromise = this.requestFactory.getTemplateSchema(templateId, version, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1050,18 +1085,19 @@ export class ObservableClient {
     }
 
     /**
-     * Retrieves the JSON Schema definition for a template\'s fields. Use this to validate data before submitting it for PDF generation, or to build dynamic forms that match the template\'s field structure and validation requirements.  See also: - [Generate PDFs Guide](https://docspring.com/docs/api-guide/generate-pdfs/generate-pdfs-via-api/) - Use schema to validate submission data 
-     * Fetch the JSON schema for a template
-     * @param templateId
+     * Returns the JSON Schema that a submission's `data` must match. Use it to check data before you create submissions, or to build a form for the template's fields. 
+     * Get the JSON Schema of a template's submission data
+     * @param templateId The template's ID.
+     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
      */
-    public getTemplateSchema(templateId: string, _options?: ConfigurationOptions): Observable<JsonSchema> {
-        return this.getTemplateSchemaWithHttpInfo(templateId, _options).pipe(map((apiResponse: HttpInfo<JsonSchema>) => apiResponse.data));
+    public getTemplateSchema(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<{ [key: string]: any; }> {
+        return this.getTemplateSchemaWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<{ [key: string]: any; }>) => apiResponse.data));
     }
 
     /**
-     * Retrieves a single webhook by its ID.
+     * Returns a webhook.
      * Get a webhook
-     * @param webhookId
+     * @param webhookId The webhook's ID.
      */
     public getWebhookWithHttpInfo(webhookId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -1084,24 +1120,24 @@ export class ObservableClient {
     }
 
     /**
-     * Retrieves a single webhook by its ID.
+     * Returns a webhook.
      * Get a webhook
-     * @param webhookId
+     * @param webhookId The webhook's ID.
      */
     public getWebhook(webhookId: string, _options?: ConfigurationOptions): Observable<Webhook> {
         return this.getWebhookWithHttpInfo(webhookId, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
     }
 
     /**
-     * Returns a paginated list of combined submissions (merged PDFs) for your account. Includes processing status, expiration details, and download URLs for processed PDFs. 
-     * Get a list of all combined submissions
-     * @param [page] Default: 1
-     * @param [perPage] Default: 50
+     * Returns the combined PDFs in your account, newest first, one page at a time.
+     * List combined PDFs
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listCombinedSubmissionsWithHttpInfo(page?: number, perPage?: number, _options?: ConfigurationOptions): Observable<HttpInfo<Array<CombinedSubmission>>> {
+    public listCombinedPdfsWithHttpInfo(limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<HttpInfo<CombinedPdfList>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.listCombinedSubmissions(page, perPage, _config);
+        const requestContextPromise = this.requestFactory.listCombinedPdfs(limit, cursor, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1114,29 +1150,67 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.listCombinedSubmissionsWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.listCombinedPdfsWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Returns a paginated list of combined submissions (merged PDFs) for your account. Includes processing status, expiration details, and download URLs for processed PDFs. 
-     * Get a list of all combined submissions
-     * @param [page] Default: 1
-     * @param [perPage] Default: 50
+     * Returns the combined PDFs in your account, newest first, one page at a time.
+     * List combined PDFs
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listCombinedSubmissions(page?: number, perPage?: number, _options?: ConfigurationOptions): Observable<Array<CombinedSubmission>> {
-        return this.listCombinedSubmissionsWithHttpInfo(page, perPage, _options).pipe(map((apiResponse: HttpInfo<Array<CombinedSubmission>>) => apiResponse.data));
+    public listCombinedPdfs(limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<CombinedPdfList> {
+        return this.listCombinedPdfsWithHttpInfo(limit, cursor, _options).pipe(map((apiResponse: HttpInfo<CombinedPdfList>) => apiResponse.data));
     }
 
     /**
-     * Returns a list of folders in your account. Can be filtered by parent folder ID to retrieve subfolders. Folders help organize templates and maintain a hierarchical structure. 
-     * Get a list of all folders
-     * @param [parentFolderId] Filter By Folder Id
+     * Returns the custom files in your account, newest first, one page at a time.
+     * List custom files
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listFoldersWithHttpInfo(parentFolderId?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Array<Folder>>> {
+    public listCustomFilesWithHttpInfo(limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<HttpInfo<CustomFileList>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.listFolders(parentFolderId, _config);
+        const requestContextPromise = this.requestFactory.listCustomFiles(limit, cursor, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.listCustomFilesWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Returns the custom files in your account, newest first, one page at a time.
+     * List custom files
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public listCustomFiles(limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<CustomFileList> {
+        return this.listCustomFilesWithHttpInfo(limit, cursor, _options).pipe(map((apiResponse: HttpInfo<CustomFileList>) => apiResponse.data));
+    }
+
+    /**
+     * Returns the folders in your account, newest first, one page at a time. Pass `parent_folder_id` to list the folders in one folder. 
+     * List folders
+     * @param [parentFolderId] Only list the folders in this folder. Without it, the list has every folder, at any depth.
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public listFoldersWithHttpInfo(parentFolderId?: string, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<HttpInfo<FolderList>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.listFolders(parentFolderId, limit, cursor, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1154,28 +1228,31 @@ export class ObservableClient {
     }
 
     /**
-     * Returns a list of folders in your account. Can be filtered by parent folder ID to retrieve subfolders. Folders help organize templates and maintain a hierarchical structure. 
-     * Get a list of all folders
-     * @param [parentFolderId] Filter By Folder Id
+     * Returns the folders in your account, newest first, one page at a time. Pass `parent_folder_id` to list the folders in one folder. 
+     * List folders
+     * @param [parentFolderId] Only list the folders in this folder. Without it, the list has every folder, at any depth.
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listFolders(parentFolderId?: string, _options?: ConfigurationOptions): Observable<Array<Folder>> {
-        return this.listFoldersWithHttpInfo(parentFolderId, _options).pipe(map((apiResponse: HttpInfo<Array<Folder>>) => apiResponse.data));
+    public listFolders(parentFolderId?: string, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<FolderList> {
+        return this.listFoldersWithHttpInfo(parentFolderId, limit, cursor, _options).pipe(map((apiResponse: HttpInfo<FolderList>) => apiResponse.data));
     }
 
     /**
-     * Returns a paginated list of all PDF submissions across all templates in your account. Can be filtered by date range and submission type (test/live). Supports cursor-based pagination and optionally includes submission data for each result. 
-     * List all submissions
-     * @param [cursor]
-     * @param [limit]
-     * @param [createdAfter]
-     * @param [createdBefore]
-     * @param [type]
-     * @param [includeData]
+     * Returns the submissions in your account, newest first, one page at a time. Lists leave out each submission's `data` unless you pass `include_data=true`. 
+     * List submissions
+     * @param [templateId] Only list this template's submissions.
+     * @param [test] Only list test submissions (true) or live submissions (false).
+     * @param [createdAfter] Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`).
+     * @param [createdBefore] Only list submissions created before this time.
+     * @param [includeData] Include each submission's `data` (null without it).
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listSubmissionsWithHttpInfo(cursor?: string, limit?: number, createdAfter?: string, createdBefore?: string, type?: string, includeData?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<ListSubmissionsResponse>> {
+    public listSubmissionsWithHttpInfo(templateId?: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<HttpInfo<SubmissionList>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.listSubmissions(cursor, limit, createdAfter, createdBefore, type, includeData, _config);
+        const requestContextPromise = this.requestFactory.listSubmissions(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1193,34 +1270,35 @@ export class ObservableClient {
     }
 
     /**
-     * Returns a paginated list of all PDF submissions across all templates in your account. Can be filtered by date range and submission type (test/live). Supports cursor-based pagination and optionally includes submission data for each result. 
-     * List all submissions
-     * @param [cursor]
-     * @param [limit]
-     * @param [createdAfter]
-     * @param [createdBefore]
-     * @param [type]
-     * @param [includeData]
+     * Returns the submissions in your account, newest first, one page at a time. Lists leave out each submission's `data` unless you pass `include_data=true`. 
+     * List submissions
+     * @param [templateId] Only list this template's submissions.
+     * @param [test] Only list test submissions (true) or live submissions (false).
+     * @param [createdAfter] Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`).
+     * @param [createdBefore] Only list submissions created before this time.
+     * @param [includeData] Include each submission's `data` (null without it).
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listSubmissions(cursor?: string, limit?: number, createdAfter?: string, createdBefore?: string, type?: string, includeData?: boolean, _options?: ConfigurationOptions): Observable<ListSubmissionsResponse> {
-        return this.listSubmissionsWithHttpInfo(cursor, limit, createdAfter, createdBefore, type, includeData, _options).pipe(map((apiResponse: HttpInfo<ListSubmissionsResponse>) => apiResponse.data));
+    public listSubmissions(templateId?: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<SubmissionList> {
+        return this.listSubmissionsWithHttpInfo(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, _options).pipe(map((apiResponse: HttpInfo<SubmissionList>) => apiResponse.data));
     }
 
     /**
-     * Returns a paginated list of all submissions for a specific template. Can be filtered by date range, submission type (test/live), and optionally include submission data. Supports cursor-based pagination for efficient retrieval of large result sets. 
-     * List all submissions for a given template
-     * @param templateId
-     * @param [cursor]
-     * @param [limit]
-     * @param [createdAfter]
-     * @param [createdBefore]
-     * @param [type]
-     * @param [includeData]
+     * Returns a template's submissions (from every version of the template), newest first.
+     * List a template's submissions
+     * @param templateId The template's ID.
+     * @param [test] Only list test submissions (true) or live submissions (false).
+     * @param [createdAfter] Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`).
+     * @param [createdBefore] Only list submissions created before this time.
+     * @param [includeData] Include each submission's `data` (null without it).
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listTemplateSubmissionsWithHttpInfo(templateId: string, cursor?: string, limit?: number, createdAfter?: string, createdBefore?: string, type?: string, includeData?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<ListSubmissionsResponse>> {
+    public listTemplateSubmissionsWithHttpInfo(templateId: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<HttpInfo<SubmissionList>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.listTemplateSubmissions(templateId, cursor, limit, createdAfter, createdBefore, type, includeData, _config);
+        const requestContextPromise = this.requestFactory.listTemplateSubmissions(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1238,32 +1316,32 @@ export class ObservableClient {
     }
 
     /**
-     * Returns a paginated list of all submissions for a specific template. Can be filtered by date range, submission type (test/live), and optionally include submission data. Supports cursor-based pagination for efficient retrieval of large result sets. 
-     * List all submissions for a given template
-     * @param templateId
-     * @param [cursor]
-     * @param [limit]
-     * @param [createdAfter]
-     * @param [createdBefore]
-     * @param [type]
-     * @param [includeData]
+     * Returns a template's submissions (from every version of the template), newest first.
+     * List a template's submissions
+     * @param templateId The template's ID.
+     * @param [test] Only list test submissions (true) or live submissions (false).
+     * @param [createdAfter] Only list submissions created after this time (RFC 3339, such as `2025-01-31T09:00:00Z`).
+     * @param [createdBefore] Only list submissions created before this time.
+     * @param [includeData] Include each submission's `data` (null without it).
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listTemplateSubmissions(templateId: string, cursor?: string, limit?: number, createdAfter?: string, createdBefore?: string, type?: string, includeData?: boolean, _options?: ConfigurationOptions): Observable<ListSubmissionsResponse> {
-        return this.listTemplateSubmissionsWithHttpInfo(templateId, cursor, limit, createdAfter, createdBefore, type, includeData, _options).pipe(map((apiResponse: HttpInfo<ListSubmissionsResponse>) => apiResponse.data));
+    public listTemplateSubmissions(templateId: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<SubmissionList> {
+        return this.listTemplateSubmissionsWithHttpInfo(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, _options).pipe(map((apiResponse: HttpInfo<SubmissionList>) => apiResponse.data));
     }
 
     /**
-     * Retrieves a list of your templates with search, filtering, and pagination options. Returns basic template information including ID, name, type (PDF or HTML), and folder location. Supports text search by name and filtering by parent folder. 
-     * Get a list of all templates
-     * @param [query] Search By Name
-     * @param [parentFolderId] Filter By Folder Id
-     * @param [page] Default: 1
-     * @param [perPage] Default: 50
+     * Returns the templates in your account (their drafts), newest first, one page at a time. Get a template by its ID for its HTML, defaults and published versions. 
+     * List templates
+     * @param [query] Only list templates whose name contains this text (ignoring case).
+     * @param [parentFolderId] Only list the templates in this folder (not in its subfolders).
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listTemplatesWithHttpInfo(query?: string, parentFolderId?: string, page?: number, perPage?: number, _options?: ConfigurationOptions): Observable<HttpInfo<Array<TemplatePreview>>> {
+    public listTemplatesWithHttpInfo(query?: string, parentFolderId?: string, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateSummaryList>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.listTemplates(query, parentFolderId, page, perPage, _config);
+        const requestContextPromise = this.requestFactory.listTemplates(query, parentFolderId, limit, cursor, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1281,32 +1359,32 @@ export class ObservableClient {
     }
 
     /**
-     * Retrieves a list of your templates with search, filtering, and pagination options. Returns basic template information including ID, name, type (PDF or HTML), and folder location. Supports text search by name and filtering by parent folder. 
-     * Get a list of all templates
-     * @param [query] Search By Name
-     * @param [parentFolderId] Filter By Folder Id
-     * @param [page] Default: 1
-     * @param [perPage] Default: 50
+     * Returns the templates in your account (their drafts), newest first, one page at a time. Get a template by its ID for its HTML, defaults and published versions. 
+     * List templates
+     * @param [query] Only list templates whose name contains this text (ignoring case).
+     * @param [parentFolderId] Only list the templates in this folder (not in its subfolders).
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listTemplates(query?: string, parentFolderId?: string, page?: number, perPage?: number, _options?: ConfigurationOptions): Observable<Array<TemplatePreview>> {
-        return this.listTemplatesWithHttpInfo(query, parentFolderId, page, perPage, _options).pipe(map((apiResponse: HttpInfo<Array<TemplatePreview>>) => apiResponse.data));
+    public listTemplates(query?: string, parentFolderId?: string, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<TemplateSummaryList> {
+        return this.listTemplatesWithHttpInfo(query, parentFolderId, limit, cursor, _options).pipe(map((apiResponse: HttpInfo<TemplateSummaryList>) => apiResponse.data));
     }
 
     /**
-     * Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
-     * Get a list of all webhooks
-     * @param [page] Default: 1
-     * @param [perPage] Default: 50
-     * @param [eventType] Filter by a subscribed event type
-     * @param [mode] Filter by mode (test or live)
-     * @param [templateId] Filter by a scoped template ID
-     * @param [folderId] Filter by a scoped folder ID
-     * @param [apiTokenId] Filter by a scoped API token ID
+     * Returns the webhooks in your account, newest first, one page at a time. Filter them by event type, mode, or the API token, template or folder they're scoped to. 
+     * List webhooks
+     * @param [eventType] Only list webhooks that subscribe to this event.
+     * @param [mode] Only list webhooks set to this mode.
+     * @param [templateId] Only list webhooks scoped to this template.
+     * @param [folderId] Only list webhooks scoped to this folder.
+     * @param [apiTokenId] Only list webhooks scoped to this API token.
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listWebhooksWithHttpInfo(page?: number, perPage?: number, eventType?: string, mode?: string, templateId?: string, folderId?: string, apiTokenId?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Array<Webhook>>> {
+    public listWebhooksWithHttpInfo(eventType?: WebhookEventType, mode?: WebhookMode, templateId?: string, folderId?: string, apiTokenId?: string, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<HttpInfo<WebhookList>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.listWebhooks(page, perPage, eventType, mode, templateId, folderId, apiTokenId, _config);
+        const requestContextPromise = this.requestFactory.listWebhooks(eventType, mode, templateId, folderId, apiTokenId, limit, cursor, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1324,30 +1402,30 @@ export class ObservableClient {
     }
 
     /**
-     * Returns a list of the webhooks configured for your account. Supports pagination and filtering by event type, mode, and the API token, template, or folder a webhook is scoped to. 
-     * Get a list of all webhooks
-     * @param [page] Default: 1
-     * @param [perPage] Default: 50
-     * @param [eventType] Filter by a subscribed event type
-     * @param [mode] Filter by mode (test or live)
-     * @param [templateId] Filter by a scoped template ID
-     * @param [folderId] Filter by a scoped folder ID
-     * @param [apiTokenId] Filter by a scoped API token ID
+     * Returns the webhooks in your account, newest first, one page at a time. Filter them by event type, mode, or the API token, template or folder they're scoped to. 
+     * List webhooks
+     * @param [eventType] Only list webhooks that subscribe to this event.
+     * @param [mode] Only list webhooks set to this mode.
+     * @param [templateId] Only list webhooks scoped to this template.
+     * @param [folderId] Only list webhooks scoped to this folder.
+     * @param [apiTokenId] Only list webhooks scoped to this API token.
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
      */
-    public listWebhooks(page?: number, perPage?: number, eventType?: string, mode?: string, templateId?: string, folderId?: string, apiTokenId?: string, _options?: ConfigurationOptions): Observable<Array<Webhook>> {
-        return this.listWebhooksWithHttpInfo(page, perPage, eventType, mode, templateId, folderId, apiTokenId, _options).pipe(map((apiResponse: HttpInfo<Array<Webhook>>) => apiResponse.data));
+    public listWebhooks(eventType?: WebhookEventType, mode?: WebhookMode, templateId?: string, folderId?: string, apiTokenId?: string, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<WebhookList> {
+        return this.listWebhooksWithHttpInfo(eventType, mode, templateId, folderId, apiTokenId, limit, cursor, _options).pipe(map((apiResponse: HttpInfo<WebhookList>) => apiResponse.data));
     }
 
     /**
-     * Moves a folder to a new parent folder or to the root level. All templates and subfolders within the folder are moved together. Cannot move a folder into one of its own subfolders. 
+     * Moves a folder into another folder, or to the root with `parent_folder_id: null`. Its templates and folders move with it. A folder can't move into itself or one of its own folders. 
      * Move a folder
-     * @param folderId
-     * @param data
+     * @param folderId The folder's ID.
+     * @param body Where to move the folder.
      */
-    public moveFolderToFolderWithHttpInfo(folderId: string, data: MoveFolderData, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
+    public moveFolderWithHttpInfo(folderId: string, body: MoveFolderRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.moveFolderToFolder(folderId, data, _config);
+        const requestContextPromise = this.requestFactory.moveFolder(folderId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1360,30 +1438,30 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.moveFolderToFolderWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.moveFolderWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Moves a folder to a new parent folder or to the root level. All templates and subfolders within the folder are moved together. Cannot move a folder into one of its own subfolders. 
+     * Moves a folder into another folder, or to the root with `parent_folder_id: null`. Its templates and folders move with it. A folder can't move into itself or one of its own folders. 
      * Move a folder
-     * @param folderId
-     * @param data
+     * @param folderId The folder's ID.
+     * @param body Where to move the folder.
      */
-    public moveFolderToFolder(folderId: string, data: MoveFolderData, _options?: ConfigurationOptions): Observable<Folder> {
-        return this.moveFolderToFolderWithHttpInfo(folderId, data, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
+    public moveFolder(folderId: string, body: MoveFolderRequest, _options?: ConfigurationOptions): Observable<Folder> {
+        return this.moveFolderWithHttpInfo(folderId, body, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
     }
 
     /**
-     * Moves a template to a different folder or to the root level. Use this to organize templates within your folders. Provide a folder ID to move to a specific folder, or `null` to move to the root level. 
-     * Move Template to folder
-     * @param templateId
-     * @param data
+     * Moves a template and all of its published versions to a folder, or to the root (`null`).
+     * Move a template to a folder
+     * @param templateId The template's ID.
+     * @param body Where to move the template.
      */
-    public moveTemplateToFolderWithHttpInfo(templateId: string, data: MoveTemplateData, _options?: ConfigurationOptions): Observable<HttpInfo<TemplatePreview>> {
+    public moveTemplateWithHttpInfo(templateId: string, body: MoveTemplateRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.moveTemplateToFolder(templateId, data, _config);
+        const requestContextPromise = this.requestFactory.moveTemplate(templateId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1396,30 +1474,30 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.moveTemplateToFolderWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.moveTemplateWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Moves a template to a different folder or to the root level. Use this to organize templates within your folders. Provide a folder ID to move to a specific folder, or `null` to move to the root level. 
-     * Move Template to folder
-     * @param templateId
-     * @param data
+     * Moves a template and all of its published versions to a folder, or to the root (`null`).
+     * Move a template to a folder
+     * @param templateId The template's ID.
+     * @param body Where to move the template.
      */
-    public moveTemplateToFolder(templateId: string, data: MoveTemplateData, _options?: ConfigurationOptions): Observable<TemplatePreview> {
-        return this.moveTemplateToFolderWithHttpInfo(templateId, data, _options).pipe(map((apiResponse: HttpInfo<TemplatePreview>) => apiResponse.data));
+    public moveTemplate(templateId: string, body: MoveTemplateRequest, _options?: ConfigurationOptions): Observable<Template> {
+        return this.moveTemplateWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
-     * Publishes the current draft version of a template and creates a new immutable version with semantic versioning (major.minor.patch). 
+     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. 
      * Publish a template version
-     * @param templateId
-     * @param data
+     * @param templateId The template's ID.
+     * @param body The version to publish.
      */
-    public publishTemplateVersionWithHttpInfo(templateId: string, data: PublishVersionData, _options?: ConfigurationOptions): Observable<HttpInfo<TemplatePublishVersionResponse>> {
+    public publishTemplateVersionWithHttpInfo(templateId: string, body: PublishTemplateVersionRequest, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateVersion>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.publishTemplateVersion(templateId, data, _config);
+        const requestContextPromise = this.requestFactory.publishTemplateVersion(templateId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1437,25 +1515,25 @@ export class ObservableClient {
     }
 
     /**
-     * Publishes the current draft version of a template and creates a new immutable version with semantic versioning (major.minor.patch). 
+     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. 
      * Publish a template version
-     * @param templateId
-     * @param data
+     * @param templateId The template's ID.
+     * @param body The version to publish.
      */
-    public publishTemplateVersion(templateId: string, data: PublishVersionData, _options?: ConfigurationOptions): Observable<TemplatePublishVersionResponse> {
-        return this.publishTemplateVersionWithHttpInfo(templateId, data, _options).pipe(map((apiResponse: HttpInfo<TemplatePublishVersionResponse>) => apiResponse.data));
+    public publishTemplateVersion(templateId: string, body: PublishTemplateVersionRequest, _options?: ConfigurationOptions): Observable<TemplateVersion> {
+        return this.publishTemplateVersionWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<TemplateVersion>) => apiResponse.data));
     }
 
     /**
-     * Renames an existing folder. The new name must be unique within the same parent folder. This operation only changes the folder name, not its location or contents. 
+     * Renames a folder. The name must be unique within its parent folder. 
      * Rename a folder
-     * @param folderId
-     * @param data
+     * @param folderId The folder's ID.
+     * @param body The folder's new name.
      */
-    public renameFolderWithHttpInfo(folderId: string, data: RenameFolderData, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
+    public renameFolderWithHttpInfo(folderId: string, body: RenameFolderRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.renameFolder(folderId, data, _config);
+        const requestContextPromise = this.requestFactory.renameFolder(folderId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1473,25 +1551,25 @@ export class ObservableClient {
     }
 
     /**
-     * Renames an existing folder. The new name must be unique within the same parent folder. This operation only changes the folder name, not its location or contents. 
+     * Renames a folder. The name must be unique within its parent folder. 
      * Rename a folder
-     * @param folderId
-     * @param data
+     * @param folderId The folder's ID.
+     * @param body The folder's new name.
      */
-    public renameFolder(folderId: string, data: RenameFolderData, _options?: ConfigurationOptions): Observable<Folder> {
-        return this.renameFolderWithHttpInfo(folderId, data, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
+    public renameFolder(folderId: string, body: RenameFolderRequest, _options?: ConfigurationOptions): Observable<Folder> {
+        return this.renameFolderWithHttpInfo(folderId, body, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
     }
 
     /**
-     * Restores your template to a previously published version, copying that version\'s content and configuration to the current draft. Use this to revert changes or recover from an unwanted modification. 
+     * Replaces the template's draft with a copy of one of its published versions.
      * Restore a template version
-     * @param templateId
-     * @param data
+     * @param templateId The template's ID.
+     * @param body The version to restore.
      */
-    public restoreTemplateVersionWithHttpInfo(templateId: string, data: RestoreVersionData, _options?: ConfigurationOptions): Observable<HttpInfo<SuccessErrorResponse>> {
+    public restoreTemplateVersionWithHttpInfo(templateId: string, body: RestoreTemplateVersionRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.restoreTemplateVersion(templateId, data, _config);
+        const requestContextPromise = this.requestFactory.restoreTemplateVersion(templateId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1509,20 +1587,20 @@ export class ObservableClient {
     }
 
     /**
-     * Restores your template to a previously published version, copying that version\'s content and configuration to the current draft. Use this to revert changes or recover from an unwanted modification. 
+     * Replaces the template's draft with a copy of one of its published versions.
      * Restore a template version
-     * @param templateId
-     * @param data
+     * @param templateId The template's ID.
+     * @param body The version to restore.
      */
-    public restoreTemplateVersion(templateId: string, data: RestoreVersionData, _options?: ConfigurationOptions): Observable<SuccessErrorResponse> {
-        return this.restoreTemplateVersionWithHttpInfo(templateId, data, _options).pipe(map((apiResponse: HttpInfo<SuccessErrorResponse>) => apiResponse.data));
+    public restoreTemplateVersion(templateId: string, body: RestoreTemplateVersionRequest, _options?: ConfigurationOptions): Observable<Template> {
+        return this.restoreTemplateVersionWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
-     * Checks whether your API token is valid by making an authenticated request. Returns a success response if authentication passes. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
+     * Checks whether your API token is valid by making an authenticated request. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
      * Test authentication
      */
-    public testAuthenticationWithHttpInfo(_options?: ConfigurationOptions): Observable<HttpInfo<SuccessErrorResponse>> {
+    public testAuthenticationWithHttpInfo(_options?: ConfigurationOptions): Observable<HttpInfo<AuthenticationCheck>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
         const requestContextPromise = this.requestFactory.testAuthentication(_config);
@@ -1543,23 +1621,23 @@ export class ObservableClient {
     }
 
     /**
-     * Checks whether your API token is valid by making an authenticated request. Returns a success response if authentication passes. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
+     * Checks whether your API token is valid by making an authenticated request. This endpoint is useful for verifying credentials during setup or troubleshooting issues. 
      * Test authentication
      */
-    public testAuthentication(_options?: ConfigurationOptions): Observable<SuccessErrorResponse> {
-        return this.testAuthenticationWithHttpInfo(_options).pipe(map((apiResponse: HttpInfo<SuccessErrorResponse>) => apiResponse.data));
+    public testAuthentication(_options?: ConfigurationOptions): Observable<AuthenticationCheck> {
+        return this.testAuthenticationWithHttpInfo(_options).pipe(map((apiResponse: HttpInfo<AuthenticationCheck>) => apiResponse.data));
     }
 
     /**
-     * Updates authentication details for a data request. Use this when a user logs in to record their authentication method, provider, session information, and hashed identifiers. Updates metadata and tracks authentication state changes for auditing and compliance. 
-     * Update a submission data request
-     * @param dataRequestId
-     * @param data
+     * Changes a pending signature request's metadata, or how your app authenticated the person (for the audit trail). Once the person has opened it, only its metadata can be changed, and a completed or declined signature request can't be changed. 
+     * Update a signature request
+     * @param signatureRequestId The signature request's ID.
+     * @param body The settings to change. Properties left out keep their values.
      */
-    public updateDataRequestWithHttpInfo(dataRequestId: string, data: UpdateSubmissionDataRequestData, _options?: ConfigurationOptions): Observable<HttpInfo<CreateSubmissionDataRequestResponse>> {
+    public updateSignatureRequestWithHttpInfo(signatureRequestId: string, body: UpdateSignatureRequestRequest, _options?: ConfigurationOptions): Observable<HttpInfo<SignatureRequest>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.updateDataRequest(dataRequestId, data, _config);
+        const requestContextPromise = this.requestFactory.updateSignatureRequest(signatureRequestId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1572,30 +1650,30 @@ export class ObservableClient {
                 for (const middleware of _config.middleware.reverse()) {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.updateDataRequestWithHttpInfo(rsp)));
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.updateSignatureRequestWithHttpInfo(rsp)));
             }));
     }
 
     /**
-     * Updates authentication details for a data request. Use this when a user logs in to record their authentication method, provider, session information, and hashed identifiers. Updates metadata and tracks authentication state changes for auditing and compliance. 
-     * Update a submission data request
-     * @param dataRequestId
-     * @param data
+     * Changes a pending signature request's metadata, or how your app authenticated the person (for the audit trail). Once the person has opened it, only its metadata can be changed, and a completed or declined signature request can't be changed. 
+     * Update a signature request
+     * @param signatureRequestId The signature request's ID.
+     * @param body The settings to change. Properties left out keep their values.
      */
-    public updateDataRequest(dataRequestId: string, data: UpdateSubmissionDataRequestData, _options?: ConfigurationOptions): Observable<CreateSubmissionDataRequestResponse> {
-        return this.updateDataRequestWithHttpInfo(dataRequestId, data, _options).pipe(map((apiResponse: HttpInfo<CreateSubmissionDataRequestResponse>) => apiResponse.data));
+    public updateSignatureRequest(signatureRequestId: string, body: UpdateSignatureRequestRequest, _options?: ConfigurationOptions): Observable<SignatureRequest> {
+        return this.updateSignatureRequestWithHttpInfo(signatureRequestId, body, _options).pipe(map((apiResponse: HttpInfo<SignatureRequest>) => apiResponse.data));
     }
 
     /**
-     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
-     * Update a Template
-     * @param templateId
-     * @param data
+     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions. 
+     * Update a template
+     * @param templateId The template's ID.
+     * @param body The settings to change. Properties left out keep their values.
      */
-    public updateTemplateWithHttpInfo(templateId: string, data: UpdateHtmlTemplate, _options?: ConfigurationOptions): Observable<HttpInfo<SuccessMultipleErrorsResponse>> {
+    public updateTemplateWithHttpInfo(templateId: string, body: UpdateTemplateRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.updateTemplate(templateId, data, _config);
+        const requestContextPromise = this.requestFactory.updateTemplate(templateId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1613,26 +1691,26 @@ export class ObservableClient {
     }
 
     /**
-     * Updates template content and properties. For HTML templates, you can modify the HTML, SCSS, headers, footers, name, and description. Changes are applied to your draft template and do not affect published template versions. The exception is `parent_folder_id`: moving the template to another folder moves its published versions too. 
-     * Update a Template
-     * @param templateId
-     * @param data
+     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions. 
+     * Update a template
+     * @param templateId The template's ID.
+     * @param body The settings to change. Properties left out keep their values.
      */
-    public updateTemplate(templateId: string, data: UpdateHtmlTemplate, _options?: ConfigurationOptions): Observable<SuccessMultipleErrorsResponse> {
-        return this.updateTemplateWithHttpInfo(templateId, data, _options).pipe(map((apiResponse: HttpInfo<SuccessMultipleErrorsResponse>) => apiResponse.data));
+    public updateTemplate(templateId: string, body: UpdateTemplateRequest, _options?: ConfigurationOptions): Observable<Template> {
+        return this.updateTemplateWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
-     * Upload a new PDF file to update a PDF template\'s document. This replaces the template\'s PDF while preserving all of the existing fields. If you upload a PDF with fewer pages than the current document, any fields on the removed pages will be deleted. 
-     * Update a template\'s document with a form POST file upload
-     * @param templateId
-     * @param templateDocument
-     * @param [templateName]
+     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF with the request instead, use PUT /templates/{template_id}/document/upload. 
+     * Replace a template's PDF
+     * @param templateId The template's ID.
+     * @param body The new PDF.
+     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
      */
-    public updateTemplateDocumentWithHttpInfo(templateId: string, templateDocument: HttpFile, templateName?: string, _options?: ConfigurationOptions): Observable<HttpInfo<SuccessMultipleErrorsResponse>> {
+    public updateTemplateDocumentWithHttpInfo(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.updateTemplateDocument(templateId, templateDocument, templateName, _config);
+        const requestContextPromise = this.requestFactory.updateTemplateDocument(templateId, body, wait, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1650,62 +1728,26 @@ export class ObservableClient {
     }
 
     /**
-     * Upload a new PDF file to update a PDF template\'s document. This replaces the template\'s PDF while preserving all of the existing fields. If you upload a PDF with fewer pages than the current document, any fields on the removed pages will be deleted. 
-     * Update a template\'s document with a form POST file upload
-     * @param templateId
-     * @param templateDocument
-     * @param [templateName]
+     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF with the request instead, use PUT /templates/{template_id}/document/upload. 
+     * Replace a template's PDF
+     * @param templateId The template's ID.
+     * @param body The new PDF.
+     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
      */
-    public updateTemplateDocument(templateId: string, templateDocument: HttpFile, templateName?: string, _options?: ConfigurationOptions): Observable<SuccessMultipleErrorsResponse> {
-        return this.updateTemplateDocumentWithHttpInfo(templateId, templateDocument, templateName, _options).pipe(map((apiResponse: HttpInfo<SuccessMultipleErrorsResponse>) => apiResponse.data));
+    public updateTemplateDocument(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<Template> {
+        return this.updateTemplateDocumentWithHttpInfo(templateId, body, wait, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
-     * Updates a PDF template\'s document using a cached file upload. This is a three-step process: First, request a presigned URL to upload your PDF file to our S3 bucket. Then, use that URL to upload your PDF file. Finally, submit the ID of the uploaded file to replace the template\'s document. 
-     * Update a template\'s document with a cached S3 file upload
-     * @param templateId
-     * @param data
-     */
-    public updateTemplateDocumentFromUploadWithHttpInfo(templateId: string, data: UpdatePdfTemplate, _options?: ConfigurationOptions): Observable<HttpInfo<SuccessMultipleErrorsResponse>> {
-        const _config = mergeConfiguration(this.configuration, _options);
-
-        const requestContextPromise = this.requestFactory.updateTemplateDocumentFromUpload(templateId, data, _config);
-        // build promise chain
-        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
-        for (const middleware of _config.middleware) {
-            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
-        }
-
-        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
-            pipe(mergeMap((response: ResponseContext) => {
-                let middlewarePostObservable = of(response);
-                for (const middleware of _config.middleware.reverse()) {
-                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
-                }
-                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.updateTemplateDocumentFromUploadWithHttpInfo(rsp)));
-            }));
-    }
-
-    /**
-     * Updates a PDF template\'s document using a cached file upload. This is a three-step process: First, request a presigned URL to upload your PDF file to our S3 bucket. Then, use that URL to upload your PDF file. Finally, submit the ID of the uploaded file to replace the template\'s document. 
-     * Update a template\'s document with a cached S3 file upload
-     * @param templateId
-     * @param data
-     */
-    public updateTemplateDocumentFromUpload(templateId: string, data: UpdatePdfTemplate, _options?: ConfigurationOptions): Observable<SuccessMultipleErrorsResponse> {
-        return this.updateTemplateDocumentFromUploadWithHttpInfo(templateId, data, _options).pipe(map((apiResponse: HttpInfo<SuccessMultipleErrorsResponse>) => apiResponse.data));
-    }
-
-    /**
-     * Updates the configuration of an existing webhook.
+     * Updates a webhook. Only the properties you send change.
      * Update a webhook
-     * @param webhookId
-     * @param data
+     * @param webhookId The webhook's ID.
+     * @param body The settings to change. Properties left out keep their values.
      */
-    public updateWebhookWithHttpInfo(webhookId: string, data: UpdateWebhookData, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
+    public updateWebhookWithHttpInfo(webhookId: string, body: UpdateWebhookRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.updateWebhook(webhookId, data, _config);
+        const requestContextPromise = this.requestFactory.updateWebhook(webhookId, body, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1723,13 +1765,105 @@ export class ObservableClient {
     }
 
     /**
-     * Updates the configuration of an existing webhook.
+     * Updates a webhook. Only the properties you send change.
      * Update a webhook
-     * @param webhookId
-     * @param data
+     * @param webhookId The webhook's ID.
+     * @param body The settings to change. Properties left out keep their values.
      */
-    public updateWebhook(webhookId: string, data: UpdateWebhookData, _options?: ConfigurationOptions): Observable<Webhook> {
-        return this.updateWebhookWithHttpInfo(webhookId, data, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
+    public updateWebhook(webhookId: string, body: UpdateWebhookRequest, _options?: ConfigurationOptions): Observable<Webhook> {
+        return this.updateWebhookWithHttpInfo(webhookId, body, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
+    }
+
+    /**
+     * Creates a PDF template from a PDF sent with the request (`multipart/form-data`). For large files, upload the PDF with the presigned upload (GET /uploads/presign) and create the template with POST /templates. 
+     * Create a PDF template from an uploaded PDF
+     * @param document The PDF.
+     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param [name] The template's name.
+     * @param [description] The template's description.
+     * @param [parentFolderId] The folder to put the template in. Left out, it's created at the root.
+     * @param [aiFieldNamingLanguage] The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. Default: your account's template settings.
+     * @param [detectFields] Set up the PDF's fields as DocSpring's "Automatically detect fields" upload option does: import or detect the fields, name them with AI, and set up conditional logic. `field_source`, `field_naming` and `field_logic` choose how. Default false. `document.page_processing_statuses` and `document.field_logic_status` show how it's going, and `document.state` becomes `processed` once every page's fields are set up.
+     * @param [fieldSource] With `detect_fields`, where the fields come from. `auto` (the default) imports the form fields of a fillable PDF and detects the fields of a PDF without them; `pdf_detection` detects the fields from the page layout, even on a fillable PDF; `pdf_form_fields` only imports the PDF's form fields.
+     * @param [fieldNaming] With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`.
+     * @param [fieldLogic] With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
+     */
+    public uploadTemplateWithHttpInfo(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.uploadTemplate(document, wait, name, description, parentFolderId, aiFieldNamingLanguage, detectFields, fieldSource, fieldNaming, fieldLogic, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.uploadTemplateWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Creates a PDF template from a PDF sent with the request (`multipart/form-data`). For large files, upload the PDF with the presigned upload (GET /uploads/presign) and create the template with POST /templates. 
+     * Create a PDF template from an uploaded PDF
+     * @param document The PDF.
+     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param [name] The template's name.
+     * @param [description] The template's description.
+     * @param [parentFolderId] The folder to put the template in. Left out, it's created at the root.
+     * @param [aiFieldNamingLanguage] The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. Default: your account's template settings.
+     * @param [detectFields] Set up the PDF's fields as DocSpring's "Automatically detect fields" upload option does: import or detect the fields, name them with AI, and set up conditional logic. `field_source`, `field_naming` and `field_logic` choose how. Default false. `document.page_processing_statuses` and `document.field_logic_status` show how it's going, and `document.state` becomes `processed` once every page's fields are set up.
+     * @param [fieldSource] With `detect_fields`, where the fields come from. `auto` (the default) imports the form fields of a fillable PDF and detects the fields of a PDF without them; `pdf_detection` detects the fields from the page layout, even on a fillable PDF; `pdf_form_fields` only imports the PDF's form fields.
+     * @param [fieldNaming] With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`.
+     * @param [fieldLogic] With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
+     */
+    public uploadTemplate(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, _options?: ConfigurationOptions): Observable<Template> {
+        return this.uploadTemplateWithHttpInfo(document, wait, name, description, parentFolderId, aiFieldNamingLanguage, detectFields, fieldSource, fieldNaming, fieldLogic, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    }
+
+    /**
+     * Replaces a PDF template's PDF with one sent with the request (`multipart/form-data`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. 
+     * Replace a template's PDF with an uploaded PDF
+     * @param templateId The template's ID.
+     * @param document The new PDF.
+     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param [reimportFields] Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields.
+     */
+    public uploadTemplateDocumentWithHttpInfo(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.uploadTemplateDocument(templateId, document, wait, reimportFields, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.uploadTemplateDocumentWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Replaces a PDF template's PDF with one sent with the request (`multipart/form-data`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. 
+     * Replace a template's PDF with an uploaded PDF
+     * @param templateId The template's ID.
+     * @param document The new PDF.
+     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param [reimportFields] Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields.
+     */
+    public uploadTemplateDocument(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, _options?: ConfigurationOptions): Observable<Template> {
+        return this.uploadTemplateDocumentWithHttpInfo(templateId, document, wait, reimportFields, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
 }

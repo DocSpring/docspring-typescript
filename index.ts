@@ -6,6 +6,8 @@ export type { Configuration, ConfigurationOptions, PromiseConfigurationOptions }
 export * from "./apis/exception";
 export * from "./servers";
 export { RequiredError } from "./apis/baseapi";
+export { ValidationError } from "./RequestValidator";
+export type { ValidationErrorDetail } from "./RequestValidator";
 
 export type { PromiseMiddleware as Middleware, Middleware as ObservableMiddleware } from './middleware';
 export { Observable } from './rxjsStub';
