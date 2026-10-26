@@ -21,7 +21,7 @@ import { HttpFile } from '../http/http';
 */
 export class TemplateDocument {
     /**
-    * The PDF's file name.
+    * The PDF's file name. Null until a `document_url` has been downloaded.
     */
     'filename': string | null;
     /**
@@ -29,11 +29,11 @@ export class TemplateDocument {
     */
     'md5': string | null;
     /**
-    * `pending` while DocSpring processes the PDF, then `processed`. `password_required`, `malformed_pdf` and `unknown_error` mean the PDF couldn't be processed, and `error_message` says why: upload it again or upload another one.
+    * `pending` while DocSpring processes the PDF, then `processed`. `password_required`, `malformed_pdf` and `unknown_error` mean the PDF couldn't be processed, and `error_message` says why: upload it again or upload another one. `downloading` while DocSpring downloads a `document_url`, then as for an upload. `download_failed` means it couldn't be downloaded, and `error_message` says why. A template keeps its PDF while a new one is downloaded, and when it couldn't be.
     */
     'state': TemplateDocumentState | (string & {});
     /**
-    * Why the PDF couldn't be processed, and how to fix it. Null unless `state` is an error.
+    * Why the PDF couldn't be processed or downloaded, and how to fix it. Null unless `state` is an error.
     */
     'error_message': string | null;
     /**

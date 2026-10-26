@@ -12,7 +12,9 @@
 
 import { AiFieldNamingLanguage } from '../models/AiFieldNamingLanguage';
 import { ExpirationInterval } from '../models/ExpirationInterval';
+import { FieldGroup } from '../models/FieldGroup';
 import { HtmlEngineOptions } from '../models/HtmlEngineOptions';
+import { PredefinedField } from '../models/PredefinedField';
 import { TemplateActor } from '../models/TemplateActor';
 import { TemplateDefaults } from '../models/TemplateDefaults';
 import { TemplateDocument } from '../models/TemplateDocument';
@@ -179,6 +181,18 @@ export class Template {
     * Conditional logic: each rule shows or hides its target fields, or makes them required, depending on the values of other fields.
     */
     'field_dependencies': Array<TemplateFieldDependency>;
+    /**
+    * The groups of the template's fields, with their settings. A field's name puts it in groups: `address/city` is in the group `address`, and `items/0/price` is in the list `items` and its items' group `items/~`.
+    */
+    'field_groups': Array<FieldGroup>;
+    /**
+    * The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
+    */
+    'predefined_fields': Array<PredefinedField>;
+    /**
+    * Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
+    */
+    'predefined_fields_sample_data': { [key: string]: any; } | null;
     /**
     * The HTML of an HTML template, as a Liquid template. Null for PDF templates.
     */
@@ -445,6 +459,24 @@ export class Template {
             "name": "field_dependencies",
             "baseName": "field_dependencies",
             "type": "Array<TemplateFieldDependency>",
+            "format": ""
+        },
+        {
+            "name": "field_groups",
+            "baseName": "field_groups",
+            "type": "Array<FieldGroup>",
+            "format": ""
+        },
+        {
+            "name": "predefined_fields",
+            "baseName": "predefined_fields",
+            "type": "Array<PredefinedField>",
+            "format": ""
+        },
+        {
+            "name": "predefined_fields_sample_data",
+            "baseName": "predefined_fields_sample_data",
+            "type": "{ [key: string]: any; }",
             "format": ""
         },
         {

@@ -1,3 +1,4 @@
+export * from '../models/AddTemplateFieldsRequest';
 export * from '../models/AiFieldNamingLanguage';
 export * from '../models/AuthenticationCheck';
 export * from '../models/BarcodeSymbology';
@@ -29,12 +30,19 @@ export * from '../models/ErrorDetail';
 export * from '../models/ErrorInfo';
 export * from '../models/ErrorResponse';
 export * from '../models/ExpirationInterval';
+export * from '../models/Field';
 export * from '../models/FieldComparisonCondition';
 export * from '../models/FieldComparisonOperator';
+export * from '../models/FieldDependency';
+export * from '../models/FieldDependencyInput';
 export * from '../models/FieldDisplayType';
 export * from '../models/FieldEqualsCondition';
 export * from '../models/FieldEqualsOperator';
+export * from '../models/FieldGroup';
+export * from '../models/FieldGroupInput';
+export * from '../models/FieldGroupType';
 export * from '../models/FieldInCondition';
+export * from '../models/FieldInput';
 export * from '../models/FieldOverride';
 export * from '../models/FieldPresenceCondition';
 export * from '../models/FieldPresenceOperator';
@@ -43,8 +51,11 @@ export * from '../models/FieldReimportState';
 export * from '../models/FieldSetupLogic';
 export * from '../models/FieldSetupNaming';
 export * from '../models/FieldSetupSource';
+export * from '../models/FieldType';
 export * from '../models/Folder';
 export * from '../models/FolderList';
+export * from '../models/GenerateFilesFormat';
+export * from '../models/GenerateSubmissionFilesRequest';
 export * from '../models/GeneratedFile';
 export * from '../models/GeneratedFileState';
 export * from '../models/HtmlEngineOptions';
@@ -55,9 +66,16 @@ export * from '../models/ModelCodeLanguage';
 export * from '../models/MoveFolderRequest';
 export * from '../models/MoveTemplateRequest';
 export * from '../models/NumberConditionType';
+export * from '../models/OutputFormat';
 export * from '../models/PageFormat';
+export * from '../models/PageImage';
+export * from '../models/PageImages';
+export * from '../models/PredefinedField';
+export * from '../models/PredefinedFieldInput';
 export * from '../models/PublishTemplateVersionRequest';
+export * from '../models/RemoveTemplateFieldsRequest';
 export * from '../models/RenameFolderRequest';
+export * from '../models/ReorderTemplateFieldsRequest';
 export * from '../models/RestoreTemplateVersionRequest';
 export * from '../models/ShapeType';
 export * from '../models/SignatureRequest';
@@ -83,13 +101,18 @@ export * from '../models/SubmissionList';
 export * from '../models/SubmissionSource';
 export * from '../models/SubmissionSourcePdf';
 export * from '../models/SubmissionState';
+export * from '../models/SubmissionValidation';
 export * from '../models/Template';
 export * from '../models/TemplateActor';
 export * from '../models/TemplateActorType';
 export * from '../models/TemplateDefaults';
 export * from '../models/TemplateDefaultsInput';
+export * from '../models/TemplateDiff';
+export * from '../models/TemplateDiffSummary';
 export * from '../models/TemplateDocument';
 export * from '../models/TemplateDocumentState';
+export * from '../models/TemplateFieldChange';
+export * from '../models/TemplateFieldChanges';
 export * from '../models/TemplateFieldDependency';
 export * from '../models/TemplateFieldDependencyAction';
 export * from '../models/TemplateFieldDependencyCondition';
@@ -98,12 +121,15 @@ export * from '../models/TemplateFieldDependencyInput';
 export * from '../models/TemplateFieldDependencyMatch';
 export * from '../models/TemplateFieldDependencyOperator';
 export * from '../models/TemplateFieldLogicStatus';
+export * from '../models/TemplateFieldMove';
+export * from '../models/TemplateFields';
 export * from '../models/TemplateFormMode';
 export * from '../models/TemplateModelCode';
 export * from '../models/TemplatePageAiError';
 export * from '../models/TemplatePageAiNamingStatus';
 export * from '../models/TemplatePageFieldsStatus';
 export * from '../models/TemplatePageImageStatus';
+export * from '../models/TemplatePageImages';
 export * from '../models/TemplatePageProcessingStatus';
 export * from '../models/TemplateSourcePdf';
 export * from '../models/TemplateSummary';
@@ -117,16 +143,19 @@ export * from '../models/TextVerticalAlignment';
 export * from '../models/Typeface';
 export * from '../models/UpdateSignatureRequestRequest';
 export * from '../models/UpdateTemplateDocumentRequest';
+export * from '../models/UpdateTemplateFieldsRequest';
 export * from '../models/UpdateTemplateRequest';
 export * from '../models/UpdateWebhookRequest';
 export * from '../models/UploadMethod';
 export * from '../models/UploadPresign';
 export * from '../models/UrlSourcePdf';
+export * from '../models/ValidateSubmissionRequest';
 export * from '../models/Webhook';
 export * from '../models/WebhookEventType';
 export * from '../models/WebhookList';
 export * from '../models/WebhookMode';
 
+import { AddTemplateFieldsRequest } from '../models/AddTemplateFieldsRequest';
 import { AiFieldNamingLanguage } from '../models/AiFieldNamingLanguage';
 import { AuthenticationCheck } from '../models/AuthenticationCheck';
 import { BarcodeSymbology } from '../models/BarcodeSymbology';
@@ -148,7 +177,7 @@ import { CreateSignatureRequestEventRequest     } from '../models/CreateSignatur
 import { CreateSignatureRequestTokenRequest  } from '../models/CreateSignatureRequestTokenRequest';
 import { CreateSubmissionBatchRequest } from '../models/CreateSubmissionBatchRequest';
 import { CreateSubmissionRequest } from '../models/CreateSubmissionRequest';
-import { CreateTemplateRequest                                        } from '../models/CreateTemplateRequest';
+import { CreateTemplateRequest                                            } from '../models/CreateTemplateRequest';
 import { CreateWebhookRequest            } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
 import { CustomFileList } from '../models/CustomFileList';
@@ -158,12 +187,19 @@ import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorInfo         } from '../models/ErrorInfo';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { ExpirationInterval } from '../models/ExpirationInterval';
+import { Field                                                                                            } from '../models/Field';
 import { FieldComparisonCondition    } from '../models/FieldComparisonCondition';
 import { FieldComparisonOperator } from '../models/FieldComparisonOperator';
+import { FieldDependency    } from '../models/FieldDependency';
+import { FieldDependencyInput    } from '../models/FieldDependencyInput';
 import { FieldDisplayType } from '../models/FieldDisplayType';
 import { FieldEqualsCondition    } from '../models/FieldEqualsCondition';
 import { FieldEqualsOperator } from '../models/FieldEqualsOperator';
+import { FieldGroup         } from '../models/FieldGroup';
+import { FieldGroupInput } from '../models/FieldGroupInput';
+import { FieldGroupType } from '../models/FieldGroupType';
 import { FieldInCondition } from '../models/FieldInCondition';
+import { FieldInput                                                                                           } from '../models/FieldInput';
 import { FieldOverride                                                                } from '../models/FieldOverride';
 import { FieldPresenceCondition   } from '../models/FieldPresenceCondition';
 import { FieldPresenceOperator } from '../models/FieldPresenceOperator';
@@ -172,8 +208,11 @@ import { FieldReimportState } from '../models/FieldReimportState';
 import { FieldSetupLogic } from '../models/FieldSetupLogic';
 import { FieldSetupNaming } from '../models/FieldSetupNaming';
 import { FieldSetupSource } from '../models/FieldSetupSource';
+import { FieldType } from '../models/FieldType';
 import { Folder } from '../models/Folder';
 import { FolderList } from '../models/FolderList';
+import { GenerateFilesFormat } from '../models/GenerateFilesFormat';
+import { GenerateSubmissionFilesRequest } from '../models/GenerateSubmissionFilesRequest';
 import { GeneratedFile         } from '../models/GeneratedFile';
 import { GeneratedFileState } from '../models/GeneratedFileState';
 import { HtmlEngineOptions           } from '../models/HtmlEngineOptions';
@@ -184,9 +223,16 @@ import { ModelCodeLanguage } from '../models/ModelCodeLanguage';
 import { MoveFolderRequest } from '../models/MoveFolderRequest';
 import { MoveTemplateRequest } from '../models/MoveTemplateRequest';
 import { NumberConditionType } from '../models/NumberConditionType';
+import { OutputFormat } from '../models/OutputFormat';
 import { PageFormat } from '../models/PageFormat';
+import { PageImage } from '../models/PageImage';
+import { PageImages     } from '../models/PageImages';
+import { PredefinedField        } from '../models/PredefinedField';
+import { PredefinedFieldInput        } from '../models/PredefinedFieldInput';
 import { PublishTemplateVersionRequest   } from '../models/PublishTemplateVersionRequest';
+import { RemoveTemplateFieldsRequest } from '../models/RemoveTemplateFieldsRequest';
 import { RenameFolderRequest } from '../models/RenameFolderRequest';
+import { ReorderTemplateFieldsRequest } from '../models/ReorderTemplateFieldsRequest';
 import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
 import { ShapeType } from '../models/ShapeType';
 import { SignatureRequest                          } from '../models/SignatureRequest';
@@ -200,7 +246,7 @@ import { SignatureRequestState } from '../models/SignatureRequestState';
 import { SignatureRequestToken        } from '../models/SignatureRequestToken';
 import { SignatureRequestTokenType } from '../models/SignatureRequestTokenType';
 import { StringConditionType } from '../models/StringConditionType';
-import { Submission                         } from '../models/Submission';
+import { Submission                          } from '../models/Submission';
 import { SubmissionAction       } from '../models/SubmissionAction';
 import { SubmissionActionState } from '../models/SubmissionActionState';
 import { SubmissionActionType } from '../models/SubmissionActionType';
@@ -212,13 +258,18 @@ import { SubmissionList } from '../models/SubmissionList';
 import { SubmissionSource } from '../models/SubmissionSource';
 import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
 import { SubmissionState } from '../models/SubmissionState';
-import { Template                                               } from '../models/Template';
+import { SubmissionValidation } from '../models/SubmissionValidation';
+import { Template                                                  } from '../models/Template';
 import { TemplateActor      } from '../models/TemplateActor';
 import { TemplateActorType } from '../models/TemplateActorType';
 import { TemplateDefaults                     } from '../models/TemplateDefaults';
 import { TemplateDefaultsInput                     } from '../models/TemplateDefaultsInput';
+import { TemplateDiff } from '../models/TemplateDiff';
+import { TemplateDiffSummary } from '../models/TemplateDiffSummary';
 import { TemplateDocument             } from '../models/TemplateDocument';
 import { TemplateDocumentState } from '../models/TemplateDocumentState';
+import { TemplateFieldChange } from '../models/TemplateFieldChange';
+import { TemplateFieldChanges } from '../models/TemplateFieldChanges';
 import { TemplateFieldDependency      } from '../models/TemplateFieldDependency';
 import { TemplateFieldDependencyAction } from '../models/TemplateFieldDependencyAction';
 import { TemplateFieldDependencyCondition     } from '../models/TemplateFieldDependencyCondition';
@@ -227,12 +278,15 @@ import { TemplateFieldDependencyInput      } from '../models/TemplateFieldDepend
 import { TemplateFieldDependencyMatch } from '../models/TemplateFieldDependencyMatch';
 import { TemplateFieldDependencyOperator } from '../models/TemplateFieldDependencyOperator';
 import { TemplateFieldLogicStatus } from '../models/TemplateFieldLogicStatus';
+import { TemplateFieldMove } from '../models/TemplateFieldMove';
+import { TemplateFields } from '../models/TemplateFields';
 import { TemplateFormMode } from '../models/TemplateFormMode';
 import { TemplateModelCode    } from '../models/TemplateModelCode';
 import { TemplatePageAiError } from '../models/TemplatePageAiError';
 import { TemplatePageAiNamingStatus } from '../models/TemplatePageAiNamingStatus';
 import { TemplatePageFieldsStatus } from '../models/TemplatePageFieldsStatus';
 import { TemplatePageImageStatus } from '../models/TemplatePageImageStatus';
+import { TemplatePageImages } from '../models/TemplatePageImages';
 import { TemplatePageProcessingStatus      } from '../models/TemplatePageProcessingStatus';
 import { TemplateSourcePdf } from '../models/TemplateSourcePdf';
 import { TemplateSummary                                      } from '../models/TemplateSummary';
@@ -246,11 +300,13 @@ import { TextVerticalAlignment } from '../models/TextVerticalAlignment';
 import { Typeface } from '../models/Typeface';
 import { UpdateSignatureRequestRequest          } from '../models/UpdateSignatureRequestRequest';
 import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
-import { UpdateTemplateRequest                                 } from '../models/UpdateTemplateRequest';
+import { UpdateTemplateFieldsRequest } from '../models/UpdateTemplateFieldsRequest';
+import { UpdateTemplateRequest                                    } from '../models/UpdateTemplateRequest';
 import { UpdateWebhookRequest            } from '../models/UpdateWebhookRequest';
 import { UploadMethod } from '../models/UploadMethod';
 import { UploadPresign     } from '../models/UploadPresign';
 import { UrlSourcePdf } from '../models/UrlSourcePdf';
+import { ValidateSubmissionRequest } from '../models/ValidateSubmissionRequest';
 import { Webhook                     } from '../models/Webhook';
 import { WebhookEventType } from '../models/WebhookEventType';
 import { WebhookList } from '../models/WebhookList';
@@ -280,16 +336,20 @@ let enumsMap: Set<string> = new Set<string>([
     "FieldComparisonOperator",
     "FieldDisplayType",
     "FieldEqualsOperator",
+    "FieldGroupType",
     "FieldPresenceOperator",
     "FieldReimportState",
     "FieldSetupLogic",
     "FieldSetupNaming",
     "FieldSetupSource",
+    "FieldType",
+    "GenerateFilesFormat",
     "GeneratedFileState",
     "ImageGravity",
     "ImageScaleType",
     "ModelCodeLanguage",
     "NumberConditionType",
+    "OutputFormat",
     "PageFormat",
     "ShapeType",
     "SignatureRequestAuthSecondFactorType",
@@ -327,6 +387,7 @@ let enumsMap: Set<string> = new Set<string>([
 ]);
 
 let typeMap: {[index: string]: any} = {
+    "AddTemplateFieldsRequest": AddTemplateFieldsRequest,
     "AuthenticationCheck": AuthenticationCheck,
     "CombinedPdf": CombinedPdf,
     "CombinedPdfFiles": CombinedPdfFiles,
@@ -350,21 +411,34 @@ let typeMap: {[index: string]: any} = {
     "ErrorDetail": ErrorDetail,
     "ErrorInfo": ErrorInfo,
     "ErrorResponse": ErrorResponse,
+    "Field": Field,
     "FieldComparisonCondition": FieldComparisonCondition,
+    "FieldDependency": FieldDependency,
+    "FieldDependencyInput": FieldDependencyInput,
     "FieldEqualsCondition": FieldEqualsCondition,
+    "FieldGroup": FieldGroup,
+    "FieldGroupInput": FieldGroupInput,
     "FieldInCondition": FieldInCondition,
+    "FieldInput": FieldInput,
     "FieldOverride": FieldOverride,
     "FieldPresenceCondition": FieldPresenceCondition,
     "FieldRangeCondition": FieldRangeCondition,
     "Folder": Folder,
     "FolderList": FolderList,
+    "GenerateSubmissionFilesRequest": GenerateSubmissionFilesRequest,
     "GeneratedFile": GeneratedFile,
     "HtmlEngineOptions": HtmlEngineOptions,
     "HtmlEngineOptionsInput": HtmlEngineOptionsInput,
     "MoveFolderRequest": MoveFolderRequest,
     "MoveTemplateRequest": MoveTemplateRequest,
+    "PageImage": PageImage,
+    "PageImages": PageImages,
+    "PredefinedField": PredefinedField,
+    "PredefinedFieldInput": PredefinedFieldInput,
     "PublishTemplateVersionRequest": PublishTemplateVersionRequest,
+    "RemoveTemplateFieldsRequest": RemoveTemplateFieldsRequest,
     "RenameFolderRequest": RenameFolderRequest,
+    "ReorderTemplateFieldsRequest": ReorderTemplateFieldsRequest,
     "RestoreTemplateVersionRequest": RestoreTemplateVersionRequest,
     "SignatureRequest": SignatureRequest,
     "SignatureRequestEvent": SignatureRequestEvent,
@@ -377,16 +451,24 @@ let typeMap: {[index: string]: any} = {
     "SubmissionInput": SubmissionInput,
     "SubmissionList": SubmissionList,
     "SubmissionSourcePdf": SubmissionSourcePdf,
+    "SubmissionValidation": SubmissionValidation,
     "Template": Template,
     "TemplateActor": TemplateActor,
     "TemplateDefaults": TemplateDefaults,
     "TemplateDefaultsInput": TemplateDefaultsInput,
+    "TemplateDiff": TemplateDiff,
+    "TemplateDiffSummary": TemplateDiffSummary,
     "TemplateDocument": TemplateDocument,
+    "TemplateFieldChange": TemplateFieldChange,
+    "TemplateFieldChanges": TemplateFieldChanges,
     "TemplateFieldDependency": TemplateFieldDependency,
     "TemplateFieldDependencyCondition": TemplateFieldDependencyCondition,
     "TemplateFieldDependencyConditionInput": TemplateFieldDependencyConditionInputClass,
     "TemplateFieldDependencyInput": TemplateFieldDependencyInput,
+    "TemplateFieldMove": TemplateFieldMove,
+    "TemplateFields": TemplateFields,
     "TemplateModelCode": TemplateModelCode,
+    "TemplatePageImages": TemplatePageImages,
     "TemplatePageProcessingStatus": TemplatePageProcessingStatus,
     "TemplateSourcePdf": TemplateSourcePdf,
     "TemplateSummary": TemplateSummary,
@@ -394,10 +476,12 @@ let typeMap: {[index: string]: any} = {
     "TemplateVersion": TemplateVersion,
     "UpdateSignatureRequestRequest": UpdateSignatureRequestRequest,
     "UpdateTemplateDocumentRequest": UpdateTemplateDocumentRequest,
+    "UpdateTemplateFieldsRequest": UpdateTemplateFieldsRequest,
     "UpdateTemplateRequest": UpdateTemplateRequest,
     "UpdateWebhookRequest": UpdateWebhookRequest,
     "UploadPresign": UploadPresign,
     "UrlSourcePdf": UrlSourcePdf,
+    "ValidateSubmissionRequest": ValidateSubmissionRequest,
     "Webhook": Webhook,
     "WebhookList": WebhookList,
 }

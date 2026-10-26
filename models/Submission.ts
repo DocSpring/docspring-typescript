@@ -11,6 +11,7 @@
  */
 
 import { ErrorDetail } from '../models/ErrorDetail';
+import { OutputFormat } from '../models/OutputFormat';
 import { SignatureRequest } from '../models/SignatureRequest';
 import { SubmissionAction } from '../models/SubmissionAction';
 import { SubmissionFiles } from '../models/SubmissionFiles';
@@ -92,7 +93,11 @@ export class Submission {
     */
     'truncated_text': { [key: string]: Array<string>; } | null;
     /**
-    * The generated files: `pdf` once the submission has been processed, `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
+    * What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission.
+    */
+    'output_formats': Array<OutputFormat>;
+    /**
+    * The generated files: `pdf` once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
     */
     'files': SubmissionFiles;
     /**
@@ -225,6 +230,12 @@ export class Submission {
             "name": "truncated_text",
             "baseName": "truncated_text",
             "type": "{ [key: string]: Array<string>; }",
+            "format": ""
+        },
+        {
+            "name": "output_formats",
+            "baseName": "output_formats",
+            "type": "Array<OutputFormat>",
             "format": ""
         },
         {

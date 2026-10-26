@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 
+import { OutputFormat } from '../models/OutputFormat';
 import { SubmissionInput } from '../models/SubmissionInput';
 import { HttpFile } from '../http/http';
 
@@ -33,6 +34,10 @@ export class CreateSubmissionBatchRequest {
     * The default `test` for each submission that doesn't set its own.
     */
     'test'?: boolean;
+    /**
+    * The default `output_formats` for each submission that doesn't set its own.
+    */
+    'output_formats'?: Array<OutputFormat>;
     /**
     * Up to 50 submissions. Each one takes the properties of POST /templates/{template_id}/submissions except `signature_requests`, plus `template_id` and `template_version` when it uses a different template from the batch.
     */
@@ -65,6 +70,12 @@ export class CreateSubmissionBatchRequest {
             "name": "test",
             "baseName": "test",
             "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "output_formats",
+            "baseName": "output_formats",
+            "type": "Array<OutputFormat>",
             "format": ""
         },
         {

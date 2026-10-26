@@ -4,6 +4,7 @@ All URIs are relative to *https://sync.api.docspring.com/api/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**addTemplateFields**](Client.md#addTemplateFields) | **POST** /templates/{template_id}/fields | Add fields to a template
 [**copyTemplate**](Client.md#copyTemplate) | **POST** /templates/{template_id}/copy | Copy a template
 [**createCombinedPdf**](Client.md#createCombinedPdf) | **POST** /combined_pdfs | Combine PDFs
 [**createCustomFileFromUpload**](Client.md#createCustomFileFromUpload) | **POST** /custom_files | Create a custom file from an upload
@@ -20,6 +21,7 @@ Method | HTTP request | Description
 [**deleteWebhook**](Client.md#deleteWebhook) | **DELETE** /webhooks/{webhook_id} | Delete a webhook
 [**expireCombinedPdf**](Client.md#expireCombinedPdf) | **DELETE** /combined_pdfs/{combined_pdf_id} | Expire a combined PDF
 [**expireSubmission**](Client.md#expireSubmission) | **DELETE** /submissions/{submission_id} | Expire a submission
+[**generateSubmissionFiles**](Client.md#generateSubmissionFiles) | **POST** /submissions/{submission_id}/generate_files | Generate more files
 [**generateSubmissionPreview**](Client.md#generateSubmissionPreview) | **POST** /submissions/{submission_id}/generate_preview | Generate a preview PDF
 [**getCombinedPdf**](Client.md#getCombinedPdf) | **GET** /combined_pdfs/{combined_pdf_id} | Get a combined PDF
 [**getCustomFile**](Client.md#getCustomFile) | **GET** /custom_files/{custom_file_id} | Get a custom file
@@ -29,29 +31,191 @@ Method | HTTP request | Description
 [**getSubmission**](Client.md#getSubmission) | **GET** /submissions/{submission_id} | Get a submission
 [**getSubmissionBatch**](Client.md#getSubmissionBatch) | **GET** /submissions/batches/{submission_batch_id} | Get a batch
 [**getTemplate**](Client.md#getTemplate) | **GET** /templates/{template_id} | Get a template
+[**getTemplateDiff**](Client.md#getTemplateDiff) | **GET** /templates/{template_id}/diff | Compare a version of a template with the one before it
 [**getTemplateModelCode**](Client.md#getTemplateModelCode) | **GET** /templates/{template_id}/model_code | Generate typed code for a template's submission data
+[**getTemplatePageImages**](Client.md#getTemplatePageImages) | **GET** /templates/{template_id}/page_images | Get images of a template's pages
 [**getTemplateSchema**](Client.md#getTemplateSchema) | **GET** /templates/{template_id}/schema | Get the JSON Schema of a template's submission data
 [**getWebhook**](Client.md#getWebhook) | **GET** /webhooks/{webhook_id} | Get a webhook
 [**listCombinedPdfs**](Client.md#listCombinedPdfs) | **GET** /combined_pdfs | List combined PDFs
 [**listCustomFiles**](Client.md#listCustomFiles) | **GET** /custom_files | List custom files
 [**listFolders**](Client.md#listFolders) | **GET** /folders | List folders
 [**listSubmissions**](Client.md#listSubmissions) | **GET** /submissions | List submissions
+[**listTemplateFields**](Client.md#listTemplateFields) | **GET** /templates/{template_id}/fields | List a template's fields
 [**listTemplateSubmissions**](Client.md#listTemplateSubmissions) | **GET** /templates/{template_id}/submissions | List a template's submissions
 [**listTemplates**](Client.md#listTemplates) | **GET** /templates | List templates
 [**listWebhooks**](Client.md#listWebhooks) | **GET** /webhooks | List webhooks
 [**moveFolder**](Client.md#moveFolder) | **POST** /folders/{folder_id}/move | Move a folder
 [**moveTemplate**](Client.md#moveTemplate) | **POST** /templates/{template_id}/move | Move a template to a folder
 [**publishTemplateVersion**](Client.md#publishTemplateVersion) | **POST** /templates/{template_id}/publish_version | Publish a template version
+[**removeTemplateFields**](Client.md#removeTemplateFields) | **POST** /templates/{template_id}/fields/remove | Remove fields from a template
 [**renameFolder**](Client.md#renameFolder) | **POST** /folders/{folder_id}/rename | Rename a folder
+[**reorderTemplateFields**](Client.md#reorderTemplateFields) | **POST** /templates/{template_id}/fields/reorder | Reorder a template's fields
 [**restoreTemplateVersion**](Client.md#restoreTemplateVersion) | **POST** /templates/{template_id}/restore_version | Restore a template version
 [**testAuthentication**](Client.md#testAuthentication) | **GET** /authentication | Test authentication
 [**updateSignatureRequest**](Client.md#updateSignatureRequest) | **PUT** /signature_requests/{signature_request_id} | Update a signature request
 [**updateTemplate**](Client.md#updateTemplate) | **PUT** /templates/{template_id} | Update a template
 [**updateTemplateDocument**](Client.md#updateTemplateDocument) | **PUT** /templates/{template_id}/document | Replace a template's PDF
+[**updateTemplateFields**](Client.md#updateTemplateFields) | **PUT** /templates/{template_id}/fields | Update a template's fields
 [**updateWebhook**](Client.md#updateWebhook) | **PUT** /webhooks/{webhook_id} | Update a webhook
 [**uploadTemplate**](Client.md#uploadTemplate) | **POST** /templates/upload | Create a PDF template from an uploaded PDF
 [**uploadTemplateDocument**](Client.md#uploadTemplateDocument) | **PUT** /templates/{template_id}/document/upload | Replace a template's PDF with an uploaded PDF
+[**validateSubmission**](Client.md#validateSubmission) | **POST** /templates/{template_id}/submissions/validate | Check a submission without creating it
 
+
+# **addTemplateFields**
+> TemplateFields addTemplateFields(body)
+
+Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientAddTemplateFieldsRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientAddTemplateFieldsRequest = {
+    // The template's ID.
+  templateId: "tpl_1234567890abcdef01",
+    // The fields to add to the template's draft.
+  body: {
+    fields: [
+      {
+        name: "name_example",
+        page: 1,
+        type: null,
+        _static: true,
+        editable: true,
+        _default: "_default_example",
+        title: "title_example",
+        description: "description_example",
+        placeholder: "placeholder_example",
+        metadata: "metadata_example",
+        required: true,
+        option_list: "option_list_example",
+        combined_field_names: "combined_field_names_example",
+        combined_field_type: null,
+        combined_field_separator: "combined_field_separator_example",
+        combined_field_format: "combined_field_format_example",
+        integer: true,
+        minimum: 3.14,
+        maximum: 3.14,
+        exclusive_minimum: true,
+        exclusive_maximum: true,
+        include_time: true,
+        signature_allow_draw: true,
+        signature_allow_type: true,
+        barcode_symbology: null,
+        hidden: true,
+        x: 3.14,
+        y: 3.14,
+        width: 3.14,
+        height: 3.14,
+        rotation: 3.14,
+        display_type: null,
+        opacity: 3.14,
+        date_time_format: "date_time_format_example",
+        typeface: null,
+        font_size: 1,
+        character_spacing: 3.14,
+        bold: true,
+        uppercase: true,
+        strikethrough: true,
+        keep_leading_spaces: true,
+        overflow: null,
+        multiline: true,
+        multiline_lines: 1,
+        min_length: 3.14,
+        max_length: 1,
+        auto_calculate_max_length: true,
+        color: "color_example",
+        color_field_name: "color_field_name_example",
+        color_field_required: true,
+        background_color: "background_color_example",
+        background_color_field_name: "background_color_field_name_example",
+        background_color_field_required: true,
+        alignment: null,
+        v_alignment: null,
+        comb: true,
+        comb_number_of_cells: 1,
+        comb_value_offset: 1,
+        shape_type: null,
+        shape_sides: 1,
+        shape_border_width: 1,
+        shape_border_color: "shape_border_color_example",
+        shape_border_color_field_name: "shape_border_color_field_name_example",
+        shape_border_color_field_required: true,
+        shape_fill_color: "shape_fill_color_example",
+        shape_fill_color_field_name: "shape_fill_color_field_name_example",
+        shape_fill_color_field_required: true,
+        check_character: null,
+        check_color: "check_color_example",
+        check_color_field_name: "check_color_field_name_example",
+        check_color_field_required: true,
+        qrcode_color: "qrcode_color_example",
+        qrcode_color_field_name: "qrcode_color_field_name_example",
+        qrcode_color_field_required: true,
+        true_text: "true_text_example",
+        false_text: "false_text_example",
+        condition: "condition_example",
+        string_condition_type: null,
+        number_condition_type: null,
+        number_condition_range_min: 3.14,
+        number_condition_range_max: 3.14,
+        number_condition_range_exclusive_min: true,
+        number_condition_range_exclusive_max: true,
+        invert_boolean_condition: true,
+        currency: true,
+        decimal_places: 1,
+        image_scale_type: null,
+        image_gravity: null,
+        dependencies: null,
+        id: 1,
+      },
+    ],
+  },
+};
+
+const data = await apiInstance.addTemplateFields(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | **AddTemplateFieldsRequest**| The fields to add to the template's draft. |
+ **templateId** | [**string**] | The template's ID. | defaults to undefined
+
+
+### Return type
+
+**TemplateFields**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**201** | fields added |  -  |
+**409** | the template's PDF hasn't been processed |  -  |
+**422** | invalid fields |  -  |
+**404** | template not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
 # **copyTemplate**
 > Template copyTemplate()
@@ -452,6 +616,9 @@ const request: ClientCreateSubmissionRequest = {
     data: {},
     metadata: {},
     password: "password_example",
+    output_formats: [
+      "pdf",
+    ],
     expires_in: 1,
     field_overrides: {
       "key": {
@@ -546,7 +713,7 @@ const request: ClientCreateSubmissionRequest = {
   },
     // The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). (optional)
   version: "version_example",
-    // Wait until the PDF has been generated before responding. Default true on sync.api hosts. (optional)
+    // Wait until the files have been generated before responding. Default true on sync.api hosts. (optional)
   wait: true,
 };
 
@@ -562,7 +729,7 @@ Name | Type | Description  | Notes
  **body** | **CreateSubmissionRequest**| The submission's data and settings. |
  **templateId** | [**string**] | The template's ID. | defaults to undefined
  **version** | [**string**] | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). | (optional) defaults to undefined
- **wait** | [**boolean**] | Wait until the PDF has been generated before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+ **wait** | [**boolean**] | Wait until the files have been generated before responding. Default true on sync.api hosts. | (optional) defaults to undefined
 
 
 ### Return type
@@ -613,6 +780,9 @@ const request: ClientCreateSubmissionBatchRequest = {
     template_id: "template_id_example",
     template_version: "template_version_example",
     test: true,
+    output_formats: [
+      "pdf",
+    ],
     submissions: [
       {
         test: true,
@@ -620,6 +790,9 @@ const request: ClientCreateSubmissionBatchRequest = {
         data: {},
         metadata: {},
         password: "password_example",
+        output_formats: [
+          "pdf",
+        ],
         expires_in: 1,
         field_overrides: {
           "key": {
@@ -797,19 +970,33 @@ const request: ClientCreateTemplateRequest = {
         group: "group_example",
       },
     ],
+    predefined_fields: [
+      {
+        name: "name_example",
+        display_name: "display_name_example",
+        title: "title_example",
+        type: null,
+        option_list: "option_list_example",
+        required_in_template: true,
+        field_required: true,
+      },
+    ],
+    predefined_fields_sample_data: {},
     html: "html_example",
     scss: "scss_example",
     header_html: "header_html_example",
     footer_html: "footer_html_example",
     html_engine_options: null,
     cache_id: "cache_id_example",
+    document_url: "document_url_example",
+    document_base64: "document_base64_example",
     filename: "filename_example",
     detect_fields: true,
     field_source: null,
     field_naming: null,
     field_logic: null,
   },
-    // Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+    // Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
   wait: true,
 };
 
@@ -823,7 +1010,7 @@ console.log('API called successfully. Returned data:', data);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | **CreateTemplateRequest**| The template to create. |
- **wait** | [**boolean**] | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+ **wait** | [**boolean**] | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
 
 
 ### Return type
@@ -1263,6 +1450,73 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | submission expired |  -  |
 **403** | test API token |  -  |
+**404** | submission not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **generateSubmissionFiles**
+> Submission generateSubmissionFiles(body)
+
+Adds formats to a processed submission's files, in the background: `png`, a PNG image of each page of the PDF (up to 100 pages). To make them with the submission, add them to `output_formats` when you create it.  Each new file is listed in `files` while it's made: on sync.api hosts the request waits for them (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until none of their `state` is `pending`. A file that couldn't be made has the state `error` and an `error_message`, and the submission stays processed. Asking for a format the submission already has (or is making) changes nothing. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientGenerateSubmissionFilesRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientGenerateSubmissionFilesRequest = {
+    // The submission's ID.
+  submissionId: "sub_1234567890abcdef01",
+    // The formats to make.
+  body: {
+    formats: [
+      "png",
+    ],
+  },
+    // Wait until the files have been generated before responding. Default true on sync.api hosts. (optional)
+  wait: true,
+};
+
+const data = await apiInstance.generateSubmissionFiles(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | **GenerateSubmissionFilesRequest**| The formats to make. |
+ **submissionId** | [**string**] | The submission's ID. | defaults to undefined
+ **wait** | [**boolean**] | Wait until the files have been generated before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+
+
+### Return type
+
+**Submission**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | images of the pages requested |  -  |
+**409** | files not possible |  -  |
+**422** | invalid request |  -  |
 **404** | submission not found |  -  |
 **401** | authentication failed |  -  |
 
@@ -1763,6 +2017,65 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
+# **getTemplateDiff**
+> TemplateDiff getTemplateDiff()
+
+Returns what changed in the template's draft since its latest published version (or in a published version since the one before it): fields added, removed, changed and moved, the settings that changed, and whether the document was replaced. Check it before you publish a version. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientGetTemplateDiffRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientGetTemplateDiffRequest = {
+    // The template's ID.
+  templateId: "tpl_1234567890abcdef01",
+    // A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+  version: "0.1.0",
+};
+
+const data = await apiInstance.getTemplateDiff(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **templateId** | [**string**] | The template's ID. | defaults to undefined
+ **version** | [**string**] | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | (optional) defaults to undefined
+
+
+### Return type
+
+**TemplateDiff**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | the draft's changes since the latest published version |  -  |
+**409** | the template's PDF hasn't been processed |  -  |
+**404** | template not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
 # **getTemplateModelCode**
 > TemplateModelCode getTemplateModelCode()
 
@@ -1820,6 +2133,65 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | model code |  -  |
 **422** | unknown language |  -  |
+**404** | template not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **getTemplatePageImages**
+> TemplatePageImages getTemplatePageImages()
+
+Returns a JPEG image of each page of a PDF template's PDF, with temporary links to download them: the draft's PDF, or a published version's. Use them to see the pages that fields are placed on. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientGetTemplatePageImagesRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientGetTemplatePageImagesRequest = {
+    // The template's ID.
+  templateId: "tpl_1234567890abcdef01",
+    // A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+  version: "latest",
+};
+
+const data = await apiInstance.getTemplatePageImages(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **templateId** | [**string**] | The template's ID. | defaults to undefined
+ **version** | [**string**] | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | (optional) defaults to undefined
+
+
+### Return type
+
+**TemplatePageImages**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | page images |  -  |
+**409** | no page images |  -  |
 **404** | template not found |  -  |
 **401** | authentication failed |  -  |
 
@@ -2188,6 +2560,65 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
+# **listTemplateFields**
+> TemplateFields listTemplateFields()
+
+Returns a template's fields with all of their settings, page by page: the draft's fields, or a published version's. A PDF template's fields are placed on its pages: GET /templates/{template_id}/page_images has images of the pages. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientListTemplateFieldsRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientListTemplateFieldsRequest = {
+    // The template's ID.
+  templateId: "tpl_1234567890abcdef01",
+    // A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. (optional)
+  version: "latest",
+};
+
+const data = await apiInstance.listTemplateFields(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **templateId** | [**string**] | The template's ID. | defaults to undefined
+ **version** | [**string**] | A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`. | (optional) defaults to undefined
+
+
+### Return type
+
+**TemplateFields**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | fields |  -  |
+**409** | the template's PDF hasn't been processed |  -  |
+**404** | template not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
 # **listTemplateSubmissions**
 > SubmissionList listTemplateSubmissions()
 
@@ -2524,7 +2955,7 @@ Name | Type | Description  | Notes
 # **publishTemplateVersion**
 > TemplateVersion publishTemplateVersion(body)
 
-Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. 
+Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. While the template's PDF is downloading or being processed, or DocSpring is setting up its fields, it returns a 409 that says so. 
 
 ### Example
 
@@ -2580,6 +3011,69 @@ Name | Type | Description  | Notes
 **422** | invalid version type |  -  |
 **404** | template not found |  -  |
 **409** | published at the same time |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **removeTemplateFields**
+> TemplateFields removeTemplateFields(body)
+
+Removes fields from a template's draft and returns the fields that are left. Conditional logic that used only the removed fields is removed too. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientRemoveTemplateFieldsRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientRemoveTemplateFieldsRequest = {
+    // The template's ID.
+  templateId: "tpl_1234567890abcdef01",
+    // The fields to remove from the template's draft.
+  body: {
+    field_ids: [
+      1,
+    ],
+  },
+};
+
+const data = await apiInstance.removeTemplateFields(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | **RemoveTemplateFieldsRequest**| The fields to remove from the template's draft. |
+ **templateId** | [**string**] | The template's ID. | defaults to undefined
+
+
+### Return type
+
+**TemplateFields**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | fields removed |  -  |
+**422** | a field the template does not have |  -  |
+**404** | template not found |  -  |
 **401** | authentication failed |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
@@ -2641,6 +3135,69 @@ Name | Type | Description  | Notes
 **200** | folder renamed |  -  |
 **422** | name already exists |  -  |
 **404** | folder not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **reorderTemplateFields**
+> TemplateFields reorderTemplateFields(body)
+
+Changes the order of the fields in a template's draft and returns them in their new order. Send every field's ID: each field stays on its page, and a page's fields are printed in this order, so a later field prints over an earlier one where they overlap. Their values are in this order in the template's data schema and forms. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientReorderTemplateFieldsRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientReorderTemplateFieldsRequest = {
+    // The template's ID.
+  templateId: "tpl_1234567890abcdef01",
+    // The new order of the fields in the template's draft.
+  body: {
+    field_ids: [
+      1,
+    ],
+  },
+};
+
+const data = await apiInstance.reorderTemplateFields(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | **ReorderTemplateFieldsRequest**| The new order of the fields in the template's draft. |
+ **templateId** | [**string**] | The template's ID. | defaults to undefined
+
+
+### Return type
+
+**TemplateFields**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | fields reordered |  -  |
+**422** | a field missing from the order |  -  |
+**404** | template not found |  -  |
 **401** | authentication failed |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
@@ -2827,7 +3384,7 @@ Name | Type | Description  | Notes
 # **updateTemplate**
 > Template updateTemplate(body)
 
-Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions. 
+Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Setting `parent_folder_id` moves the template and all of its published versions. 
 
 ### Example
 
@@ -2885,6 +3442,29 @@ const request: ClientUpdateTemplateRequest = {
         group: "group_example",
       },
     ],
+    field_groups: [
+      {
+        name: "name_example",
+        title: "title_example",
+        description: "description_example",
+        metadata: "metadata_example",
+        min_items: 1,
+        max_items: 1,
+        allow_additional_items: true,
+      },
+    ],
+    predefined_fields: [
+      {
+        name: "name_example",
+        display_name: "display_name_example",
+        title: "title_example",
+        type: null,
+        option_list: "option_list_example",
+        required_in_template: true,
+        field_required: true,
+      },
+    ],
+    predefined_fields_sample_data: {},
     html: "html_example",
     scss: "scss_example",
     header_html: "header_html_example",
@@ -2925,8 +3505,8 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | template updated |  -  |
 **409** | template is locked |  -  |
+**422** | invalid field group changes |  -  |
 **404** | template not found |  -  |
-**422** | invalid update |  -  |
 **401** | authentication failed |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
@@ -2934,7 +3514,7 @@ Name | Type | Description  | Notes
 # **updateTemplateDocument**
 > Template updateTemplateDocument(body)
 
-Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF with the request instead, use PUT /templates/{template_id}/document/upload. 
+Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign) (`cache_id`), a link to download it from (`document_url`), or the file in base64 (`document_base64`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF as `multipart/form-data` instead, use PUT /templates/{template_id}/document/upload. 
 
 ### Example
 
@@ -2949,13 +3529,15 @@ const apiInstance = new Client(configuration);
 const request: ClientUpdateTemplateDocumentRequest = {
     // The template's ID.
   templateId: "tpl_1234567890abcdef01",
-    // The new PDF.
+    // The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
   body: {
     cache_id: "cache_id_example",
+    document_url: "document_url_example",
+    document_base64: "document_base64_example",
     filename: "filename_example",
     reimport_fields: true,
   },
-    // Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+    // Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
   wait: true,
 };
 
@@ -2968,9 +3550,9 @@ console.log('API called successfully. Returned data:', data);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **UpdateTemplateDocumentRequest**| The new PDF. |
+ **body** | **UpdateTemplateDocumentRequest**| The new PDF, as one of `cache_id`, `document_url` and `document_base64`. |
  **templateId** | [**string**] | The template's ID. | defaults to undefined
- **wait** | [**boolean**] | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+ **wait** | [**boolean**] | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
 
 
 ### Return type
@@ -2992,7 +3574,161 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | PDF replaced |  -  |
 **409** | template is locked, so its fields can't be re-imported |  -  |
-**422** | not a PDF template |  -  |
+**422** | no document, or more than one |  -  |
+**404** | template not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **updateTemplateFields**
+> TemplateFields updateTemplateFields(body)
+
+Changes fields of a template's draft and returns all of its fields. Settings left out keep their values. A shared setting (`type`, `required`, `default`, ...) changes for every field with the same name. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientUpdateTemplateFieldsRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientUpdateTemplateFieldsRequest = {
+    // The template's ID.
+  templateId: "tpl_1234567890abcdef01",
+    // The fields to change in the template's draft.
+  body: {
+    fields: [
+      {
+        name: "name_example",
+        page: 1,
+        type: null,
+        _static: true,
+        editable: true,
+        _default: "_default_example",
+        title: "title_example",
+        description: "description_example",
+        placeholder: "placeholder_example",
+        metadata: "metadata_example",
+        required: true,
+        option_list: "option_list_example",
+        combined_field_names: "combined_field_names_example",
+        combined_field_type: null,
+        combined_field_separator: "combined_field_separator_example",
+        combined_field_format: "combined_field_format_example",
+        integer: true,
+        minimum: 3.14,
+        maximum: 3.14,
+        exclusive_minimum: true,
+        exclusive_maximum: true,
+        include_time: true,
+        signature_allow_draw: true,
+        signature_allow_type: true,
+        barcode_symbology: null,
+        hidden: true,
+        x: 3.14,
+        y: 3.14,
+        width: 3.14,
+        height: 3.14,
+        rotation: 3.14,
+        display_type: null,
+        opacity: 3.14,
+        date_time_format: "date_time_format_example",
+        typeface: null,
+        font_size: 1,
+        character_spacing: 3.14,
+        bold: true,
+        uppercase: true,
+        strikethrough: true,
+        keep_leading_spaces: true,
+        overflow: null,
+        multiline: true,
+        multiline_lines: 1,
+        min_length: 3.14,
+        max_length: 1,
+        auto_calculate_max_length: true,
+        color: "color_example",
+        color_field_name: "color_field_name_example",
+        color_field_required: true,
+        background_color: "background_color_example",
+        background_color_field_name: "background_color_field_name_example",
+        background_color_field_required: true,
+        alignment: null,
+        v_alignment: null,
+        comb: true,
+        comb_number_of_cells: 1,
+        comb_value_offset: 1,
+        shape_type: null,
+        shape_sides: 1,
+        shape_border_width: 1,
+        shape_border_color: "shape_border_color_example",
+        shape_border_color_field_name: "shape_border_color_field_name_example",
+        shape_border_color_field_required: true,
+        shape_fill_color: "shape_fill_color_example",
+        shape_fill_color_field_name: "shape_fill_color_field_name_example",
+        shape_fill_color_field_required: true,
+        check_character: null,
+        check_color: "check_color_example",
+        check_color_field_name: "check_color_field_name_example",
+        check_color_field_required: true,
+        qrcode_color: "qrcode_color_example",
+        qrcode_color_field_name: "qrcode_color_field_name_example",
+        qrcode_color_field_required: true,
+        true_text: "true_text_example",
+        false_text: "false_text_example",
+        condition: "condition_example",
+        string_condition_type: null,
+        number_condition_type: null,
+        number_condition_range_min: 3.14,
+        number_condition_range_max: 3.14,
+        number_condition_range_exclusive_min: true,
+        number_condition_range_exclusive_max: true,
+        invert_boolean_condition: true,
+        currency: true,
+        decimal_places: 1,
+        image_scale_type: null,
+        image_gravity: null,
+        dependencies: null,
+        id: 1,
+      },
+    ],
+  },
+};
+
+const data = await apiInstance.updateTemplateFields(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | **UpdateTemplateFieldsRequest**| The fields to change in the template's draft. |
+ **templateId** | [**string**] | The template's ID. | defaults to undefined
+
+
+### Return type
+
+**TemplateFields**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | fields updated |  -  |
+**422** | invalid changes |  -  |
 **404** | template not found |  -  |
 **401** | authentication failed |  -  |
 
@@ -3099,7 +3835,7 @@ const apiInstance = new Client(configuration);
 const request: ClientUploadTemplateRequest = {
     // The PDF.
   document: { data: Buffer.from(fs.readFileSync('/path/to/file', 'utf-8')), name: '/path/to/file' },
-    // Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+    // Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
   wait: true,
     // The template's name. (optional)
   name: "name_example",
@@ -3129,7 +3865,7 @@ console.log('API called successfully. Returned data:', data);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **document** | [**HttpFile**] | The PDF. | defaults to undefined
- **wait** | [**boolean**] | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+ **wait** | [**boolean**] | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
  **name** | [**string**] | The template's name. | (optional) defaults to undefined
  **description** | [**string**] | The template's description. | (optional) defaults to undefined
  **parentFolderId** | [**string**] | The folder to put the template in. Left out, it's created at the root. | (optional) defaults to undefined
@@ -3184,7 +3920,7 @@ const request: ClientUploadTemplateDocumentRequest = {
   templateId: "tpl_1234567890abcdef01",
     // The new PDF.
   document: { data: Buffer.from(fs.readFileSync('/path/to/file', 'utf-8')), name: '/path/to/file' },
-    // Wait until the PDF has been processed before responding. Default true on sync.api hosts. (optional)
+    // Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
   wait: true,
     // Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. (optional)
   reimportFields: true,
@@ -3201,7 +3937,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **templateId** | [**string**] | The template's ID. | defaults to undefined
  **document** | [**HttpFile**] | The new PDF. | defaults to undefined
- **wait** | [**boolean**] | Wait until the PDF has been processed before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+ **wait** | [**boolean**] | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
  **reimportFields** | [**boolean**] | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. | (optional) defaults to undefined
 
 
@@ -3225,6 +3961,168 @@ Name | Type | Description  | Notes
 **200** | PDF replaced |  -  |
 **422** | not a PDF template |  -  |
 **404** | template not found |  -  |
+**401** | authentication failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+
+# **validateSubmission**
+> SubmissionValidation validateSubmission(body)
+
+Checks a submission as creating it would (its data against the template's fields, its settings and signature requests) without saving it, generating anything or using credits. It doesn't check your account's credits. The response says whether the submission is valid, and if not, has the error that creating it would return. 
+
+### Example
+
+
+```typescript
+import { createConfiguration, Client } from '';
+import type { ClientValidateSubmissionRequest } from '';
+
+const configuration = createConfiguration();
+const apiInstance = new Client(configuration);
+
+const request: ClientValidateSubmissionRequest = {
+    // The template's ID.
+  templateId: "tpl_1234567890abcdef01",
+    // The submission's data and settings.
+  body: {
+    test: true,
+    editable: true,
+    data: {},
+    metadata: {},
+    password: "password_example",
+    output_formats: [
+      "pdf",
+    ],
+    expires_in: 1,
+    field_overrides: {
+      "key": {
+        _static: true,
+        editable: true,
+        _default: "_default_example",
+        title: "title_example",
+        required: true,
+        option_list: "option_list_example",
+        combined_field_names: "combined_field_names_example",
+        combined_field_type: null,
+        combined_field_separator: "combined_field_separator_example",
+        combined_field_format: "combined_field_format_example",
+        integer: true,
+        include_time: true,
+        signature_allow_draw: true,
+        signature_allow_type: true,
+        barcode_symbology: null,
+        hidden: true,
+        x: 3.14,
+        y: 3.14,
+        width: 3.14,
+        height: 3.14,
+        rotation: 3.14,
+        display_type: null,
+        opacity: 3.14,
+        date_time_format: "date_time_format_example",
+        typeface: null,
+        font_size: 1,
+        character_spacing: 3.14,
+        bold: true,
+        uppercase: true,
+        strikethrough: true,
+        keep_leading_spaces: true,
+        overflow: null,
+        multiline: true,
+        multiline_lines: 1,
+        max_length: 1,
+        color: "color_example",
+        background_color: "background_color_example",
+        alignment: null,
+        v_alignment: null,
+        comb: true,
+        comb_number_of_cells: 1,
+        comb_value_offset: 1,
+        shape_type: null,
+        shape_sides: 1,
+        shape_border_width: 1,
+        shape_border_color: "shape_border_color_example",
+        shape_fill_color: "shape_fill_color_example",
+        check_character: null,
+        check_color: "check_color_example",
+        qrcode_color: "qrcode_color_example",
+        true_text: "true_text_example",
+        false_text: "false_text_example",
+        condition: "condition_example",
+        string_condition_type: null,
+        number_condition_type: null,
+        number_condition_range_min: 3.14,
+        number_condition_range_max: 3.14,
+        number_condition_range_exclusive_min: true,
+        number_condition_range_exclusive_max: true,
+        invert_boolean_condition: true,
+        decimal_places: 1,
+        image_scale_type: null,
+        image_gravity: null,
+      },
+    },
+    html: "html_example",
+    css: "css_example",
+    signature_requests: [
+      {
+        name: "name_example",
+        email: "email_example",
+        fields: [
+          "fields_example",
+        ],
+        metadata: {},
+        role: "role_example",
+        auth_type: null,
+        auth_second_factor_type: null,
+        auth_provider: "auth_provider_example",
+        auth_session_started_at: new Date('1970-01-01T00:00:00.00Z'),
+        auth_session_id_hash: "auth_session_id_hash_example",
+        auth_user_id_hash: "auth_user_id_hash_example",
+        auth_username_hash: "auth_username_hash_example",
+        auth_phone_number_hash: "auth_phone_number_hash_example",
+        ignore_unknown_fields: true,
+        prefilled_values_editable: true,
+      },
+    ],
+  },
+    // The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). (optional)
+  version: "latest",
+};
+
+const data = await apiInstance.validateSubmission(request);
+console.log('API called successfully. Returned data:', data);
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | **ValidateSubmissionRequest**| The submission's data and settings. |
+ **templateId** | [**string**] | The template's ID. | defaults to undefined
+ **version** | [**string**] | The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published). | (optional) defaults to undefined
+
+
+### Return type
+
+**SubmissionValidation**
+
+### Authorization
+
+[api_token_basic](README.md#api_token_basic)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | valid submission |  -  |
+**404** | template not found |  -  |
+**422** | invalid request |  -  |
 **401** | authentication failed |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)

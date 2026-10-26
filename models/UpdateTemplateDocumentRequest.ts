@@ -13,15 +13,23 @@
 import { HttpFile } from '../http/http';
 
 /**
-* The new PDF.
+* The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
 */
 export class UpdateTemplateDocumentRequest {
     /**
     * The `fields.key` of the new PDF, uploaded with the presigned upload (GET /uploads/presign).
     */
-    'cache_id': string;
+    'cache_id'?: string;
     /**
-    * The PDF's file name, for a `cache_id` (presigned uploads don't send one).
+    * An https:// link to the template's PDF (up to 100 MB), instead of `cache_id`. DocSpring downloads it after responding, following redirects to other https:// links: the template's `document.state` is `downloading` until then (sync.api hosts wait for it). If it can't be downloaded, the state is `download_failed` and `document.error_message` says why.
+    */
+    'document_url'?: string;
+    /**
+    * The template's PDF, encoded as base64 (a `data:` URI works too), instead of `cache_id`. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`.
+    */
+    'document_base64'?: string;
+    /**
+    * The PDF's file name, for a `cache_id` (presigned uploads don't send one) or `document_base64`. A `document_url`'s is the last part of its path unless you set it.
     */
     'filename'?: string;
     /**
@@ -37,6 +45,18 @@ export class UpdateTemplateDocumentRequest {
         {
             "name": "cache_id",
             "baseName": "cache_id",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "document_url",
+            "baseName": "document_url",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "document_base64",
+            "baseName": "document_base64",
             "type": "string",
             "format": ""
         },

@@ -11,6 +11,7 @@
  */
 
 import { FieldOverride } from '../models/FieldOverride';
+import { OutputFormat } from '../models/OutputFormat';
 import { SignatureRequestInput } from '../models/SignatureRequestInput';
 import { HttpFile } from '../http/http';
 
@@ -38,6 +39,10 @@ export class CreateSubmissionRequest {
     * A password that the PDF needs to be opened with. It's never returned; `has_password` says if it's set.
     */
     'password'?: string;
+    /**
+    * What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission.
+    */
+    'output_formats'?: Array<OutputFormat>;
     /**
     * Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours.
     */
@@ -92,6 +97,12 @@ export class CreateSubmissionRequest {
             "name": "password",
             "baseName": "password",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "output_formats",
+            "baseName": "output_formats",
+            "type": "Array<OutputFormat>",
             "format": ""
         },
         {

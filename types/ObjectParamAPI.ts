@@ -2,6 +2,7 @@ import { ResponseContext, RequestContext, HttpFile, HttpInfo } from '../http/htt
 import { Configuration, ConfigurationOptions } from '../configuration'
 import type { Middleware } from '../middleware';
 
+import { AddTemplateFieldsRequest } from '../models/AddTemplateFieldsRequest';
 import { AiFieldNamingLanguage } from '../models/AiFieldNamingLanguage';
 import { AuthenticationCheck } from '../models/AuthenticationCheck';
 import { BarcodeSymbology } from '../models/BarcodeSymbology';
@@ -33,12 +34,19 @@ import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorInfo } from '../models/ErrorInfo';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { ExpirationInterval } from '../models/ExpirationInterval';
+import { Field } from '../models/Field';
 import { FieldComparisonCondition } from '../models/FieldComparisonCondition';
 import { FieldComparisonOperator } from '../models/FieldComparisonOperator';
+import { FieldDependency } from '../models/FieldDependency';
+import { FieldDependencyInput } from '../models/FieldDependencyInput';
 import { FieldDisplayType } from '../models/FieldDisplayType';
 import { FieldEqualsCondition } from '../models/FieldEqualsCondition';
 import { FieldEqualsOperator } from '../models/FieldEqualsOperator';
+import { FieldGroup } from '../models/FieldGroup';
+import { FieldGroupInput } from '../models/FieldGroupInput';
+import { FieldGroupType } from '../models/FieldGroupType';
 import { FieldInCondition } from '../models/FieldInCondition';
+import { FieldInput } from '../models/FieldInput';
 import { FieldOverride } from '../models/FieldOverride';
 import { FieldPresenceCondition } from '../models/FieldPresenceCondition';
 import { FieldPresenceOperator } from '../models/FieldPresenceOperator';
@@ -47,8 +55,11 @@ import { FieldReimportState } from '../models/FieldReimportState';
 import { FieldSetupLogic } from '../models/FieldSetupLogic';
 import { FieldSetupNaming } from '../models/FieldSetupNaming';
 import { FieldSetupSource } from '../models/FieldSetupSource';
+import { FieldType } from '../models/FieldType';
 import { Folder } from '../models/Folder';
 import { FolderList } from '../models/FolderList';
+import { GenerateFilesFormat } from '../models/GenerateFilesFormat';
+import { GenerateSubmissionFilesRequest } from '../models/GenerateSubmissionFilesRequest';
 import { GeneratedFile } from '../models/GeneratedFile';
 import { GeneratedFileState } from '../models/GeneratedFileState';
 import { HtmlEngineOptions } from '../models/HtmlEngineOptions';
@@ -59,9 +70,16 @@ import { ModelCodeLanguage } from '../models/ModelCodeLanguage';
 import { MoveFolderRequest } from '../models/MoveFolderRequest';
 import { MoveTemplateRequest } from '../models/MoveTemplateRequest';
 import { NumberConditionType } from '../models/NumberConditionType';
+import { OutputFormat } from '../models/OutputFormat';
 import { PageFormat } from '../models/PageFormat';
+import { PageImage } from '../models/PageImage';
+import { PageImages } from '../models/PageImages';
+import { PredefinedField } from '../models/PredefinedField';
+import { PredefinedFieldInput } from '../models/PredefinedFieldInput';
 import { PublishTemplateVersionRequest } from '../models/PublishTemplateVersionRequest';
+import { RemoveTemplateFieldsRequest } from '../models/RemoveTemplateFieldsRequest';
 import { RenameFolderRequest } from '../models/RenameFolderRequest';
+import { ReorderTemplateFieldsRequest } from '../models/ReorderTemplateFieldsRequest';
 import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
 import { ShapeType } from '../models/ShapeType';
 import { SignatureRequest } from '../models/SignatureRequest';
@@ -87,13 +105,18 @@ import { SubmissionList } from '../models/SubmissionList';
 import { SubmissionSource } from '../models/SubmissionSource';
 import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
 import { SubmissionState } from '../models/SubmissionState';
+import { SubmissionValidation } from '../models/SubmissionValidation';
 import { Template } from '../models/Template';
 import { TemplateActor } from '../models/TemplateActor';
 import { TemplateActorType } from '../models/TemplateActorType';
 import { TemplateDefaults } from '../models/TemplateDefaults';
 import { TemplateDefaultsInput } from '../models/TemplateDefaultsInput';
+import { TemplateDiff } from '../models/TemplateDiff';
+import { TemplateDiffSummary } from '../models/TemplateDiffSummary';
 import { TemplateDocument } from '../models/TemplateDocument';
 import { TemplateDocumentState } from '../models/TemplateDocumentState';
+import { TemplateFieldChange } from '../models/TemplateFieldChange';
+import { TemplateFieldChanges } from '../models/TemplateFieldChanges';
 import { TemplateFieldDependency } from '../models/TemplateFieldDependency';
 import { TemplateFieldDependencyAction } from '../models/TemplateFieldDependencyAction';
 import { TemplateFieldDependencyCondition } from '../models/TemplateFieldDependencyCondition';
@@ -102,12 +125,15 @@ import { TemplateFieldDependencyInput } from '../models/TemplateFieldDependencyI
 import { TemplateFieldDependencyMatch } from '../models/TemplateFieldDependencyMatch';
 import { TemplateFieldDependencyOperator } from '../models/TemplateFieldDependencyOperator';
 import { TemplateFieldLogicStatus } from '../models/TemplateFieldLogicStatus';
+import { TemplateFieldMove } from '../models/TemplateFieldMove';
+import { TemplateFields } from '../models/TemplateFields';
 import { TemplateFormMode } from '../models/TemplateFormMode';
 import { TemplateModelCode } from '../models/TemplateModelCode';
 import { TemplatePageAiError } from '../models/TemplatePageAiError';
 import { TemplatePageAiNamingStatus } from '../models/TemplatePageAiNamingStatus';
 import { TemplatePageFieldsStatus } from '../models/TemplatePageFieldsStatus';
 import { TemplatePageImageStatus } from '../models/TemplatePageImageStatus';
+import { TemplatePageImages } from '../models/TemplatePageImages';
 import { TemplatePageProcessingStatus } from '../models/TemplatePageProcessingStatus';
 import { TemplateSourcePdf } from '../models/TemplateSourcePdf';
 import { TemplateSummary } from '../models/TemplateSummary';
@@ -121,11 +147,13 @@ import { TextVerticalAlignment } from '../models/TextVerticalAlignment';
 import { Typeface } from '../models/Typeface';
 import { UpdateSignatureRequestRequest } from '../models/UpdateSignatureRequestRequest';
 import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
+import { UpdateTemplateFieldsRequest } from '../models/UpdateTemplateFieldsRequest';
 import { UpdateTemplateRequest } from '../models/UpdateTemplateRequest';
 import { UpdateWebhookRequest } from '../models/UpdateWebhookRequest';
 import { UploadMethod } from '../models/UploadMethod';
 import { UploadPresign } from '../models/UploadPresign';
 import { UrlSourcePdf } from '../models/UrlSourcePdf';
+import { ValidateSubmissionRequest } from '../models/ValidateSubmissionRequest';
 import { Webhook } from '../models/Webhook';
 import { WebhookEventType } from '../models/WebhookEventType';
 import { WebhookList } from '../models/WebhookList';
@@ -133,6 +161,22 @@ import { WebhookMode } from '../models/WebhookMode';
 
 import { ObservableClient } from "./ObservableAPI";
 import { ClientRequestFactory, ClientResponseProcessor} from "../apis/Client";
+
+export interface ClientAddTemplateFieldsRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientaddTemplateFields
+     */
+    templateId: string
+    /**
+     * The fields to add to the template's draft.
+     * @type AddTemplateFieldsRequest
+     * @memberof ClientaddTemplateFields
+     */
+    body: AddTemplateFieldsRequest
+}
 
 export interface ClientCopyTemplateRequest {
     /**
@@ -238,7 +282,7 @@ export interface ClientCreateSubmissionRequest {
      */
     version?: string
     /**
-     * Wait until the PDF has been generated before responding. Default true on sync.api hosts.
+     * Wait until the files have been generated before responding. Default true on sync.api hosts.
      * Defaults to: undefined
      * @type boolean
      * @memberof ClientcreateSubmission
@@ -270,7 +314,7 @@ export interface ClientCreateTemplateRequest {
      */
     body: CreateTemplateRequest
     /**
-     * Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      * Defaults to: undefined
      * @type boolean
      * @memberof ClientcreateTemplate
@@ -352,6 +396,29 @@ export interface ClientExpireSubmissionRequest {
      * @memberof ClientexpireSubmission
      */
     submissionId: string
+}
+
+export interface ClientGenerateSubmissionFilesRequest {
+    /**
+     * The submission's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgenerateSubmissionFiles
+     */
+    submissionId: string
+    /**
+     * The formats to make.
+     * @type GenerateSubmissionFilesRequest
+     * @memberof ClientgenerateSubmissionFiles
+     */
+    body: GenerateSubmissionFilesRequest
+    /**
+     * Wait until the files have been generated before responding. Default true on sync.api hosts.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientgenerateSubmissionFiles
+     */
+    wait?: boolean
 }
 
 export interface ClientGenerateSubmissionPreviewRequest {
@@ -451,6 +518,23 @@ export interface ClientGetTemplateRequest {
     version?: string
 }
 
+export interface ClientGetTemplateDiffRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetTemplateDiff
+     */
+    templateId: string
+    /**
+     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetTemplateDiff
+     */
+    version?: string
+}
+
 export interface ClientGetTemplateModelCodeRequest {
     /**
      * The template's ID.
@@ -471,6 +555,23 @@ export interface ClientGetTemplateModelCodeRequest {
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetTemplateModelCode
+     */
+    version?: string
+}
+
+export interface ClientGetTemplatePageImagesRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetTemplatePageImages
+     */
+    templateId: string
+    /**
+     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetTemplatePageImages
      */
     version?: string
 }
@@ -610,6 +711,23 @@ export interface ClientListSubmissionsRequest {
      * @memberof ClientlistSubmissions
      */
     cursor?: string
+}
+
+export interface ClientListTemplateFieldsRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientlistTemplateFields
+     */
+    templateId: string
+    /**
+     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientlistTemplateFields
+     */
+    version?: string
 }
 
 export interface ClientListTemplateSubmissionsRequest {
@@ -795,6 +913,22 @@ export interface ClientPublishTemplateVersionRequest {
     body: PublishTemplateVersionRequest
 }
 
+export interface ClientRemoveTemplateFieldsRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientremoveTemplateFields
+     */
+    templateId: string
+    /**
+     * The fields to remove from the template's draft.
+     * @type RemoveTemplateFieldsRequest
+     * @memberof ClientremoveTemplateFields
+     */
+    body: RemoveTemplateFieldsRequest
+}
+
 export interface ClientRenameFolderRequest {
     /**
      * The folder's ID.
@@ -809,6 +943,22 @@ export interface ClientRenameFolderRequest {
      * @memberof ClientrenameFolder
      */
     body: RenameFolderRequest
+}
+
+export interface ClientReorderTemplateFieldsRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientreorderTemplateFields
+     */
+    templateId: string
+    /**
+     * The new order of the fields in the template's draft.
+     * @type ReorderTemplateFieldsRequest
+     * @memberof ClientreorderTemplateFields
+     */
+    body: ReorderTemplateFieldsRequest
 }
 
 export interface ClientRestoreTemplateVersionRequest {
@@ -871,18 +1021,34 @@ export interface ClientUpdateTemplateDocumentRequest {
      */
     templateId: string
     /**
-     * The new PDF.
+     * The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
      * @type UpdateTemplateDocumentRequest
      * @memberof ClientupdateTemplateDocument
      */
     body: UpdateTemplateDocumentRequest
     /**
-     * Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      * Defaults to: undefined
      * @type boolean
      * @memberof ClientupdateTemplateDocument
      */
     wait?: boolean
+}
+
+export interface ClientUpdateTemplateFieldsRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateTemplateFields
+     */
+    templateId: string
+    /**
+     * The fields to change in the template's draft.
+     * @type UpdateTemplateFieldsRequest
+     * @memberof ClientupdateTemplateFields
+     */
+    body: UpdateTemplateFieldsRequest
 }
 
 export interface ClientUpdateWebhookRequest {
@@ -910,7 +1076,7 @@ export interface ClientUploadTemplateRequest {
      */
     document: HttpFile
     /**
-     * Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      * Defaults to: undefined
      * @type boolean
      * @memberof ClientuploadTemplate
@@ -990,7 +1156,7 @@ export interface ClientUploadTemplateDocumentRequest {
      */
     document: HttpFile
     /**
-     * Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      * Defaults to: undefined
      * @type boolean
      * @memberof ClientuploadTemplateDocument
@@ -1005,11 +1171,52 @@ export interface ClientUploadTemplateDocumentRequest {
     reimportFields?: boolean
 }
 
+export interface ClientValidateSubmissionRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientvalidateSubmission
+     */
+    templateId: string
+    /**
+     * The submission's data and settings.
+     * @type ValidateSubmissionRequest
+     * @memberof ClientvalidateSubmission
+     */
+    body: ValidateSubmissionRequest
+    /**
+     * The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientvalidateSubmission
+     */
+    version?: string
+}
+
 export class ObjectClient {
     private api: ObservableClient
 
     public constructor(configuration: Configuration, requestFactory?: ClientRequestFactory, responseProcessor?: ClientResponseProcessor) {
         this.api = new ObservableClient(configuration, requestFactory, responseProcessor);
+    }
+
+    /**
+     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. 
+     * Add fields to a template
+     * @param param the request object
+     */
+    public addTemplateFieldsWithHttpInfo(param: ClientAddTemplateFieldsRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
+        return this.api.addTemplateFieldsWithHttpInfo(param.templateId, param.body,  options).toPromise();
+    }
+
+    /**
+     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. 
+     * Add fields to a template
+     * @param param the request object
+     */
+    public addTemplateFields(param: ClientAddTemplateFieldsRequest, options?: ConfigurationOptions): Promise<TemplateFields> {
+        return this.api.addTemplateFields(param.templateId, param.body,  options).toPromise();
     }
 
     /**
@@ -1301,6 +1508,24 @@ export class ObjectClient {
     }
 
     /**
+     * Adds formats to a processed submission's files, in the background: `png`, a PNG image of each page of the PDF (up to 100 pages). To make them with the submission, add them to `output_formats` when you create it.  Each new file is listed in `files` while it's made: on sync.api hosts the request waits for them (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until none of their `state` is `pending`. A file that couldn't be made has the state `error` and an `error_message`, and the submission stays processed. Asking for a format the submission already has (or is making) changes nothing. 
+     * Generate more files
+     * @param param the request object
+     */
+    public generateSubmissionFilesWithHttpInfo(param: ClientGenerateSubmissionFilesRequest, options?: ConfigurationOptions): Promise<HttpInfo<Submission>> {
+        return this.api.generateSubmissionFilesWithHttpInfo(param.submissionId, param.body, param.wait,  options).toPromise();
+    }
+
+    /**
+     * Adds formats to a processed submission's files, in the background: `png`, a PNG image of each page of the PDF (up to 100 pages). To make them with the submission, add them to `output_formats` when you create it.  Each new file is listed in `files` while it's made: on sync.api hosts the request waits for them (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until none of their `state` is `pending`. A file that couldn't be made has the state `error` and an `error_message`, and the submission stays processed. Asking for a format the submission already has (or is making) changes nothing. 
+     * Generate more files
+     * @param param the request object
+     */
+    public generateSubmissionFiles(param: ClientGenerateSubmissionFilesRequest, options?: ConfigurationOptions): Promise<Submission> {
+        return this.api.generateSubmissionFiles(param.submissionId, param.body, param.wait,  options).toPromise();
+    }
+
+    /**
      * Generates a preview of a submission's PDF in the background, such as for a submission still waiting for its signature requests. It's in `files.preview` once `preview_generated_at` changes. 
      * Generate a preview PDF
      * @param param the request object
@@ -1463,6 +1688,24 @@ export class ObjectClient {
     }
 
     /**
+     * Returns what changed in the template's draft since its latest published version (or in a published version since the one before it): fields added, removed, changed and moved, the settings that changed, and whether the document was replaced. Check it before you publish a version. 
+     * Compare a version of a template with the one before it
+     * @param param the request object
+     */
+    public getTemplateDiffWithHttpInfo(param: ClientGetTemplateDiffRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateDiff>> {
+        return this.api.getTemplateDiffWithHttpInfo(param.templateId, param.version,  options).toPromise();
+    }
+
+    /**
+     * Returns what changed in the template's draft since its latest published version (or in a published version since the one before it): fields added, removed, changed and moved, the settings that changed, and whether the document was replaced. Check it before you publish a version. 
+     * Compare a version of a template with the one before it
+     * @param param the request object
+     */
+    public getTemplateDiff(param: ClientGetTemplateDiffRequest, options?: ConfigurationOptions): Promise<TemplateDiff> {
+        return this.api.getTemplateDiff(param.templateId, param.version,  options).toPromise();
+    }
+
+    /**
      * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
      * Generate typed code for a template's submission data
      * @param param the request object
@@ -1478,6 +1721,24 @@ export class ObjectClient {
      */
     public getTemplateModelCode(param: ClientGetTemplateModelCodeRequest, options?: ConfigurationOptions): Promise<TemplateModelCode> {
         return this.api.getTemplateModelCode(param.templateId, param.lang, param.version,  options).toPromise();
+    }
+
+    /**
+     * Returns a JPEG image of each page of a PDF template's PDF, with temporary links to download them: the draft's PDF, or a published version's. Use them to see the pages that fields are placed on. 
+     * Get images of a template's pages
+     * @param param the request object
+     */
+    public getTemplatePageImagesWithHttpInfo(param: ClientGetTemplatePageImagesRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePageImages>> {
+        return this.api.getTemplatePageImagesWithHttpInfo(param.templateId, param.version,  options).toPromise();
+    }
+
+    /**
+     * Returns a JPEG image of each page of a PDF template's PDF, with temporary links to download them: the draft's PDF, or a published version's. Use them to see the pages that fields are placed on. 
+     * Get images of a template's pages
+     * @param param the request object
+     */
+    public getTemplatePageImages(param: ClientGetTemplatePageImagesRequest, options?: ConfigurationOptions): Promise<TemplatePageImages> {
+        return this.api.getTemplatePageImages(param.templateId, param.version,  options).toPromise();
     }
 
     /**
@@ -1589,6 +1850,24 @@ export class ObjectClient {
     }
 
     /**
+     * Returns a template's fields with all of their settings, page by page: the draft's fields, or a published version's. A PDF template's fields are placed on its pages: GET /templates/{template_id}/page_images has images of the pages. 
+     * List a template's fields
+     * @param param the request object
+     */
+    public listTemplateFieldsWithHttpInfo(param: ClientListTemplateFieldsRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
+        return this.api.listTemplateFieldsWithHttpInfo(param.templateId, param.version,  options).toPromise();
+    }
+
+    /**
+     * Returns a template's fields with all of their settings, page by page: the draft's fields, or a published version's. A PDF template's fields are placed on its pages: GET /templates/{template_id}/page_images has images of the pages. 
+     * List a template's fields
+     * @param param the request object
+     */
+    public listTemplateFields(param: ClientListTemplateFieldsRequest, options?: ConfigurationOptions): Promise<TemplateFields> {
+        return this.api.listTemplateFields(param.templateId, param.version,  options).toPromise();
+    }
+
+    /**
      * Returns a template's submissions (from every version of the template), newest first.
      * List a template's submissions
      * @param param the request object
@@ -1679,7 +1958,7 @@ export class ObjectClient {
     }
 
     /**
-     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. 
+     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. While the template's PDF is downloading or being processed, or DocSpring is setting up its fields, it returns a 409 that says so. 
      * Publish a template version
      * @param param the request object
      */
@@ -1688,12 +1967,30 @@ export class ObjectClient {
     }
 
     /**
-     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. 
+     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. While the template's PDF is downloading or being processed, or DocSpring is setting up its fields, it returns a 409 that says so. 
      * Publish a template version
      * @param param the request object
      */
     public publishTemplateVersion(param: ClientPublishTemplateVersionRequest, options?: ConfigurationOptions): Promise<TemplateVersion> {
         return this.api.publishTemplateVersion(param.templateId, param.body,  options).toPromise();
+    }
+
+    /**
+     * Removes fields from a template's draft and returns the fields that are left. Conditional logic that used only the removed fields is removed too. 
+     * Remove fields from a template
+     * @param param the request object
+     */
+    public removeTemplateFieldsWithHttpInfo(param: ClientRemoveTemplateFieldsRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
+        return this.api.removeTemplateFieldsWithHttpInfo(param.templateId, param.body,  options).toPromise();
+    }
+
+    /**
+     * Removes fields from a template's draft and returns the fields that are left. Conditional logic that used only the removed fields is removed too. 
+     * Remove fields from a template
+     * @param param the request object
+     */
+    public removeTemplateFields(param: ClientRemoveTemplateFieldsRequest, options?: ConfigurationOptions): Promise<TemplateFields> {
+        return this.api.removeTemplateFields(param.templateId, param.body,  options).toPromise();
     }
 
     /**
@@ -1712,6 +2009,24 @@ export class ObjectClient {
      */
     public renameFolder(param: ClientRenameFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
         return this.api.renameFolder(param.folderId, param.body,  options).toPromise();
+    }
+
+    /**
+     * Changes the order of the fields in a template's draft and returns them in their new order. Send every field's ID: each field stays on its page, and a page's fields are printed in this order, so a later field prints over an earlier one where they overlap. Their values are in this order in the template's data schema and forms. 
+     * Reorder a template's fields
+     * @param param the request object
+     */
+    public reorderTemplateFieldsWithHttpInfo(param: ClientReorderTemplateFieldsRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
+        return this.api.reorderTemplateFieldsWithHttpInfo(param.templateId, param.body,  options).toPromise();
+    }
+
+    /**
+     * Changes the order of the fields in a template's draft and returns them in their new order. Send every field's ID: each field stays on its page, and a page's fields are printed in this order, so a later field prints over an earlier one where they overlap. Their values are in this order in the template's data schema and forms. 
+     * Reorder a template's fields
+     * @param param the request object
+     */
+    public reorderTemplateFields(param: ClientReorderTemplateFieldsRequest, options?: ConfigurationOptions): Promise<TemplateFields> {
+        return this.api.reorderTemplateFields(param.templateId, param.body,  options).toPromise();
     }
 
     /**
@@ -1769,7 +2084,7 @@ export class ObjectClient {
     }
 
     /**
-     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions. 
+     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Setting `parent_folder_id` moves the template and all of its published versions. 
      * Update a template
      * @param param the request object
      */
@@ -1778,7 +2093,7 @@ export class ObjectClient {
     }
 
     /**
-     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions. 
+     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Setting `parent_folder_id` moves the template and all of its published versions. 
      * Update a template
      * @param param the request object
      */
@@ -1787,7 +2102,7 @@ export class ObjectClient {
     }
 
     /**
-     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF with the request instead, use PUT /templates/{template_id}/document/upload. 
+     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign) (`cache_id`), a link to download it from (`document_url`), or the file in base64 (`document_base64`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF as `multipart/form-data` instead, use PUT /templates/{template_id}/document/upload. 
      * Replace a template's PDF
      * @param param the request object
      */
@@ -1796,12 +2111,30 @@ export class ObjectClient {
     }
 
     /**
-     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF with the request instead, use PUT /templates/{template_id}/document/upload. 
+     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign) (`cache_id`), a link to download it from (`document_url`), or the file in base64 (`document_base64`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF as `multipart/form-data` instead, use PUT /templates/{template_id}/document/upload. 
      * Replace a template's PDF
      * @param param the request object
      */
     public updateTemplateDocument(param: ClientUpdateTemplateDocumentRequest, options?: ConfigurationOptions): Promise<Template> {
         return this.api.updateTemplateDocument(param.templateId, param.body, param.wait,  options).toPromise();
+    }
+
+    /**
+     * Changes fields of a template's draft and returns all of its fields. Settings left out keep their values. A shared setting (`type`, `required`, `default`, ...) changes for every field with the same name. 
+     * Update a template's fields
+     * @param param the request object
+     */
+    public updateTemplateFieldsWithHttpInfo(param: ClientUpdateTemplateFieldsRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
+        return this.api.updateTemplateFieldsWithHttpInfo(param.templateId, param.body,  options).toPromise();
+    }
+
+    /**
+     * Changes fields of a template's draft and returns all of its fields. Settings left out keep their values. A shared setting (`type`, `required`, `default`, ...) changes for every field with the same name. 
+     * Update a template's fields
+     * @param param the request object
+     */
+    public updateTemplateFields(param: ClientUpdateTemplateFieldsRequest, options?: ConfigurationOptions): Promise<TemplateFields> {
+        return this.api.updateTemplateFields(param.templateId, param.body,  options).toPromise();
     }
 
     /**
@@ -1856,6 +2189,24 @@ export class ObjectClient {
      */
     public uploadTemplateDocument(param: ClientUploadTemplateDocumentRequest, options?: ConfigurationOptions): Promise<Template> {
         return this.api.uploadTemplateDocument(param.templateId, param.document, param.wait, param.reimportFields,  options).toPromise();
+    }
+
+    /**
+     * Checks a submission as creating it would (its data against the template's fields, its settings and signature requests) without saving it, generating anything or using credits. It doesn't check your account's credits. The response says whether the submission is valid, and if not, has the error that creating it would return. 
+     * Check a submission without creating it
+     * @param param the request object
+     */
+    public validateSubmissionWithHttpInfo(param: ClientValidateSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionValidation>> {
+        return this.api.validateSubmissionWithHttpInfo(param.templateId, param.body, param.version,  options).toPromise();
+    }
+
+    /**
+     * Checks a submission as creating it would (its data against the template's fields, its settings and signature requests) without saving it, generating anything or using credits. It doesn't check your account's credits. The response says whether the submission is valid, and if not, has the error that creating it would return. 
+     * Check a submission without creating it
+     * @param param the request object
+     */
+    public validateSubmission(param: ClientValidateSubmissionRequest, options?: ConfigurationOptions): Promise<SubmissionValidation> {
+        return this.api.validateSubmission(param.templateId, param.body, param.version,  options).toPromise();
     }
 
 }

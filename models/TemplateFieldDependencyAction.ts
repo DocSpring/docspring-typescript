@@ -13,7 +13,7 @@
 import { HttpFile } from '../http/http';
 
 /**
-* What a conditional logic rule does to its target fields.
+* What a conditional logic rule does to the fields it applies to.
 */
 export const TemplateFieldDependencyAction = {
     RequireAndShow: 'require_and_show',

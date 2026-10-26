@@ -20,7 +20,9 @@ export const TemplateDocumentState = {
     Processed: 'processed',
     PasswordRequired: 'password_required',
     MalformedPdf: 'malformed_pdf',
-    UnknownError: 'unknown_error'
+    UnknownError: 'unknown_error',
+    Downloading: 'downloading',
+    DownloadFailed: 'download_failed'
 } as const;
 /**
 * One of the values in the TemplateDocumentState object. A response property can also have a value added to the API after this

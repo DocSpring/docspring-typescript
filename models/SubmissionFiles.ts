@@ -11,6 +11,7 @@
  */
 
 import { GeneratedFile } from '../models/GeneratedFile';
+import { PageImages } from '../models/PageImages';
 import { HttpFile } from '../http/http';
 
 /**
@@ -29,6 +30,7 @@ export class SubmissionFiles {
     * The preview PDF from POST /submissions/{submission_id}/generate_preview, such as for a submission still waiting for its signature requests.
     */
     'preview'?: GeneratedFile;
+    'png'?: PageImages;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -51,6 +53,12 @@ export class SubmissionFiles {
             "name": "preview",
             "baseName": "preview",
             "type": "GeneratedFile",
+            "format": ""
+        },
+        {
+            "name": "png",
+            "baseName": "png",
+            "type": "PageImages",
             "format": ""
         }    ];
 

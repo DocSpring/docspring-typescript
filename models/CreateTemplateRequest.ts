@@ -16,6 +16,7 @@ import { FieldSetupLogic } from '../models/FieldSetupLogic';
 import { FieldSetupNaming } from '../models/FieldSetupNaming';
 import { FieldSetupSource } from '../models/FieldSetupSource';
 import { HtmlEngineOptionsInput } from '../models/HtmlEngineOptionsInput';
+import { PredefinedFieldInput } from '../models/PredefinedFieldInput';
 import { TemplateDefaultsInput } from '../models/TemplateDefaultsInput';
 import { TemplateFieldDependencyInput } from '../models/TemplateFieldDependencyInput';
 import { TemplateFormMode } from '../models/TemplateFormMode';
@@ -139,6 +140,14 @@ export class CreateTemplateRequest {
     */
     'field_dependencies'?: Array<TemplateFieldDependencyInput>;
     /**
+    * The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
+    */
+    'predefined_fields'?: Array<PredefinedFieldInput>;
+    /**
+    * Sample submission data that sets `predefined_fields`: each value becomes a predefined field, with a type that fits it (`string`, `number`, `boolean`, `date`, `email` or `url`) and `required_in_template` true. Nested objects and arrays become names with `/`, such as `customer/email`. Without `predefined_fields` in the same request, it replaces them; with them, it adds to them and sets the types of the ones it has values for.
+    */
+    'predefined_fields_sample_data'?: { [key: string]: any; } | null;
+    /**
     * The HTML of an HTML template, as a Liquid template. Null for PDF templates.
     */
     'html'?: string | null;
@@ -159,11 +168,19 @@ export class CreateTemplateRequest {
     */
     'html_engine_options'?: HtmlEngineOptionsInput | null;
     /**
-    * A PDF template's document: the `fields.key` of a file you uploaded with the presigned upload (GET /uploads/presign). Required for a PDF template. To upload the PDF with the request, use POST /templates/upload.
+    * A PDF template's document: the `fields.key` of a file you uploaded with the presigned upload (GET /uploads/presign). A PDF template needs one of `cache_id`, `document_url` and `document_base64`. To upload the PDF with the request, use POST /templates/upload.
     */
     'cache_id'?: string;
     /**
-    * The PDF's file name, for a `cache_id` (presigned uploads don't send one).
+    * An https:// link to the template's PDF (up to 100 MB), instead of `cache_id`. DocSpring downloads it after responding, following redirects to other https:// links: the template's `document.state` is `downloading` until then (sync.api hosts wait for it). If it can't be downloaded, the state is `download_failed` and `document.error_message` says why.
+    */
+    'document_url'?: string;
+    /**
+    * The template's PDF, encoded as base64 (a `data:` URI works too), instead of `cache_id`. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`.
+    */
+    'document_base64'?: string;
+    /**
+    * The PDF's file name, for a `cache_id` (presigned uploads don't send one) or `document_base64`. A `document_url`'s is the last part of its path unless you set it.
     */
     'filename'?: string;
     /**
@@ -357,6 +374,18 @@ export class CreateTemplateRequest {
             "format": ""
         },
         {
+            "name": "predefined_fields",
+            "baseName": "predefined_fields",
+            "type": "Array<PredefinedFieldInput>",
+            "format": ""
+        },
+        {
+            "name": "predefined_fields_sample_data",
+            "baseName": "predefined_fields_sample_data",
+            "type": "{ [key: string]: any; }",
+            "format": ""
+        },
+        {
             "name": "html",
             "baseName": "html",
             "type": "string",
@@ -389,6 +418,18 @@ export class CreateTemplateRequest {
         {
             "name": "cache_id",
             "baseName": "cache_id",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "document_url",
+            "baseName": "document_url",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "document_base64",
+            "baseName": "document_base64",
             "type": "string",
             "format": ""
         },

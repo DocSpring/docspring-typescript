@@ -4,6 +4,7 @@ import { ServerConfiguration } from '../servers'
 import { createConfiguration } from '../configuration'
 import { PromiseMiddleware, Middleware, PromiseMiddlewareWrapper } from '../middleware';
 
+import { AddTemplateFieldsRequest } from '../models/AddTemplateFieldsRequest';
 import { AiFieldNamingLanguage } from '../models/AiFieldNamingLanguage';
 import { AuthenticationCheck } from '../models/AuthenticationCheck';
 import { BarcodeSymbology } from '../models/BarcodeSymbology';
@@ -35,12 +36,19 @@ import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorInfo } from '../models/ErrorInfo';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { ExpirationInterval } from '../models/ExpirationInterval';
+import { Field } from '../models/Field';
 import { FieldComparisonCondition } from '../models/FieldComparisonCondition';
 import { FieldComparisonOperator } from '../models/FieldComparisonOperator';
+import { FieldDependency } from '../models/FieldDependency';
+import { FieldDependencyInput } from '../models/FieldDependencyInput';
 import { FieldDisplayType } from '../models/FieldDisplayType';
 import { FieldEqualsCondition } from '../models/FieldEqualsCondition';
 import { FieldEqualsOperator } from '../models/FieldEqualsOperator';
+import { FieldGroup } from '../models/FieldGroup';
+import { FieldGroupInput } from '../models/FieldGroupInput';
+import { FieldGroupType } from '../models/FieldGroupType';
 import { FieldInCondition } from '../models/FieldInCondition';
+import { FieldInput } from '../models/FieldInput';
 import { FieldOverride } from '../models/FieldOverride';
 import { FieldPresenceCondition } from '../models/FieldPresenceCondition';
 import { FieldPresenceOperator } from '../models/FieldPresenceOperator';
@@ -49,8 +57,11 @@ import { FieldReimportState } from '../models/FieldReimportState';
 import { FieldSetupLogic } from '../models/FieldSetupLogic';
 import { FieldSetupNaming } from '../models/FieldSetupNaming';
 import { FieldSetupSource } from '../models/FieldSetupSource';
+import { FieldType } from '../models/FieldType';
 import { Folder } from '../models/Folder';
 import { FolderList } from '../models/FolderList';
+import { GenerateFilesFormat } from '../models/GenerateFilesFormat';
+import { GenerateSubmissionFilesRequest } from '../models/GenerateSubmissionFilesRequest';
 import { GeneratedFile } from '../models/GeneratedFile';
 import { GeneratedFileState } from '../models/GeneratedFileState';
 import { HtmlEngineOptions } from '../models/HtmlEngineOptions';
@@ -61,9 +72,16 @@ import { ModelCodeLanguage } from '../models/ModelCodeLanguage';
 import { MoveFolderRequest } from '../models/MoveFolderRequest';
 import { MoveTemplateRequest } from '../models/MoveTemplateRequest';
 import { NumberConditionType } from '../models/NumberConditionType';
+import { OutputFormat } from '../models/OutputFormat';
 import { PageFormat } from '../models/PageFormat';
+import { PageImage } from '../models/PageImage';
+import { PageImages } from '../models/PageImages';
+import { PredefinedField } from '../models/PredefinedField';
+import { PredefinedFieldInput } from '../models/PredefinedFieldInput';
 import { PublishTemplateVersionRequest } from '../models/PublishTemplateVersionRequest';
+import { RemoveTemplateFieldsRequest } from '../models/RemoveTemplateFieldsRequest';
 import { RenameFolderRequest } from '../models/RenameFolderRequest';
+import { ReorderTemplateFieldsRequest } from '../models/ReorderTemplateFieldsRequest';
 import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
 import { ShapeType } from '../models/ShapeType';
 import { SignatureRequest } from '../models/SignatureRequest';
@@ -89,13 +107,18 @@ import { SubmissionList } from '../models/SubmissionList';
 import { SubmissionSource } from '../models/SubmissionSource';
 import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
 import { SubmissionState } from '../models/SubmissionState';
+import { SubmissionValidation } from '../models/SubmissionValidation';
 import { Template } from '../models/Template';
 import { TemplateActor } from '../models/TemplateActor';
 import { TemplateActorType } from '../models/TemplateActorType';
 import { TemplateDefaults } from '../models/TemplateDefaults';
 import { TemplateDefaultsInput } from '../models/TemplateDefaultsInput';
+import { TemplateDiff } from '../models/TemplateDiff';
+import { TemplateDiffSummary } from '../models/TemplateDiffSummary';
 import { TemplateDocument } from '../models/TemplateDocument';
 import { TemplateDocumentState } from '../models/TemplateDocumentState';
+import { TemplateFieldChange } from '../models/TemplateFieldChange';
+import { TemplateFieldChanges } from '../models/TemplateFieldChanges';
 import { TemplateFieldDependency } from '../models/TemplateFieldDependency';
 import { TemplateFieldDependencyAction } from '../models/TemplateFieldDependencyAction';
 import { TemplateFieldDependencyCondition } from '../models/TemplateFieldDependencyCondition';
@@ -104,12 +127,15 @@ import { TemplateFieldDependencyInput } from '../models/TemplateFieldDependencyI
 import { TemplateFieldDependencyMatch } from '../models/TemplateFieldDependencyMatch';
 import { TemplateFieldDependencyOperator } from '../models/TemplateFieldDependencyOperator';
 import { TemplateFieldLogicStatus } from '../models/TemplateFieldLogicStatus';
+import { TemplateFieldMove } from '../models/TemplateFieldMove';
+import { TemplateFields } from '../models/TemplateFields';
 import { TemplateFormMode } from '../models/TemplateFormMode';
 import { TemplateModelCode } from '../models/TemplateModelCode';
 import { TemplatePageAiError } from '../models/TemplatePageAiError';
 import { TemplatePageAiNamingStatus } from '../models/TemplatePageAiNamingStatus';
 import { TemplatePageFieldsStatus } from '../models/TemplatePageFieldsStatus';
 import { TemplatePageImageStatus } from '../models/TemplatePageImageStatus';
+import { TemplatePageImages } from '../models/TemplatePageImages';
 import { TemplatePageProcessingStatus } from '../models/TemplatePageProcessingStatus';
 import { TemplateSourcePdf } from '../models/TemplateSourcePdf';
 import { TemplateSummary } from '../models/TemplateSummary';
@@ -123,11 +149,13 @@ import { TextVerticalAlignment } from '../models/TextVerticalAlignment';
 import { Typeface } from '../models/Typeface';
 import { UpdateSignatureRequestRequest } from '../models/UpdateSignatureRequestRequest';
 import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
+import { UpdateTemplateFieldsRequest } from '../models/UpdateTemplateFieldsRequest';
 import { UpdateTemplateRequest } from '../models/UpdateTemplateRequest';
 import { UpdateWebhookRequest } from '../models/UpdateWebhookRequest';
 import { UploadMethod } from '../models/UploadMethod';
 import { UploadPresign } from '../models/UploadPresign';
 import { UrlSourcePdf } from '../models/UrlSourcePdf';
+import { ValidateSubmissionRequest } from '../models/ValidateSubmissionRequest';
 import { Webhook } from '../models/Webhook';
 import { WebhookEventType } from '../models/WebhookEventType';
 import { WebhookList } from '../models/WebhookList';
@@ -194,6 +222,30 @@ export class PromiseClient {
         this.api = new ObservableClient(configuration as Configuration, requestFactory, responseProcessor);
     }
 
+
+    /**
+     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. 
+     * Add fields to a template
+     * @param templateId The template's ID.
+     * @param body The fields to add to the template's draft.
+     */
+    public addTemplateFieldsWithHttpInfo(templateId: string, body: AddTemplateFieldsRequest, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.addTemplateFieldsWithHttpInfo(templateId, body, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. 
+     * Add fields to a template
+     * @param templateId The template's ID.
+     * @param body The fields to add to the template's draft.
+     */
+    public addTemplateFields(templateId: string, body: AddTemplateFieldsRequest, _options?: PromiseConfigurationOptions): Promise<TemplateFields> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.addTemplateFields(templateId, body, observableOptions);
+        return result.toPromise();
+    }
 
     /**
      * Copies a template (its draft, or a published version) into a new template.
@@ -341,7 +393,7 @@ export class PromiseClient {
      * @param templateId The template's ID.
      * @param body The submission's data and settings.
      * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
-     * @param [wait] Wait until the PDF has been generated before responding. Default true on sync.api hosts.
+     * @param [wait] Wait until the files have been generated before responding. Default true on sync.api hosts.
      */
     public createSubmissionWithHttpInfo(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Submission>> {
         const observableOptions = wrapOptions(_options);
@@ -355,7 +407,7 @@ export class PromiseClient {
      * @param templateId The template's ID.
      * @param body The submission's data and settings.
      * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
-     * @param [wait] Wait until the PDF has been generated before responding. Default true on sync.api hosts.
+     * @param [wait] Wait until the files have been generated before responding. Default true on sync.api hosts.
      */
     public createSubmission(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<Submission> {
         const observableOptions = wrapOptions(_options);
@@ -391,7 +443,7 @@ export class PromiseClient {
      * Creates an HTML template, or a PDF template from a PDF you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. To send the PDF with the request instead, use POST /templates/upload.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
      * Create a template
      * @param body The template to create.
-     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param [wait] Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      */
     public createTemplateWithHttpInfo(body: CreateTemplateRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Template>> {
         const observableOptions = wrapOptions(_options);
@@ -403,7 +455,7 @@ export class PromiseClient {
      * Creates an HTML template, or a PDF template from a PDF you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. To send the PDF with the request instead, use POST /templates/upload.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
      * Create a template
      * @param body The template to create.
-     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param [wait] Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      */
     public createTemplate(body: CreateTemplateRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<Template> {
         const observableOptions = wrapOptions(_options);
@@ -564,6 +616,32 @@ export class PromiseClient {
     public expireSubmission(submissionId: string, _options?: PromiseConfigurationOptions): Promise<Submission> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.expireSubmission(submissionId, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Adds formats to a processed submission's files, in the background: `png`, a PNG image of each page of the PDF (up to 100 pages). To make them with the submission, add them to `output_formats` when you create it.  Each new file is listed in `files` while it's made: on sync.api hosts the request waits for them (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until none of their `state` is `pending`. A file that couldn't be made has the state `error` and an `error_message`, and the submission stays processed. Asking for a format the submission already has (or is making) changes nothing. 
+     * Generate more files
+     * @param submissionId The submission's ID.
+     * @param body The formats to make.
+     * @param [wait] Wait until the files have been generated before responding. Default true on sync.api hosts.
+     */
+    public generateSubmissionFilesWithHttpInfo(submissionId: string, body: GenerateSubmissionFilesRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Submission>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.generateSubmissionFilesWithHttpInfo(submissionId, body, wait, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Adds formats to a processed submission's files, in the background: `png`, a PNG image of each page of the PDF (up to 100 pages). To make them with the submission, add them to `output_formats` when you create it.  Each new file is listed in `files` while it's made: on sync.api hosts the request waits for them (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until none of their `state` is `pending`. A file that couldn't be made has the state `error` and an `error_message`, and the submission stays processed. Asking for a format the submission already has (or is making) changes nothing. 
+     * Generate more files
+     * @param submissionId The submission's ID.
+     * @param body The formats to make.
+     * @param [wait] Wait until the files have been generated before responding. Default true on sync.api hosts.
+     */
+    public generateSubmissionFiles(submissionId: string, body: GenerateSubmissionFilesRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<Submission> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.generateSubmissionFiles(submissionId, body, wait, observableOptions);
         return result.toPromise();
     }
 
@@ -768,6 +846,30 @@ export class PromiseClient {
     }
 
     /**
+     * Returns what changed in the template's draft since its latest published version (or in a published version since the one before it): fields added, removed, changed and moved, the settings that changed, and whether the document was replaced. Check it before you publish a version. 
+     * Compare a version of a template with the one before it
+     * @param templateId The template's ID.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     */
+    public getTemplateDiffWithHttpInfo(templateId: string, version?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplateDiff>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getTemplateDiffWithHttpInfo(templateId, version, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Returns what changed in the template's draft since its latest published version (or in a published version since the one before it): fields added, removed, changed and moved, the settings that changed, and whether the document was replaced. Check it before you publish a version. 
+     * Compare a version of a template with the one before it
+     * @param templateId The template's ID.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     */
+    public getTemplateDiff(templateId: string, version?: string, _options?: PromiseConfigurationOptions): Promise<TemplateDiff> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getTemplateDiff(templateId, version, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
      * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
      * Generate typed code for a template's submission data
      * @param templateId The template's ID.
@@ -790,6 +892,30 @@ export class PromiseClient {
     public getTemplateModelCode(templateId: string, lang: ModelCodeLanguage, version?: string, _options?: PromiseConfigurationOptions): Promise<TemplateModelCode> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.getTemplateModelCode(templateId, lang, version, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Returns a JPEG image of each page of a PDF template's PDF, with temporary links to download them: the draft's PDF, or a published version's. Use them to see the pages that fields are placed on. 
+     * Get images of a template's pages
+     * @param templateId The template's ID.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     */
+    public getTemplatePageImagesWithHttpInfo(templateId: string, version?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplatePageImages>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getTemplatePageImagesWithHttpInfo(templateId, version, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Returns a JPEG image of each page of a PDF template's PDF, with temporary links to download them: the draft's PDF, or a published version's. Use them to see the pages that fields are placed on. 
+     * Get images of a template's pages
+     * @param templateId The template's ID.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     */
+    public getTemplatePageImages(templateId: string, version?: string, _options?: PromiseConfigurationOptions): Promise<TemplatePageImages> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getTemplatePageImages(templateId, version, observableOptions);
         return result.toPromise();
     }
 
@@ -948,6 +1074,30 @@ export class PromiseClient {
     }
 
     /**
+     * Returns a template's fields with all of their settings, page by page: the draft's fields, or a published version's. A PDF template's fields are placed on its pages: GET /templates/{template_id}/page_images has images of the pages. 
+     * List a template's fields
+     * @param templateId The template's ID.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     */
+    public listTemplateFieldsWithHttpInfo(templateId: string, version?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.listTemplateFieldsWithHttpInfo(templateId, version, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Returns a template's fields with all of their settings, page by page: the draft's fields, or a published version's. A PDF template's fields are placed on its pages: GET /templates/{template_id}/page_images has images of the pages. 
+     * List a template's fields
+     * @param templateId The template's ID.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     */
+    public listTemplateFields(templateId: string, version?: string, _options?: PromiseConfigurationOptions): Promise<TemplateFields> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.listTemplateFields(templateId, version, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
      * Returns a template's submissions (from every version of the template), newest first.
      * List a template's submissions
      * @param templateId The template's ID.
@@ -1092,7 +1242,7 @@ export class PromiseClient {
     }
 
     /**
-     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. 
+     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. While the template's PDF is downloading or being processed, or DocSpring is setting up its fields, it returns a 409 that says so. 
      * Publish a template version
      * @param templateId The template's ID.
      * @param body The version to publish.
@@ -1104,7 +1254,7 @@ export class PromiseClient {
     }
 
     /**
-     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. 
+     * Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. While the template's PDF is downloading or being processed, or DocSpring is setting up its fields, it returns a 409 that says so. 
      * Publish a template version
      * @param templateId The template's ID.
      * @param body The version to publish.
@@ -1112,6 +1262,30 @@ export class PromiseClient {
     public publishTemplateVersion(templateId: string, body: PublishTemplateVersionRequest, _options?: PromiseConfigurationOptions): Promise<TemplateVersion> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.publishTemplateVersion(templateId, body, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Removes fields from a template's draft and returns the fields that are left. Conditional logic that used only the removed fields is removed too. 
+     * Remove fields from a template
+     * @param templateId The template's ID.
+     * @param body The fields to remove from the template's draft.
+     */
+    public removeTemplateFieldsWithHttpInfo(templateId: string, body: RemoveTemplateFieldsRequest, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.removeTemplateFieldsWithHttpInfo(templateId, body, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Removes fields from a template's draft and returns the fields that are left. Conditional logic that used only the removed fields is removed too. 
+     * Remove fields from a template
+     * @param templateId The template's ID.
+     * @param body The fields to remove from the template's draft.
+     */
+    public removeTemplateFields(templateId: string, body: RemoveTemplateFieldsRequest, _options?: PromiseConfigurationOptions): Promise<TemplateFields> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.removeTemplateFields(templateId, body, observableOptions);
         return result.toPromise();
     }
 
@@ -1136,6 +1310,30 @@ export class PromiseClient {
     public renameFolder(folderId: string, body: RenameFolderRequest, _options?: PromiseConfigurationOptions): Promise<Folder> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.renameFolder(folderId, body, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Changes the order of the fields in a template's draft and returns them in their new order. Send every field's ID: each field stays on its page, and a page's fields are printed in this order, so a later field prints over an earlier one where they overlap. Their values are in this order in the template's data schema and forms. 
+     * Reorder a template's fields
+     * @param templateId The template's ID.
+     * @param body The new order of the fields in the template's draft.
+     */
+    public reorderTemplateFieldsWithHttpInfo(templateId: string, body: ReorderTemplateFieldsRequest, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.reorderTemplateFieldsWithHttpInfo(templateId, body, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Changes the order of the fields in a template's draft and returns them in their new order. Send every field's ID: each field stays on its page, and a page's fields are printed in this order, so a later field prints over an earlier one where they overlap. Their values are in this order in the template's data schema and forms. 
+     * Reorder a template's fields
+     * @param templateId The template's ID.
+     * @param body The new order of the fields in the template's draft.
+     */
+    public reorderTemplateFields(templateId: string, body: ReorderTemplateFieldsRequest, _options?: PromiseConfigurationOptions): Promise<TemplateFields> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.reorderTemplateFields(templateId, body, observableOptions);
         return result.toPromise();
     }
 
@@ -1208,7 +1406,7 @@ export class PromiseClient {
     }
 
     /**
-     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions. 
+     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Setting `parent_folder_id` moves the template and all of its published versions. 
      * Update a template
      * @param templateId The template's ID.
      * @param body The settings to change. Properties left out keep their values.
@@ -1220,7 +1418,7 @@ export class PromiseClient {
     }
 
     /**
-     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object. Setting `parent_folder_id` moves the template and all of its published versions. 
+     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Setting `parent_folder_id` moves the template and all of its published versions. 
      * Update a template
      * @param templateId The template's ID.
      * @param body The settings to change. Properties left out keep their values.
@@ -1232,11 +1430,11 @@ export class PromiseClient {
     }
 
     /**
-     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF with the request instead, use PUT /templates/{template_id}/document/upload. 
+     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign) (`cache_id`), a link to download it from (`document_url`), or the file in base64 (`document_base64`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF as `multipart/form-data` instead, use PUT /templates/{template_id}/document/upload. 
      * Replace a template's PDF
      * @param templateId The template's ID.
-     * @param body The new PDF.
-     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param body The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
+     * @param [wait] Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      */
     public updateTemplateDocumentWithHttpInfo(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Template>> {
         const observableOptions = wrapOptions(_options);
@@ -1245,15 +1443,39 @@ export class PromiseClient {
     }
 
     /**
-     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF with the request instead, use PUT /templates/{template_id}/document/upload. 
+     * Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign) (`cache_id`), a link to download it from (`document_url`), or the file in base64 (`document_base64`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF as `multipart/form-data` instead, use PUT /templates/{template_id}/document/upload. 
      * Replace a template's PDF
      * @param templateId The template's ID.
-     * @param body The new PDF.
-     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param body The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
+     * @param [wait] Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      */
     public updateTemplateDocument(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<Template> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.updateTemplateDocument(templateId, body, wait, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Changes fields of a template's draft and returns all of its fields. Settings left out keep their values. A shared setting (`type`, `required`, `default`, ...) changes for every field with the same name. 
+     * Update a template's fields
+     * @param templateId The template's ID.
+     * @param body The fields to change in the template's draft.
+     */
+    public updateTemplateFieldsWithHttpInfo(templateId: string, body: UpdateTemplateFieldsRequest, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.updateTemplateFieldsWithHttpInfo(templateId, body, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Changes fields of a template's draft and returns all of its fields. Settings left out keep their values. A shared setting (`type`, `required`, `default`, ...) changes for every field with the same name. 
+     * Update a template's fields
+     * @param templateId The template's ID.
+     * @param body The fields to change in the template's draft.
+     */
+    public updateTemplateFields(templateId: string, body: UpdateTemplateFieldsRequest, _options?: PromiseConfigurationOptions): Promise<TemplateFields> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.updateTemplateFields(templateId, body, observableOptions);
         return result.toPromise();
     }
 
@@ -1285,7 +1507,7 @@ export class PromiseClient {
      * Creates a PDF template from a PDF sent with the request (`multipart/form-data`). For large files, upload the PDF with the presigned upload (GET /uploads/presign) and create the template with POST /templates. 
      * Create a PDF template from an uploaded PDF
      * @param document The PDF.
-     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param [wait] Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      * @param [name] The template's name.
      * @param [description] The template's description.
      * @param [parentFolderId] The folder to put the template in. Left out, it's created at the root.
@@ -1305,7 +1527,7 @@ export class PromiseClient {
      * Creates a PDF template from a PDF sent with the request (`multipart/form-data`). For large files, upload the PDF with the presigned upload (GET /uploads/presign) and create the template with POST /templates. 
      * Create a PDF template from an uploaded PDF
      * @param document The PDF.
-     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param [wait] Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      * @param [name] The template's name.
      * @param [description] The template's description.
      * @param [parentFolderId] The folder to put the template in. Left out, it's created at the root.
@@ -1326,7 +1548,7 @@ export class PromiseClient {
      * Replace a template's PDF with an uploaded PDF
      * @param templateId The template's ID.
      * @param document The new PDF.
-     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param [wait] Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      * @param [reimportFields] Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields.
      */
     public uploadTemplateDocumentWithHttpInfo(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Template>> {
@@ -1340,12 +1562,38 @@ export class PromiseClient {
      * Replace a template's PDF with an uploaded PDF
      * @param templateId The template's ID.
      * @param document The new PDF.
-     * @param [wait] Wait until the PDF has been processed before responding. Default true on sync.api hosts.
+     * @param [wait] Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts.
      * @param [reimportFields] Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields.
      */
     public uploadTemplateDocument(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, _options?: PromiseConfigurationOptions): Promise<Template> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.uploadTemplateDocument(templateId, document, wait, reimportFields, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Checks a submission as creating it would (its data against the template's fields, its settings and signature requests) without saving it, generating anything or using credits. It doesn't check your account's credits. The response says whether the submission is valid, and if not, has the error that creating it would return. 
+     * Check a submission without creating it
+     * @param templateId The template's ID.
+     * @param body The submission's data and settings.
+     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     */
+    public validateSubmissionWithHttpInfo(templateId: string, body: ValidateSubmissionRequest, version?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<SubmissionValidation>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.validateSubmissionWithHttpInfo(templateId, body, version, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Checks a submission as creating it would (its data against the template's fields, its settings and signature requests) without saving it, generating anything or using credits. It doesn't check your account's credits. The response says whether the submission is valid, and if not, has the error that creating it would return. 
+     * Check a submission without creating it
+     * @param templateId The template's ID.
+     * @param body The submission's data and settings.
+     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     */
+    public validateSubmission(templateId: string, body: ValidateSubmissionRequest, version?: string, _options?: PromiseConfigurationOptions): Promise<SubmissionValidation> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.validateSubmission(templateId, body, version, observableOptions);
         return result.toPromise();
     }
 
