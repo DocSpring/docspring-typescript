@@ -29,7 +29,7 @@ export class ErrorDetail {
     */
     'pointer'?: string;
     /**
-    * The query parameter the detail is about.
+    * The query parameter or header the detail is about.
     */
     'parameter'?: string;
     /**

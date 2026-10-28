@@ -45,7 +45,7 @@ export class Template {
     */
     'template_type': TemplateType | (string & {});
     /**
-    * Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once its document has been processed (`document.state` is `processed`).
+    * Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once DocSpring has stored its PDF, made an image of each page and finished looking for fields on each page, which can be after `document.state` becomes `processed`. A PDF template with no PDF (`document` is null) isn't ready.
     */
     'ready': boolean;
     /**
@@ -61,10 +61,6 @@ export class Template {
     */
     'path': string;
     /**
-    * The published version this is, such as `1.2.0`. Null for the draft.
-    */
-    'version': string | null;
-    /**
     * The template's latest published version. Null if no version has been published.
     */
     'latest_version': string | null;
@@ -76,6 +72,22 @@ export class Template {
     * A locked template can't be changed or deleted until it's unlocked (`locked` can always be changed).
     */
     'locked': boolean;
+    /**
+    * When the draft was last changed.
+    */
+    'last_changed_at': Date | null;
+    /**
+    * When the template was created.
+    */
+    'created_at': Date;
+    /**
+    * When the template was last updated.
+    */
+    'updated_at': Date;
+    /**
+    * The published version this is, such as `1.2.0`. Null for the draft.
+    */
+    'version': string | null;
     /**
     * Print the submission ID in the footer of each page of PDFs signed through signature requests.
     */
@@ -101,7 +113,7 @@ export class Template {
     */
     'editable_submissions': boolean;
     /**
-    * The sites where the template's signature requests, forms and embedded template editor can be loaded: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). When it's empty, live signature requests don't load on any site, and the embedded template editor loads on every site.
+    * The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted.
     */
     'embed_domains': Array<string>;
     /**
@@ -161,21 +173,9 @@ export class Template {
     */
     'has_slack_webhook_url': boolean;
     /**
-    * When the draft was last changed.
-    */
-    'last_changed_at': Date | null;
-    /**
     * Who last changed the draft: a user in your account, an API token, or someone using the embedded template editor. Null if no change has been recorded.
     */
     'last_changed_by': TemplateActor | null;
-    /**
-    * When the template was created.
-    */
-    'created_at': Date;
-    /**
-    * When the template was last updated.
-    */
-    'updated_at': Date;
     'defaults': TemplateDefaults;
     /**
     * Conditional logic: each rule shows or hides its target fields, or makes them required, depending on the values of other fields.
@@ -213,6 +213,10 @@ export class Template {
     * How an HTML template's PDFs are printed. Null for PDF templates. Setting it replaces the whole object: options left out use their defaults.
     */
     'html_engine_options': HtmlEngineOptions | null;
+    /**
+    * Whether an HTML template HTML-escapes the values it prints. When true, `{{ value }}` prints a value as text, so a `<` or `&` in it is printed as that character, and `{{ value | raw }}` prints a value as HTML. New HTML templates default to true. Templates created before October 2026, or with API v1, default to false, which prints every value as HTML. Null for PDF templates.
+    */
+    'html_escape_data': boolean | null;
     /**
     * The token that opens the template in the embedded template editor.
     */
@@ -276,12 +280,6 @@ export class Template {
             "format": ""
         },
         {
-            "name": "version",
-            "baseName": "version",
-            "type": "string",
-            "format": ""
-        },
-        {
             "name": "latest_version",
             "baseName": "latest_version",
             "type": "string",
@@ -297,6 +295,30 @@ export class Template {
             "name": "locked",
             "baseName": "locked",
             "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "last_changed_at",
+            "baseName": "last_changed_at",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
+            "name": "created_at",
+            "baseName": "created_at",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
+            "name": "updated_at",
+            "baseName": "updated_at",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
+            "name": "version",
+            "baseName": "version",
+            "type": "string",
             "format": ""
         },
         {
@@ -426,28 +448,10 @@ export class Template {
             "format": ""
         },
         {
-            "name": "last_changed_at",
-            "baseName": "last_changed_at",
-            "type": "Date",
-            "format": "date-time"
-        },
-        {
             "name": "last_changed_by",
             "baseName": "last_changed_by",
             "type": "TemplateActor",
             "format": ""
-        },
-        {
-            "name": "created_at",
-            "baseName": "created_at",
-            "type": "Date",
-            "format": "date-time"
-        },
-        {
-            "name": "updated_at",
-            "baseName": "updated_at",
-            "type": "Date",
-            "format": "date-time"
         },
         {
             "name": "defaults",
@@ -507,6 +511,12 @@ export class Template {
             "name": "html_engine_options",
             "baseName": "html_engine_options",
             "type": "HtmlEngineOptions",
+            "format": ""
+        },
+        {
+            "name": "html_escape_data",
+            "baseName": "html_escape_data",
+            "type": "boolean",
             "format": ""
         },
         {

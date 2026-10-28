@@ -20,6 +20,7 @@ export * from '../models/CreateSignatureRequestEventRequest';
 export * from '../models/CreateSignatureRequestTokenRequest';
 export * from '../models/CreateSubmissionBatchRequest';
 export * from '../models/CreateSubmissionRequest';
+export * from '../models/CreateTemplatePreviewRequest';
 export * from '../models/CreateTemplateRequest';
 export * from '../models/CreateWebhookRequest';
 export * from '../models/CustomFile';
@@ -101,6 +102,7 @@ export * from '../models/SubmissionList';
 export * from '../models/SubmissionSource';
 export * from '../models/SubmissionSourcePdf';
 export * from '../models/SubmissionState';
+export * from '../models/SubmissionSummary';
 export * from '../models/SubmissionValidation';
 export * from '../models/Template';
 export * from '../models/TemplateActor';
@@ -111,6 +113,7 @@ export * from '../models/TemplateDiff';
 export * from '../models/TemplateDiffSummary';
 export * from '../models/TemplateDocument';
 export * from '../models/TemplateDocumentState';
+export * from '../models/TemplateDocumentSummary';
 export * from '../models/TemplateFieldChange';
 export * from '../models/TemplateFieldChanges';
 export * from '../models/TemplateFieldDependency';
@@ -131,6 +134,8 @@ export * from '../models/TemplatePageFieldsStatus';
 export * from '../models/TemplatePageImageStatus';
 export * from '../models/TemplatePageImages';
 export * from '../models/TemplatePageProcessingStatus';
+export * from '../models/TemplatePreview';
+export * from '../models/TemplatePreviewState';
 export * from '../models/TemplateSourcePdf';
 export * from '../models/TemplateSummary';
 export * from '../models/TemplateSummaryList';
@@ -177,7 +182,8 @@ import { CreateSignatureRequestEventRequest     } from '../models/CreateSignatur
 import { CreateSignatureRequestTokenRequest  } from '../models/CreateSignatureRequestTokenRequest';
 import { CreateSubmissionBatchRequest } from '../models/CreateSubmissionBatchRequest';
 import { CreateSubmissionRequest } from '../models/CreateSubmissionRequest';
-import { CreateTemplateRequest                                            } from '../models/CreateTemplateRequest';
+import { CreateTemplatePreviewRequest } from '../models/CreateTemplatePreviewRequest';
+import { CreateTemplateRequest                                             } from '../models/CreateTemplateRequest';
 import { CreateWebhookRequest            } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
 import { CustomFileList } from '../models/CustomFileList';
@@ -258,8 +264,9 @@ import { SubmissionList } from '../models/SubmissionList';
 import { SubmissionSource } from '../models/SubmissionSource';
 import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
 import { SubmissionState } from '../models/SubmissionState';
+import { SubmissionSummary                    } from '../models/SubmissionSummary';
 import { SubmissionValidation } from '../models/SubmissionValidation';
-import { Template                                                  } from '../models/Template';
+import { Template                                                   } from '../models/Template';
 import { TemplateActor      } from '../models/TemplateActor';
 import { TemplateActorType } from '../models/TemplateActorType';
 import { TemplateDefaults                     } from '../models/TemplateDefaults';
@@ -268,6 +275,7 @@ import { TemplateDiff } from '../models/TemplateDiff';
 import { TemplateDiffSummary } from '../models/TemplateDiffSummary';
 import { TemplateDocument             } from '../models/TemplateDocument';
 import { TemplateDocumentState } from '../models/TemplateDocumentState';
+import { TemplateDocumentSummary     } from '../models/TemplateDocumentSummary';
 import { TemplateFieldChange } from '../models/TemplateFieldChange';
 import { TemplateFieldChanges } from '../models/TemplateFieldChanges';
 import { TemplateFieldDependency      } from '../models/TemplateFieldDependency';
@@ -288,8 +296,10 @@ import { TemplatePageFieldsStatus } from '../models/TemplatePageFieldsStatus';
 import { TemplatePageImageStatus } from '../models/TemplatePageImageStatus';
 import { TemplatePageImages } from '../models/TemplatePageImages';
 import { TemplatePageProcessingStatus      } from '../models/TemplatePageProcessingStatus';
+import { TemplatePreview         } from '../models/TemplatePreview';
+import { TemplatePreviewState } from '../models/TemplatePreviewState';
 import { TemplateSourcePdf } from '../models/TemplateSourcePdf';
-import { TemplateSummary                                      } from '../models/TemplateSummary';
+import { TemplateSummary               } from '../models/TemplateSummary';
 import { TemplateSummaryList } from '../models/TemplateSummaryList';
 import { TemplateType } from '../models/TemplateType';
 import { TemplateVersion } from '../models/TemplateVersion';
@@ -301,7 +311,7 @@ import { Typeface } from '../models/Typeface';
 import { UpdateSignatureRequestRequest          } from '../models/UpdateSignatureRequestRequest';
 import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
 import { UpdateTemplateFieldsRequest } from '../models/UpdateTemplateFieldsRequest';
-import { UpdateTemplateRequest                                    } from '../models/UpdateTemplateRequest';
+import { UpdateTemplateRequest                                     } from '../models/UpdateTemplateRequest';
 import { UpdateWebhookRequest            } from '../models/UpdateWebhookRequest';
 import { UploadMethod } from '../models/UploadMethod';
 import { UploadPresign     } from '../models/UploadPresign';
@@ -375,6 +385,7 @@ let enumsMap: Set<string> = new Set<string>([
     "TemplatePageAiNamingStatus",
     "TemplatePageFieldsStatus",
     "TemplatePageImageStatus",
+    "TemplatePreviewState",
     "TemplateType",
     "TemplateVersionType",
     "TextAlignment",
@@ -403,6 +414,7 @@ let typeMap: {[index: string]: any} = {
     "CreateSignatureRequestTokenRequest": CreateSignatureRequestTokenRequest,
     "CreateSubmissionBatchRequest": CreateSubmissionBatchRequest,
     "CreateSubmissionRequest": CreateSubmissionRequest,
+    "CreateTemplatePreviewRequest": CreateTemplatePreviewRequest,
     "CreateTemplateRequest": CreateTemplateRequest,
     "CreateWebhookRequest": CreateWebhookRequest,
     "CustomFile": CustomFile,
@@ -451,6 +463,7 @@ let typeMap: {[index: string]: any} = {
     "SubmissionInput": SubmissionInput,
     "SubmissionList": SubmissionList,
     "SubmissionSourcePdf": SubmissionSourcePdf,
+    "SubmissionSummary": SubmissionSummary,
     "SubmissionValidation": SubmissionValidation,
     "Template": Template,
     "TemplateActor": TemplateActor,
@@ -459,6 +472,7 @@ let typeMap: {[index: string]: any} = {
     "TemplateDiff": TemplateDiff,
     "TemplateDiffSummary": TemplateDiffSummary,
     "TemplateDocument": TemplateDocument,
+    "TemplateDocumentSummary": TemplateDocumentSummary,
     "TemplateFieldChange": TemplateFieldChange,
     "TemplateFieldChanges": TemplateFieldChanges,
     "TemplateFieldDependency": TemplateFieldDependency,
@@ -470,6 +484,7 @@ let typeMap: {[index: string]: any} = {
     "TemplateModelCode": TemplateModelCode,
     "TemplatePageImages": TemplatePageImages,
     "TemplatePageProcessingStatus": TemplatePageProcessingStatus,
+    "TemplatePreview": TemplatePreview,
     "TemplateSourcePdf": TemplateSourcePdf,
     "TemplateSummary": TemplateSummary,
     "TemplateSummaryList": TemplateSummaryList,

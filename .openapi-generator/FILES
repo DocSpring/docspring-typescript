@@ -34,6 +34,7 @@ models/CreateSignatureRequestEventRequest.ts
 models/CreateSignatureRequestTokenRequest.ts
 models/CreateSubmissionBatchRequest.ts
 models/CreateSubmissionRequest.ts
+models/CreateTemplatePreviewRequest.ts
 models/CreateTemplateRequest.ts
 models/CreateWebhookRequest.ts
 models/CustomFile.ts
@@ -116,6 +117,7 @@ models/SubmissionList.ts
 models/SubmissionSource.ts
 models/SubmissionSourcePdf.ts
 models/SubmissionState.ts
+models/SubmissionSummary.ts
 models/SubmissionValidation.ts
 models/Template.ts
 models/TemplateActor.ts
@@ -126,6 +128,7 @@ models/TemplateDiff.ts
 models/TemplateDiffSummary.ts
 models/TemplateDocument.ts
 models/TemplateDocumentState.ts
+models/TemplateDocumentSummary.ts
 models/TemplateFieldChange.ts
 models/TemplateFieldChanges.ts
 models/TemplateFieldDependency.ts
@@ -146,6 +149,8 @@ models/TemplatePageFieldsStatus.ts
 models/TemplatePageImageStatus.ts
 models/TemplatePageImages.ts
 models/TemplatePageProcessingStatus.ts
+models/TemplatePreview.ts
+models/TemplatePreviewState.ts
 models/TemplateSourcePdf.ts
 models/TemplateSummary.ts
 models/TemplateSummaryList.ts

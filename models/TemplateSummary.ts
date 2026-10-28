@@ -10,16 +10,12 @@
  * Do not edit the class manually.
  */
 
-import { AiFieldNamingLanguage } from '../models/AiFieldNamingLanguage';
-import { ExpirationInterval } from '../models/ExpirationInterval';
-import { TemplateActor } from '../models/TemplateActor';
-import { TemplateDocument } from '../models/TemplateDocument';
-import { TemplateFormMode } from '../models/TemplateFormMode';
+import { TemplateDocumentSummary } from '../models/TemplateDocumentSummary';
 import { TemplateType } from '../models/TemplateType';
 import { HttpFile } from '../http/http';
 
 /**
-* A template in a list. Get a template by its ID for its HTML, defaults, field dependency rules and published versions.
+* A template in a list: its name, type, folder, latest published version and whether it's ready. Get a template by its ID for its settings, its PDF in full, its HTML, defaults, field dependency rules and published versions.
 */
 export class TemplateSummary {
     /**
@@ -39,13 +35,13 @@ export class TemplateSummary {
     */
     'template_type': TemplateType | (string & {});
     /**
-    * Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once its document has been processed (`document.state` is `processed`).
+    * Whether the template can generate PDFs. HTML templates are always ready. A PDF template is ready once DocSpring has stored its PDF, made an image of each page and finished looking for fields on each page, which can be after `document.state` becomes `processed`. A PDF template with no PDF (`document` is null) isn't ready.
     */
     'ready': boolean;
     /**
-    * The PDF of a PDF template. Null for HTML templates, and for a PDF template that has no PDF yet.
+    * The PDF of a PDF template: its file name, page count and processing state. Null for HTML templates, and for a PDF template that has no PDF yet.
     */
-    'document': TemplateDocument | null;
+    'document': TemplateDocumentSummary | null;
     /**
     * The ID of the folder the template is in. Null for a template at the root. Setting it moves the template and all of its published versions.
     */
@@ -54,10 +50,6 @@ export class TemplateSummary {
     * The path of the folder the template is in, such as `/Contracts`. `/` for a template at the root.
     */
     'path': string;
-    /**
-    * The published version this is, such as `1.2.0`. Null for the draft.
-    */
-    'version': string | null;
     /**
     * The template's latest published version. Null if no version has been published.
     */
@@ -71,97 +63,9 @@ export class TemplateSummary {
     */
     'locked': boolean;
     /**
-    * Print the submission ID in the footer of each page of PDFs signed through signature requests.
-    */
-    'add_signature_request_submission_id_footers': boolean;
-    /**
-    * The language AI field setup names fields in: `auto` uses the form's language when it's written in the Latin alphabet without accents, and English otherwise; `english` always uses English; `form_language` uses the form's language and script. New templates take it from your account's template settings. Null for HTML templates.
-    */
-    'ai_field_naming_language': AiFieldNamingLanguage | (string & {}) | null;
-    /**
-    * Accept submission data with properties that aren't fields of the template.
-    */
-    'allow_additional_properties': boolean;
-    /**
-    * Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it.
-    */
-    'allow_skipping_optional_fields': boolean;
-    /**
-    * The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). HTML templates have no visual form, so `web` is the only value they accept.
-    */
-    'default_form_mode': TemplateFormMode | (string & {});
-    /**
-    * Generate PDFs whose text and check fields stay fillable ("Generate Editable PDFs"). A submission's `editable` overrides it.
-    */
-    'editable_submissions': boolean;
-    /**
-    * The sites where the template's signature requests, forms and embedded template editor can be loaded: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work). When it's empty, live signature requests don't load on any site, and the embedded template editor loads on every site.
-    */
-    'embed_domains': Array<string>;
-    /**
-    * Allow the embedded template editor to change sensitive template settings (webhooks, redirect URL, encryption, public access, expiration and so on).
-    */
-    'embed_edit_allow_settings': boolean;
-    /**
-    * Allow the embedded template editor to publish, restore, compare and delete published versions.
-    */
-    'embed_edit_allow_versioning': boolean;
-    /**
-    * Allow the embedded template editor to replace the template's PDF.
-    */
-    'embed_edit_allow_document_replacement': boolean;
-    /**
-    * Encrypt generated PDFs with `encrypt_pdfs_password`.
-    */
-    'encrypt_pdfs': boolean;
-    /**
-    * Whether `encrypt_pdfs_password` is set.
-    */
-    'has_encrypt_pdfs_password': boolean;
-    /**
-    * Delete each submission's data and PDF after `expire_after` `expiration_interval`.
-    */
-    'expire_submissions': boolean;
-    /**
-    * How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` is on. At most 5256000 (10 years in minutes).
-    */
-    'expire_after': number;
-    /**
-    * The unit of `expire_after`.
-    */
-    'expiration_interval': ExpirationInterval | (string & {});
-    /**
-    * Add the audit trail to the end of PDFs signed through signature requests.
-    */
-    'merge_audit_trail_pdf': boolean;
-    /**
-    * Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way.
-    */
-    'parse_dates_using_template_date_format': boolean;
-    /**
-    * Allow anyone with a submission's ID to download its PDF.
-    */
-    'public_submissions': boolean;
-    /**
-    * Allow anyone to fill in the template's web form.
-    */
-    'public_web_form': boolean;
-    /**
-    * Where the web form sends people after they submit it.
-    */
-    'redirect_url': string | null;
-    /**
-    * Whether `slack_webhook_url` is set.
-    */
-    'has_slack_webhook_url': boolean;
-    /**
     * When the draft was last changed.
     */
     'last_changed_at': Date | null;
-    /**
-    * Who last changed the draft: a user in your account, an API token, or someone using the embedded template editor. Null if no change has been recorded.
-    */
-    'last_changed_by': TemplateActor | null;
     /**
     * When the template was created.
     */
@@ -209,7 +113,7 @@ export class TemplateSummary {
         {
             "name": "document",
             "baseName": "document",
-            "type": "TemplateDocument",
+            "type": "TemplateDocumentSummary",
             "format": ""
         },
         {
@@ -221,12 +125,6 @@ export class TemplateSummary {
         {
             "name": "path",
             "baseName": "path",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "version",
-            "baseName": "version",
             "type": "string",
             "format": ""
         },
@@ -249,142 +147,10 @@ export class TemplateSummary {
             "format": ""
         },
         {
-            "name": "add_signature_request_submission_id_footers",
-            "baseName": "add_signature_request_submission_id_footers",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "ai_field_naming_language",
-            "baseName": "ai_field_naming_language",
-            "type": "AiFieldNamingLanguage",
-            "format": ""
-        },
-        {
-            "name": "allow_additional_properties",
-            "baseName": "allow_additional_properties",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "allow_skipping_optional_fields",
-            "baseName": "allow_skipping_optional_fields",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "default_form_mode",
-            "baseName": "default_form_mode",
-            "type": "TemplateFormMode",
-            "format": ""
-        },
-        {
-            "name": "editable_submissions",
-            "baseName": "editable_submissions",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "embed_domains",
-            "baseName": "embed_domains",
-            "type": "Array<string>",
-            "format": ""
-        },
-        {
-            "name": "embed_edit_allow_settings",
-            "baseName": "embed_edit_allow_settings",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "embed_edit_allow_versioning",
-            "baseName": "embed_edit_allow_versioning",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "embed_edit_allow_document_replacement",
-            "baseName": "embed_edit_allow_document_replacement",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "encrypt_pdfs",
-            "baseName": "encrypt_pdfs",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "has_encrypt_pdfs_password",
-            "baseName": "has_encrypt_pdfs_password",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "expire_submissions",
-            "baseName": "expire_submissions",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "expire_after",
-            "baseName": "expire_after",
-            "type": "number",
-            "format": ""
-        },
-        {
-            "name": "expiration_interval",
-            "baseName": "expiration_interval",
-            "type": "ExpirationInterval",
-            "format": ""
-        },
-        {
-            "name": "merge_audit_trail_pdf",
-            "baseName": "merge_audit_trail_pdf",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "parse_dates_using_template_date_format",
-            "baseName": "parse_dates_using_template_date_format",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "public_submissions",
-            "baseName": "public_submissions",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "public_web_form",
-            "baseName": "public_web_form",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "redirect_url",
-            "baseName": "redirect_url",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "has_slack_webhook_url",
-            "baseName": "has_slack_webhook_url",
-            "type": "boolean",
-            "format": ""
-        },
-        {
             "name": "last_changed_at",
             "baseName": "last_changed_at",
             "type": "Date",
             "format": "date-time"
-        },
-        {
-            "name": "last_changed_by",
-            "baseName": "last_changed_by",
-            "type": "TemplateActor",
-            "format": ""
         },
         {
             "name": "created_at",

@@ -26,6 +26,7 @@ import { CreateSignatureRequestEventRequest } from '../models/CreateSignatureReq
 import { CreateSignatureRequestTokenRequest } from '../models/CreateSignatureRequestTokenRequest';
 import { CreateSubmissionBatchRequest } from '../models/CreateSubmissionBatchRequest';
 import { CreateSubmissionRequest } from '../models/CreateSubmissionRequest';
+import { CreateTemplatePreviewRequest } from '../models/CreateTemplatePreviewRequest';
 import { CreateTemplateRequest } from '../models/CreateTemplateRequest';
 import { CreateWebhookRequest } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
@@ -107,6 +108,7 @@ import { SubmissionList } from '../models/SubmissionList';
 import { SubmissionSource } from '../models/SubmissionSource';
 import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
 import { SubmissionState } from '../models/SubmissionState';
+import { SubmissionSummary } from '../models/SubmissionSummary';
 import { SubmissionValidation } from '../models/SubmissionValidation';
 import { Template } from '../models/Template';
 import { TemplateActor } from '../models/TemplateActor';
@@ -117,6 +119,7 @@ import { TemplateDiff } from '../models/TemplateDiff';
 import { TemplateDiffSummary } from '../models/TemplateDiffSummary';
 import { TemplateDocument } from '../models/TemplateDocument';
 import { TemplateDocumentState } from '../models/TemplateDocumentState';
+import { TemplateDocumentSummary } from '../models/TemplateDocumentSummary';
 import { TemplateFieldChange } from '../models/TemplateFieldChange';
 import { TemplateFieldChanges } from '../models/TemplateFieldChanges';
 import { TemplateFieldDependency } from '../models/TemplateFieldDependency';
@@ -137,6 +140,8 @@ import { TemplatePageFieldsStatus } from '../models/TemplatePageFieldsStatus';
 import { TemplatePageImageStatus } from '../models/TemplatePageImageStatus';
 import { TemplatePageImages } from '../models/TemplatePageImages';
 import { TemplatePageProcessingStatus } from '../models/TemplatePageProcessingStatus';
+import { TemplatePreview } from '../models/TemplatePreview';
+import { TemplatePreviewState } from '../models/TemplatePreviewState';
 import { TemplateSourcePdf } from '../models/TemplateSourcePdf';
 import { TemplateSummary } from '../models/TemplateSummary';
 import { TemplateSummaryList } from '../models/TemplateSummaryList';
@@ -276,10 +281,11 @@ export class PromiseClient {
      * Combine PDFs
      * @param body The PDFs to merge, and the combined PDF's settings.
      * @param [wait] Wait until the PDF has been generated before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
      */
-    public createCombinedPdfWithHttpInfo(body: CreateCombinedPdfRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<CombinedPdf>> {
+    public createCombinedPdfWithHttpInfo(body: CreateCombinedPdfRequest, wait?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<CombinedPdf>> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.createCombinedPdfWithHttpInfo(body, wait, observableOptions);
+        const result = this.api.createCombinedPdfWithHttpInfo(body, wait, idempotencyKey, observableOptions);
         return result.toPromise();
     }
 
@@ -288,10 +294,11 @@ export class PromiseClient {
      * Combine PDFs
      * @param body The PDFs to merge, and the combined PDF's settings.
      * @param [wait] Wait until the PDF has been generated before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
      */
-    public createCombinedPdf(body: CreateCombinedPdfRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<CombinedPdf> {
+    public createCombinedPdf(body: CreateCombinedPdfRequest, wait?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<CombinedPdf> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.createCombinedPdf(body, wait, observableOptions);
+        const result = this.api.createCombinedPdf(body, wait, idempotencyKey, observableOptions);
         return result.toPromise();
     }
 
@@ -340,7 +347,7 @@ export class PromiseClient {
     }
 
     /**
-     * Records something that happened outside DocSpring in the signature request's audit trail: you sent the request to the person (`send_request`). The audit trail shows it as reported by your account. 
+     * Records something that happened outside DocSpring in the signature request's audit trail: you sent the request to the person (`send_request`). The audit trail shows it as reported by your account. A finished (completed, declined or expired) signature request's audit trail takes no more events, and a test API token can't record one for a live signature request. 
      * Record a signature request event
      * @param signatureRequestId The signature request's ID.
      * @param body The event to record.
@@ -352,7 +359,7 @@ export class PromiseClient {
     }
 
     /**
-     * Records something that happened outside DocSpring in the signature request's audit trail: you sent the request to the person (`send_request`). The audit trail shows it as reported by your account. 
+     * Records something that happened outside DocSpring in the signature request's audit trail: you sent the request to the person (`send_request`). The audit trail shows it as reported by your account. A finished (completed, declined or expired) signature request's audit trail takes no more events, and a test API token can't record one for a live signature request. 
      * Record a signature request event
      * @param signatureRequestId The signature request's ID.
      * @param body The event to record.
@@ -394,10 +401,11 @@ export class PromiseClient {
      * @param body The submission's data and settings.
      * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
      * @param [wait] Wait until the files have been generated before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
      */
-    public createSubmissionWithHttpInfo(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Submission>> {
+    public createSubmissionWithHttpInfo(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Submission>> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.createSubmissionWithHttpInfo(templateId, body, version, wait, observableOptions);
+        const result = this.api.createSubmissionWithHttpInfo(templateId, body, version, wait, idempotencyKey, observableOptions);
         return result.toPromise();
     }
 
@@ -408,10 +416,11 @@ export class PromiseClient {
      * @param body The submission's data and settings.
      * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
      * @param [wait] Wait until the files have been generated before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
      */
-    public createSubmission(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<Submission> {
+    public createSubmission(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<Submission> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.createSubmission(templateId, body, version, wait, observableOptions);
+        const result = this.api.createSubmission(templateId, body, version, wait, idempotencyKey, observableOptions);
         return result.toPromise();
     }
 
@@ -420,10 +429,11 @@ export class PromiseClient {
      * Generate PDFs in a batch
      * @param body The submissions to create, and the settings they share.
      * @param [wait] Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
      */
-    public createSubmissionBatchWithHttpInfo(body: CreateSubmissionBatchRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<SubmissionBatch>> {
+    public createSubmissionBatchWithHttpInfo(body: CreateSubmissionBatchRequest, wait?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<SubmissionBatch>> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.createSubmissionBatchWithHttpInfo(body, wait, observableOptions);
+        const result = this.api.createSubmissionBatchWithHttpInfo(body, wait, idempotencyKey, observableOptions);
         return result.toPromise();
     }
 
@@ -432,10 +442,11 @@ export class PromiseClient {
      * Generate PDFs in a batch
      * @param body The submissions to create, and the settings they share.
      * @param [wait] Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
      */
-    public createSubmissionBatch(body: CreateSubmissionBatchRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<SubmissionBatch> {
+    public createSubmissionBatch(body: CreateSubmissionBatchRequest, wait?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<SubmissionBatch> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.createSubmissionBatch(body, wait, observableOptions);
+        const result = this.api.createSubmissionBatch(body, wait, idempotencyKey, observableOptions);
         return result.toPromise();
     }
 
@@ -460,6 +471,32 @@ export class PromiseClient {
     public createTemplate(body: CreateTemplateRequest, wait?: boolean, _options?: PromiseConfigurationOptions): Promise<Template> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.createTemplate(body, wait, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML or PDF template prints with your data before you publish a version or send live data. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
+     * Preview a template with data
+     * @param templateId The template's ID.
+     * @param body The data to render the template with.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     */
+    public createTemplatePreviewWithHttpInfo(templateId: string, body: CreateTemplatePreviewRequest, version?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.createTemplatePreviewWithHttpInfo(templateId, body, version, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML or PDF template prints with your data before you publish a version or send live data. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
+     * Preview a template with data
+     * @param templateId The template's ID.
+     * @param body The data to render the template with.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     */
+    public createTemplatePreview(templateId: string, body: CreateTemplatePreviewRequest, version?: string, _options?: PromiseConfigurationOptions): Promise<TemplatePreview> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.createTemplatePreview(templateId, body, version, observableOptions);
         return result.toPromise();
     }
 
@@ -870,28 +907,30 @@ export class PromiseClient {
     }
 
     /**
-     * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
+     * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object, and `just_types=true` leaves out the code that converts JSON to and from the types. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
      * Generate typed code for a template's submission data
      * @param templateId The template's ID.
      * @param lang The language to generate the code in.
      * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * @param [justTypes] Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types and PHP no types-only code, so theirs is the same either way.
      */
-    public getTemplateModelCodeWithHttpInfo(templateId: string, lang: ModelCodeLanguage, version?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplateModelCode>> {
+    public getTemplateModelCodeWithHttpInfo(templateId: string, lang: ModelCodeLanguage, version?: string, justTypes?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplateModelCode>> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.getTemplateModelCodeWithHttpInfo(templateId, lang, version, observableOptions);
+        const result = this.api.getTemplateModelCodeWithHttpInfo(templateId, lang, version, justTypes, observableOptions);
         return result.toPromise();
     }
 
     /**
-     * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
+     * Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object, and `just_types=true` leaves out the code that converts JSON to and from the types. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
      * Generate typed code for a template's submission data
      * @param templateId The template's ID.
      * @param lang The language to generate the code in.
      * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * @param [justTypes] Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types and PHP no types-only code, so theirs is the same either way.
      */
-    public getTemplateModelCode(templateId: string, lang: ModelCodeLanguage, version?: string, _options?: PromiseConfigurationOptions): Promise<TemplateModelCode> {
+    public getTemplateModelCode(templateId: string, lang: ModelCodeLanguage, version?: string, justTypes?: boolean, _options?: PromiseConfigurationOptions): Promise<TemplateModelCode> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.getTemplateModelCode(templateId, lang, version, observableOptions);
+        const result = this.api.getTemplateModelCode(templateId, lang, version, justTypes, observableOptions);
         return result.toPromise();
     }
 
@@ -916,6 +955,30 @@ export class PromiseClient {
     public getTemplatePageImages(templateId: string, version?: string, _options?: PromiseConfigurationOptions): Promise<TemplatePageImages> {
         const observableOptions = wrapOptions(_options);
         const result = this.api.getTemplatePageImages(templateId, version, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Returns a preview made with POST /templates/{template_id}/previews. Once it's `processed`, `pages` has a PNG image of each page with a temporary link to download it: a preview has no PDF. Previews are deleted an hour after they're created. 
+     * Get a template preview
+     * @param templateId The template's ID.
+     * @param previewId The preview's ID.
+     */
+    public getTemplatePreviewWithHttpInfo(templateId: string, previewId: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getTemplatePreviewWithHttpInfo(templateId, previewId, observableOptions);
+        return result.toPromise();
+    }
+
+    /**
+     * Returns a preview made with POST /templates/{template_id}/previews. Once it's `processed`, `pages` has a PNG image of each page with a temporary link to download it: a preview has no PDF. Previews are deleted an hour after they're created. 
+     * Get a template preview
+     * @param templateId The template's ID.
+     * @param previewId The preview's ID.
+     */
+    public getTemplatePreview(templateId: string, previewId: string, _options?: PromiseConfigurationOptions): Promise<TemplatePreview> {
+        const observableOptions = wrapOptions(_options);
+        const result = this.api.getTemplatePreview(templateId, previewId, observableOptions);
         return result.toPromise();
     }
 
@@ -1040,7 +1103,7 @@ export class PromiseClient {
     }
 
     /**
-     * Returns the submissions in your account, newest first, one page at a time. Lists leave out each submission's `data` unless you pass `include_data=true`. 
+     * Returns the submissions in your account, newest first, one page at a time. Each one is a summary: its `data` is null unless you pass `include_data=true`, and its `files` are empty unless you pass `include_files=true`. Get a submission by its ID for its signature requests, uploads and page images. 
      * List submissions
      * @param [templateId] Only list this template's submissions.
      * @param [test] Only list test submissions (true) or live submissions (false).
@@ -1049,15 +1112,17 @@ export class PromiseClient {
      * @param [includeData] Include each submission's `data` (null without it).
      * @param [limit] How many items to return (1-100, default 50).
      * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * @param [state] Only list submissions in this state (one state per request). The ones that failed are `invalid_data`, `error`, `syntax_error`, `image_download_failed` and `image_processing_failed`, and one still `pending` an hour after it was created is stuck.
+     * @param [includeFiles] Include each submission's generated files and their download links (`files`, empty without it), without the page images' links.
      */
-    public listSubmissionsWithHttpInfo(templateId?: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<SubmissionList>> {
+    public listSubmissionsWithHttpInfo(templateId?: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, state?: SubmissionState, includeFiles?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<SubmissionList>> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.listSubmissionsWithHttpInfo(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, observableOptions);
+        const result = this.api.listSubmissionsWithHttpInfo(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, state, includeFiles, observableOptions);
         return result.toPromise();
     }
 
     /**
-     * Returns the submissions in your account, newest first, one page at a time. Lists leave out each submission's `data` unless you pass `include_data=true`. 
+     * Returns the submissions in your account, newest first, one page at a time. Each one is a summary: its `data` is null unless you pass `include_data=true`, and its `files` are empty unless you pass `include_files=true`. Get a submission by its ID for its signature requests, uploads and page images. 
      * List submissions
      * @param [templateId] Only list this template's submissions.
      * @param [test] Only list test submissions (true) or live submissions (false).
@@ -1066,10 +1131,12 @@ export class PromiseClient {
      * @param [includeData] Include each submission's `data` (null without it).
      * @param [limit] How many items to return (1-100, default 50).
      * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * @param [state] Only list submissions in this state (one state per request). The ones that failed are `invalid_data`, `error`, `syntax_error`, `image_download_failed` and `image_processing_failed`, and one still `pending` an hour after it was created is stuck.
+     * @param [includeFiles] Include each submission's generated files and their download links (`files`, empty without it), without the page images' links.
      */
-    public listSubmissions(templateId?: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, _options?: PromiseConfigurationOptions): Promise<SubmissionList> {
+    public listSubmissions(templateId?: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, state?: SubmissionState, includeFiles?: boolean, _options?: PromiseConfigurationOptions): Promise<SubmissionList> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.listSubmissions(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, observableOptions);
+        const result = this.api.listSubmissions(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, state, includeFiles, observableOptions);
         return result.toPromise();
     }
 
@@ -1107,10 +1174,12 @@ export class PromiseClient {
      * @param [includeData] Include each submission's `data` (null without it).
      * @param [limit] How many items to return (1-100, default 50).
      * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * @param [state] Only list submissions in this state (one state per request). The ones that failed are `invalid_data`, `error`, `syntax_error`, `image_download_failed` and `image_processing_failed`, and one still `pending` an hour after it was created is stuck.
+     * @param [includeFiles] Include each submission's generated files and their download links (`files`, empty without it), without the page images' links.
      */
-    public listTemplateSubmissionsWithHttpInfo(templateId: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<SubmissionList>> {
+    public listTemplateSubmissionsWithHttpInfo(templateId: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, state?: SubmissionState, includeFiles?: boolean, _options?: PromiseConfigurationOptions): Promise<HttpInfo<SubmissionList>> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.listTemplateSubmissionsWithHttpInfo(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, observableOptions);
+        const result = this.api.listTemplateSubmissionsWithHttpInfo(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, state, includeFiles, observableOptions);
         return result.toPromise();
     }
 
@@ -1124,15 +1193,17 @@ export class PromiseClient {
      * @param [includeData] Include each submission's `data` (null without it).
      * @param [limit] How many items to return (1-100, default 50).
      * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * @param [state] Only list submissions in this state (one state per request). The ones that failed are `invalid_data`, `error`, `syntax_error`, `image_download_failed` and `image_processing_failed`, and one still `pending` an hour after it was created is stuck.
+     * @param [includeFiles] Include each submission's generated files and their download links (`files`, empty without it), without the page images' links.
      */
-    public listTemplateSubmissions(templateId: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, _options?: PromiseConfigurationOptions): Promise<SubmissionList> {
+    public listTemplateSubmissions(templateId: string, test?: boolean, createdAfter?: Date, createdBefore?: Date, includeData?: boolean, limit?: number, cursor?: string, state?: SubmissionState, includeFiles?: boolean, _options?: PromiseConfigurationOptions): Promise<SubmissionList> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.listTemplateSubmissions(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, observableOptions);
+        const result = this.api.listTemplateSubmissions(templateId, test, createdAfter, createdBefore, includeData, limit, cursor, state, includeFiles, observableOptions);
         return result.toPromise();
     }
 
     /**
-     * Returns the templates in your account (their drafts), newest first, one page at a time. Get a template by its ID for its HTML, defaults and published versions. 
+     * Returns the templates in your account (their drafts), newest first, one page at a time. Each one is a summary: get a template by its ID for its settings, its PDF in full, its HTML, defaults and published versions. 
      * List templates
      * @param [query] Only list templates whose name contains this text (ignoring case).
      * @param [parentFolderId] Only list the templates in this folder (not in its subfolders).
@@ -1146,7 +1217,7 @@ export class PromiseClient {
     }
 
     /**
-     * Returns the templates in your account (their drafts), newest first, one page at a time. Get a template by its ID for its HTML, defaults and published versions. 
+     * Returns the templates in your account (their drafts), newest first, one page at a time. Each one is a summary: get a template by its ID for its settings, its PDF in full, its HTML, defaults and published versions. 
      * List templates
      * @param [query] Only list templates whose name contains this text (ignoring case).
      * @param [parentFolderId] Only list the templates in this folder (not in its subfolders).

@@ -61,7 +61,7 @@ export class Submission {
     */
     'editable': boolean;
     /**
-    * The submission's data, with the values entered in completed signature requests. Lists leave it out (null) unless you pass `include_data=true`. Empty once the submission has expired.
+    * The submission's data, with the values entered in completed signature requests. Empty once the submission has expired. Null in a batch's submissions unless you pass `include_data=true`, and in the events of a webhook that leaves out submission data.
     */
     'data': { [key: string]: any; } | null;
     /**
@@ -73,9 +73,33 @@ export class Submission {
     */
     'error_message': string | null;
     /**
-    * Your own data about the submission, such as an ID from your app. It isn't printed on the PDF.
+    * Your own data about the submission, such as an ID from your app. It isn't printed on the PDF. Two keys also change the PDF: `pdf_filename` names its file (`files.pdf.filename`, and its download), and `pdf_title` is its title in the PDF's document properties (and an HTML template's `<title>`, unless its HTML has one). Without `pdf_title`, the title is the template's name. In `pdf_filename`, a `.pdf` ending is removed, each run of characters other than letters, digits, `-`, `_` and `.` becomes one `_`, and the first 128 characters are kept, then `.pdf` is added. Without it, the file is named after the submission's ID (`sub_1234567890abcdef01.pdf`).
     */
     'metadata': { [key: string]: any; };
+    /**
+    * The generated files: `pdf` once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
+    */
+    'files': SubmissionFiles;
+    /**
+    * An expired submission's data, metadata, password and PDF have been deleted.
+    */
+    'expired': boolean;
+    /**
+    * When the submission expires. Null if it's kept until you delete it.
+    */
+    'expires_at': Date | null;
+    /**
+    * When the PDF was generated. Null until then.
+    */
+    'processed_at': Date | null;
+    /**
+    * When the submission was created.
+    */
+    'created_at': Date;
+    /**
+    * When the submission was last updated.
+    */
+    'updated_at': Date;
     /**
     * Whether the PDF needs a password to open (`password`).
     */
@@ -97,33 +121,9 @@ export class Submission {
     */
     'output_formats': Array<OutputFormat>;
     /**
-    * The generated files: `pdf` once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
-    */
-    'files': SubmissionFiles;
-    /**
     * When the preview PDF was generated. Null if there is no preview.
     */
     'preview_generated_at': Date | null;
-    /**
-    * An expired submission's data, metadata, password and PDF have been deleted.
-    */
-    'expired': boolean;
-    /**
-    * When the submission expires. Null if it's kept until you delete it.
-    */
-    'expires_at': Date | null;
-    /**
-    * When the PDF was generated. Null until then.
-    */
-    'processed_at': Date | null;
-    /**
-    * When the submission was created.
-    */
-    'created_at': Date;
-    /**
-    * When the submission was last updated.
-    */
-    'updated_at': Date;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -209,6 +209,42 @@ export class Submission {
             "format": ""
         },
         {
+            "name": "files",
+            "baseName": "files",
+            "type": "SubmissionFiles",
+            "format": ""
+        },
+        {
+            "name": "expired",
+            "baseName": "expired",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "expires_at",
+            "baseName": "expires_at",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
+            "name": "processed_at",
+            "baseName": "processed_at",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
+            "name": "created_at",
+            "baseName": "created_at",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
+            "name": "updated_at",
+            "baseName": "updated_at",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
             "name": "has_password",
             "baseName": "has_password",
             "type": "boolean",
@@ -239,44 +275,8 @@ export class Submission {
             "format": ""
         },
         {
-            "name": "files",
-            "baseName": "files",
-            "type": "SubmissionFiles",
-            "format": ""
-        },
-        {
             "name": "preview_generated_at",
             "baseName": "preview_generated_at",
-            "type": "Date",
-            "format": "date-time"
-        },
-        {
-            "name": "expired",
-            "baseName": "expired",
-            "type": "boolean",
-            "format": ""
-        },
-        {
-            "name": "expires_at",
-            "baseName": "expires_at",
-            "type": "Date",
-            "format": "date-time"
-        },
-        {
-            "name": "processed_at",
-            "baseName": "processed_at",
-            "type": "Date",
-            "format": "date-time"
-        },
-        {
-            "name": "created_at",
-            "baseName": "created_at",
-            "type": "Date",
-            "format": "date-time"
-        },
-        {
-            "name": "updated_at",
-            "baseName": "updated_at",
             "type": "Date",
             "format": "date-time"
         }    ];

@@ -25,11 +25,7 @@ export class TemplateDocument {
     */
     'filename': string | null;
     /**
-    * The MD5 hash of the PDF.
-    */
-    'md5': string | null;
-    /**
-    * `pending` while DocSpring processes the PDF, then `processed`. `password_required`, `malformed_pdf` and `unknown_error` mean the PDF couldn't be processed, and `error_message` says why: upload it again or upload another one. `downloading` while DocSpring downloads a `document_url`, then as for an upload. `download_failed` means it couldn't be downloaded, and `error_message` says why. A template keeps its PDF while a new one is downloaded, and when it couldn't be.
+    * `pending` while DocSpring processes the PDF, then `processed` (`ready` says when its pages are done too). `password_required`, `malformed_pdf` and `unknown_error` mean the PDF couldn't be processed, and `error_message` says why: upload it again or upload another one. `downloading` while DocSpring downloads a `document_url`, then as for an upload. `download_failed` means it couldn't be downloaded, and `error_message` says why. A template keeps its PDF while a new one is downloaded, and when it couldn't be.
     */
     'state': TemplateDocumentState | (string & {});
     /**
@@ -37,13 +33,17 @@ export class TemplateDocument {
     */
     'error_message': string | null;
     /**
-    * Whether the fields are being re-imported from this PDF (`reimport_fields` when the PDF was replaced): `requested` while DocSpring processes the PDF, then `imported`, or `no_fields` when the PDF had no fillable fields and the template kept its fields. `none` when no re-import was asked for, or when it couldn't run (the PDF couldn't be processed, or the template was locked or published while it was).
-    */
-    'field_reimport_state': FieldReimportState | (string & {});
-    /**
     * 0 until the PDF has been processed.
     */
     'page_count': number;
+    /**
+    * The MD5 hash of the PDF.
+    */
+    'md5': string | null;
+    /**
+    * Whether the fields are being re-imported from this PDF (`reimport_fields` when the PDF was replaced): `requested` while DocSpring processes the PDF, then `imported`, or `no_fields` when the PDF had no fillable fields and the template kept its fields. `none` when no re-import was asked for, or when it couldn't run (the PDF couldn't be processed, or the template was locked or published while it was).
+    */
+    'field_reimport_state': FieldReimportState | (string & {});
     /**
     * Each page's width and height in PDF points. Null until the PDF has been processed.
     */
@@ -81,12 +81,6 @@ export class TemplateDocument {
             "format": ""
         },
         {
-            "name": "md5",
-            "baseName": "md5",
-            "type": "string",
-            "format": ""
-        },
-        {
             "name": "state",
             "baseName": "state",
             "type": "TemplateDocumentState",
@@ -99,15 +93,21 @@ export class TemplateDocument {
             "format": ""
         },
         {
-            "name": "field_reimport_state",
-            "baseName": "field_reimport_state",
-            "type": "FieldReimportState",
-            "format": ""
-        },
-        {
             "name": "page_count",
             "baseName": "page_count",
             "type": "number",
+            "format": ""
+        },
+        {
+            "name": "md5",
+            "baseName": "md5",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "field_reimport_state",
+            "baseName": "field_reimport_state",
+            "type": "FieldReimportState",
             "format": ""
         },
         {

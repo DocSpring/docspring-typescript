@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-import { Submission } from '../models/Submission';
+import { SubmissionSummary } from '../models/SubmissionSummary';
 import { HttpFile } from '../http/http';
 
 /**
@@ -20,7 +20,7 @@ export class SubmissionList {
     /**
     * The items on this page.
     */
-    'data': Array<Submission>;
+    'data': Array<SubmissionSummary>;
     /**
     * Pass it as `cursor` to get the next page. Null on the last page.
     */
@@ -34,7 +34,7 @@ export class SubmissionList {
         {
             "name": "data",
             "baseName": "data",
-            "type": "Array<Submission>",
+            "type": "Array<SubmissionSummary>",
             "format": ""
         },
         {

@@ -36,7 +36,9 @@ export const ErrorCode = {
     BadGateway: 'bad_gateway',
     ServiceUnavailable: 'service_unavailable',
     UpstreamTimeout: 'upstream_timeout',
-    PollingTimeout: 'polling_timeout'
+    PollingTimeout: 'polling_timeout',
+    IdempotencyKeyInUse: 'idempotency_key_in_use',
+    IdempotencyKeyReused: 'idempotency_key_reused'
 } as const;
 /**
 * One of the values in the ErrorCode object. A response property can also have a value added to the API after this
