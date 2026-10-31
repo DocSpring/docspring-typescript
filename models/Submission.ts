@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
  *
  * OpenAPI spec version: v2
  * 
@@ -21,7 +21,7 @@ import { TemplateType } from '../models/TemplateType';
 import { HttpFile } from '../http/http';
 
 /**
-* Data submitted to a template, and the PDF generated from it.
+* Data submitted to a template, and the files generated from it (a PDF, a Word document, an OpenDocument file, or more than one of them).
 */
 export class Submission {
     /**
@@ -33,7 +33,7 @@ export class Submission {
     */
     'template_id': string | null;
     /**
-    * The template's type: `pdf` or `html`.
+    * The template's type: `pdf`, `html` or `docx`.
     */
     'template_type': TemplateType | (string & {});
     /**
@@ -49,7 +49,7 @@ export class Submission {
     */
     'source': SubmissionSource | (string & {});
     /**
-    * `pending` until the PDF has been generated, then `processed`. `waiting_for_signature_requests` until every signature request is completed. `insufficient_credits`: waiting for credits; `error_message` says whether the PDF is generated once you add them. `account_suspended`: waiting for the account to be reactivated, for up to 30 days. Waiting ends in `error` if it's discarded or takes over 30 days. Every other state is final, with no PDF: `invalid_data` (the data doesn't match the template's fields: see `data_errors`), `declined` (a signature request was declined), and the states where generating the PDF failed, which have an `error_message`: `syntax_error` (a mistake in an HTML template's Liquid or SCSS), `image_download_failed` or `image_processing_failed` (an image in the data or the template couldn't be downloaded or read) and `error` (anything else). Older submissions can also be `license_revoked` or `accidental`.
+    * `pending` until the files have been generated, then `processed`. `waiting_for_signature_requests` until every signature request is completed. `insufficient_credits`: waiting for credits; `error_message` says whether the files are generated once you add them. `account_suspended`: waiting for the account to be reactivated, for up to 30 days. Waiting ends in `error` if it's discarded or takes over 30 days. Every other state is final, with no files: `invalid_data` (the data doesn't match the template's fields: see `data_errors`), `declined` (a signature request was declined), and the states where generating the files failed, which have an `error_message`: `syntax_error` (a mistake in an HTML template's Liquid or SCSS, or in a Word template's tags), `image_download_failed` or `image_processing_failed` (an image in the data or the template couldn't be downloaded or read) and `error` (anything else). Older submissions can also be `license_revoked` or `accidental`.
     */
     'state': SubmissionState | (string & {});
     /**
@@ -77,7 +77,7 @@ export class Submission {
     */
     'metadata': { [key: string]: any; };
     /**
-    * The generated files: `pdf` once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
+    * The generated files: `pdf`, `docx` and `odt` (by `output_formats`) once the submission has been processed, `png` (the images of the PDF's pages, when `output_formats` has it: `files.png.pages[0]` is page 1), `audit_trail` once its signature requests are completed, and `preview` once a preview PDF has been generated. Empty once the submission has expired.
     */
     'files': SubmissionFiles;
     /**
@@ -117,7 +117,7 @@ export class Submission {
     */
     'truncated_text': { [key: string]: Array<string>; } | null;
     /**
-    * What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission.
+    * What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission.
     */
     'output_formats': Array<OutputFormat>;
     /**

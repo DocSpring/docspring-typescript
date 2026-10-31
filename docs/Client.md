@@ -56,11 +56,11 @@ Method | HTTP request | Description
 [**testAuthentication**](Client.md#testAuthentication) | **GET** /authentication | Test authentication
 [**updateSignatureRequest**](Client.md#updateSignatureRequest) | **PUT** /signature_requests/{signature_request_id} | Update a signature request
 [**updateTemplate**](Client.md#updateTemplate) | **PUT** /templates/{template_id} | Update a template
-[**updateTemplateDocument**](Client.md#updateTemplateDocument) | **PUT** /templates/{template_id}/document | Replace a template's PDF
+[**updateTemplateDocument**](Client.md#updateTemplateDocument) | **PUT** /templates/{template_id}/document | Replace a template's document
 [**updateTemplateFields**](Client.md#updateTemplateFields) | **PUT** /templates/{template_id}/fields | Update a template's fields
 [**updateWebhook**](Client.md#updateWebhook) | **PUT** /webhooks/{webhook_id} | Update a webhook
-[**uploadTemplate**](Client.md#uploadTemplate) | **POST** /templates/upload | Create a PDF template from an uploaded PDF
-[**uploadTemplateDocument**](Client.md#uploadTemplateDocument) | **PUT** /templates/{template_id}/document/upload | Replace a template's PDF with an uploaded PDF
+[**uploadTemplate**](Client.md#uploadTemplate) | **POST** /templates/upload | Create a template from an uploaded PDF or Word document
+[**uploadTemplateDocument**](Client.md#uploadTemplateDocument) | **PUT** /templates/{template_id}/document/upload | Replace a template's document with an uploaded file
 [**validateSubmission**](Client.md#validateSubmission) | **POST** /templates/{template_id}/submissions/validate | Check a submission without creating it
 
 
@@ -200,7 +200,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -218,7 +218,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **copyTemplate**
 > Template copyTemplate()
@@ -265,7 +265,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -283,7 +283,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **createCombinedPdf**
 > CombinedPdf createCombinedPdf(body)
@@ -337,7 +337,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -357,7 +357,7 @@ Name | Type | Description  | Notes
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 **504** | On a sync.api host, the wait ran out: the record was saved and is still being processed. Get it by the ID in the error's combined_pdf_id instead of sending the request again. |  -  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **createCustomFileFromUpload**
 > CustomFile createCustomFileFromUpload(body)
@@ -399,7 +399,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -415,7 +415,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **createFolder**
 > Folder createFolder(body)
@@ -458,7 +458,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -474,7 +474,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **createSignatureRequestEvent**
 > SignatureRequestEvent createSignatureRequestEvent(body)
@@ -522,7 +522,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -541,7 +541,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **createSignatureRequestToken**
 > SignatureRequestToken createSignatureRequestToken()
@@ -586,7 +586,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -605,7 +605,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **createSubmission**
 > Submission createSubmission(body)
@@ -757,7 +757,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -778,7 +778,7 @@ Name | Type | Description  | Notes
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 **504** | On a sync.api host, the wait ran out: the record was saved and is still being processed. Get it by the ID in the error's submission_id instead of sending the request again. |  -  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **createSubmissionBatch**
 > SubmissionBatch createSubmissionBatch(body)
@@ -890,7 +890,7 @@ const request: ClientCreateSubmissionBatchRequest = {
       },
     ],
   },
-    // Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts. (optional)
+    // Wait until every file in the batch has been generated before responding. Default true on sync.api hosts. (optional)
   wait: true,
     // A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. (optional)
   idempotencyKey: "Idempotency-Key_example",
@@ -906,7 +906,7 @@ console.log('API called successfully. Returned data:', data);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | **CreateSubmissionBatchRequest**| The submissions to create, and the settings they share. |
- **wait** | [**boolean**] | Wait until every PDF in the batch has been generated before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+ **wait** | [**boolean**] | Wait until every file in the batch has been generated before responding. Default true on sync.api hosts. | (optional) defaults to undefined
  **idempotencyKey** | [**string**] | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds. | (optional) defaults to undefined
 
 
@@ -916,7 +916,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -936,12 +936,12 @@ Name | Type | Description  | Notes
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 **504** | On a sync.api host, the wait ran out: the record was saved and is still being processed. Get it by the ID in the error's submission_batch_id instead of sending the request again. |  -  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **createTemplate**
 > Template createTemplate(body)
 
-Creates an HTML template, or a PDF template from a PDF you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. To send the PDF with the request instead, use POST /templates/upload.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
 
 ### Example
 
@@ -959,6 +959,7 @@ const request: ClientCreateTemplateRequest = {
     name: "name_example",
     description: "description_example",
     template_type: null,
+    output_format: null,
     parent_folder_id: "parent_folder_id_example",
     locked: true,
     add_signature_request_submission_id_footers: true,
@@ -1025,7 +1026,7 @@ const request: ClientCreateTemplateRequest = {
     field_naming: null,
     field_logic: null,
   },
-    // Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
+    // Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
   wait: true,
 };
 
@@ -1039,7 +1040,7 @@ console.log('API called successfully. Returned data:', data);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | **CreateTemplateRequest**| The template to create. |
- **wait** | [**boolean**] | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+ **wait** | [**boolean**] | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
 
 
 ### Return type
@@ -1048,7 +1049,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1066,12 +1067,12 @@ Name | Type | Description  | Notes
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 **504** | On a sync.api host, the wait ran out: the record was saved and is still being processed. Get it by the ID in the error's template_id instead of sending the request again. |  -  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **createTemplatePreview**
 > TemplatePreview createTemplatePreview(body)
 
-Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML or PDF template prints with your data before you publish a version or send live data. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
+Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
 
 ### Example
 
@@ -1114,7 +1115,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1126,11 +1127,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **201** | preview created |  -  |
-**409** | the template's PDF hasn't been processed |  -  |
+**409** | this server can't convert Word documents to PDF |  -  |
 **422** | no data |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **createWebhook**
 > Webhook createWebhook(body)
@@ -1194,7 +1195,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1207,10 +1208,11 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **201** | webhook created |  -  |
 **422** | invalid webhook |  -  |
+**403** | the plan's integration limit is reached |  -  |
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **deleteCustomFile**
 > CustomFile deleteCustomFile()
@@ -1250,7 +1252,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1267,7 +1269,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **deleteFolder**
 > Folder deleteFolder()
@@ -1307,7 +1309,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1324,7 +1326,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **deleteTemplate**
 > Template deleteTemplate()
@@ -1367,7 +1369,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1385,7 +1387,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **deleteWebhook**
 > Webhook deleteWebhook()
@@ -1425,7 +1427,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1441,7 +1443,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **expireCombinedPdf**
 > CombinedPdf expireCombinedPdf()
@@ -1481,7 +1483,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1498,7 +1500,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **expireSubmission**
 > Submission expireSubmission()
@@ -1538,7 +1540,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1555,12 +1557,12 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **generateSubmissionFiles**
 > Submission generateSubmissionFiles(body)
 
-Adds formats to a processed submission's files, in the background: `png`, a PNG image of each page of the PDF (up to 100 pages). To make them with the submission, add them to `output_formats` when you create it.  Each new file is listed in `files` while it's made: on sync.api hosts the request waits for them (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until none of their `state` is `pending`. A file that couldn't be made has the state `error` and an `error_message`, and the submission stays processed. Asking for a format the submission already has (or is making) changes nothing. 
+Adds formats to a processed submission's files, in the background, without using credits again: `pdf`, the PDF of a Word template's submission that made only its Word document (converted from that document), `docx`, the Word document of a Word template's submission that made only its PDF (made again from its data and the template version it used), `odt`, a Word template's submission's OpenDocument file (converted from its Word document, or from one made again when it didn't keep one), and `png`, a PNG image of each page of the PDF (up to 100 pages), which makes the PDF first when the submission doesn't have one. To make them with the submission, add them to `output_formats` when you create it.  Each new file is listed in `files` while it's made: on sync.api hosts the request waits for them (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until none of their `state` is `pending`. A file that couldn't be made has the state `error` and an `error_message`, and the submission stays processed. Asking for a format the submission already has (or is making) changes nothing. 
 
 ### Example
 
@@ -1578,7 +1580,7 @@ const request: ClientGenerateSubmissionFilesRequest = {
     // The formats to make.
   body: {
     formats: [
-      "png",
+      "pdf",
     ],
   },
     // Wait until the files have been generated before responding. Default true on sync.api hosts. (optional)
@@ -1605,7 +1607,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1624,7 +1626,7 @@ Name | Type | Description  | Notes
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 **504** | On a sync.api host, the wait ran out: the record was saved and is still being processed. Get it by the ID in the error's submission_id instead of sending the request again. |  -  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **generateSubmissionPreview**
 > Submission generateSubmissionPreview()
@@ -1664,7 +1666,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1681,7 +1683,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getCombinedPdf**
 > CombinedPdf getCombinedPdf()
@@ -1721,7 +1723,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1737,7 +1739,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getCustomFile**
 > CustomFile getCustomFile()
@@ -1777,7 +1779,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1793,7 +1795,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getFolder**
 > Folder getFolder()
@@ -1833,7 +1835,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1849,7 +1851,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getPresignUrl**
 > UploadPresign getPresignUrl()
@@ -1882,7 +1884,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1897,7 +1899,7 @@ This endpoint does not need any parameter.
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getSignatureRequest**
 > SignatureRequest getSignatureRequest()
@@ -1937,7 +1939,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -1953,7 +1955,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getSubmission**
 > Submission getSubmission()
@@ -1993,7 +1995,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2009,7 +2011,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getSubmissionBatch**
 > SubmissionBatch getSubmissionBatch()
@@ -2052,7 +2054,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2068,7 +2070,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getTemplate**
 > Template getTemplate()
@@ -2111,7 +2113,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2128,7 +2130,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getTemplateDiff**
 > TemplateDiff getTemplateDiff()
@@ -2171,7 +2173,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2188,12 +2190,12 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getTemplateModelCode**
 > TemplateModelCode getTemplateModelCode()
 
-Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir or Go, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object, and `just_types=true` leaves out the code that converts JSON to and from the types. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
+Generates types for a template's submission data in TypeScript, JavaScript, Ruby, Python, PHP, Java, C#, Elixir, Go or Rust, so your app catches mistakes before it calls the API. `root_type_name` is the type of the whole `data` object, and `just_types=true` leaves out the code that converts JSON to and from the types. Java returns every class in `code`, each under a `// ClassName.java` comment. A template with no named fields returns 422. 
 
 ### Example
 
@@ -2212,7 +2214,7 @@ const request: ClientGetTemplateModelCodeRequest = {
   lang: "typescript",
     // The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. (optional)
   version: "draft",
-    // Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types and PHP no types-only code, so theirs is the same either way. (optional)
+    // Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types, PHP has no types-only code, and Rust's code is only types (serde converts the JSON), so theirs is the same either way. (optional)
   justTypes: true,
 };
 
@@ -2228,7 +2230,7 @@ Name | Type | Description  | Notes
  **templateId** | [**string**] | The template's ID. | defaults to undefined
  **lang** | **ModelCodeLanguage** | The language to generate the code in. | defaults to undefined
  **version** | [**string**] | The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default. | (optional) defaults to undefined
- **justTypes** | [**boolean**] | Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types and PHP no types-only code, so theirs is the same either way. | (optional) defaults to undefined
+ **justTypes** | [**boolean**] | Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types, PHP has no types-only code, and Rust's code is only types (serde converts the JSON), so theirs is the same either way. | (optional) defaults to undefined
 
 
 ### Return type
@@ -2237,7 +2239,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2254,7 +2256,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getTemplatePageImages**
 > TemplatePageImages getTemplatePageImages()
@@ -2297,7 +2299,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2314,7 +2316,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getTemplatePreview**
 > TemplatePreview getTemplatePreview()
@@ -2357,7 +2359,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2372,7 +2374,7 @@ Name | Type | Description  | Notes
 **404** | preview not found |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getTemplateSchema**
 > { [key: string]: any; } getTemplateSchema()
@@ -2415,7 +2417,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2431,7 +2433,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **getWebhook**
 > Webhook getWebhook()
@@ -2471,7 +2473,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2487,7 +2489,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **listCombinedPdfs**
 > CombinedPdfList listCombinedPdfs()
@@ -2530,7 +2532,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2546,7 +2548,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **listCustomFiles**
 > CustomFileList listCustomFiles()
@@ -2589,7 +2591,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2605,7 +2607,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **listFolders**
 > FolderList listFolders()
@@ -2651,7 +2653,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2667,7 +2669,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **listSubmissions**
 > SubmissionList listSubmissions()
@@ -2731,7 +2733,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2747,7 +2749,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **listTemplateFields**
 > TemplateFields listTemplateFields()
@@ -2790,7 +2792,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2807,7 +2809,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **listTemplateSubmissions**
 > SubmissionList listTemplateSubmissions()
@@ -2871,7 +2873,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2888,7 +2890,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **listTemplates**
 > TemplateSummaryList listTemplates()
@@ -2937,7 +2939,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -2953,7 +2955,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **listWebhooks**
 > WebhookList listWebhooks()
@@ -3011,7 +3013,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3027,7 +3029,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **moveFolder**
 > Folder moveFolder(body)
@@ -3072,7 +3074,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3089,7 +3091,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **moveTemplate**
 > Template moveTemplate(body)
@@ -3134,7 +3136,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3151,12 +3153,12 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **publishTemplateVersion**
 > TemplateVersion publishTemplateVersion(body)
 
-Publishes the template's draft as a new version that doesn't change. `version_type` says which part of the latest version number goes up. While the template's PDF is downloading or being processed, or DocSpring is setting up its fields, it returns a 409 that says so. 
+Publishes the template's draft as a new version. Its content (the PDF or HTML, fields, name and description) never changes, while settings such as `webhook_url` and `public_submissions` keep following the draft. `version_type` says which part of the latest version number goes up. While the template's PDF is downloading or being processed, or DocSpring is setting up its fields, it returns a 409 that says so. 
 
 ### Example
 
@@ -3197,7 +3199,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3215,7 +3217,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **removeTemplateFields**
 > TemplateFields removeTemplateFields(body)
@@ -3262,7 +3264,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3279,7 +3281,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **renameFolder**
 > Folder renameFolder(body)
@@ -3324,7 +3326,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3341,7 +3343,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **reorderTemplateFields**
 > TemplateFields reorderTemplateFields(body)
@@ -3388,7 +3390,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3405,12 +3407,12 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **restoreTemplateVersion**
 > Template restoreTemplateVersion(body)
 
-Replaces the template's draft with a copy of one of its published versions.
+Replaces the template's draft with a copy of one of its published versions. The draft keeps its settings that apply to every version, such as `webhook_url`.
 
 ### Example
 
@@ -3450,7 +3452,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3468,7 +3470,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **testAuthentication**
 > AuthenticationCheck testAuthentication()
@@ -3501,7 +3503,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3516,7 +3518,7 @@ This endpoint does not need any parameter.
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **updateSignatureRequest**
 > SignatureRequest updateSignatureRequest(body)
@@ -3569,7 +3571,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3587,12 +3589,12 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **updateTemplate**
 > Template updateTemplate(body)
 
-Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Setting `parent_folder_id` moves the template and all of its published versions. 
+Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
 
 ### Example
 
@@ -3611,6 +3613,7 @@ const request: ClientUpdateTemplateRequest = {
   body: {
     name: "name_example",
     description: "description_example",
+    output_format: null,
     parent_folder_id: "parent_folder_id_example",
     locked: true,
     add_signature_request_submission_id_footers: true,
@@ -3701,7 +3704,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3719,12 +3722,12 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **updateTemplateDocument**
 > Template updateTemplateDocument(body)
 
-Replaces a PDF template's PDF with one you uploaded with the presigned upload (GET /uploads/presign) (`cache_id`), a link to download it from (`document_url`), or the file in base64 (`document_base64`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. To send the PDF as `multipart/form-data` instead, use PUT /templates/{template_id}/document/upload. 
+Replaces a PDF template's PDF, or a Word template's Word document (from a .docx or an .odt), with one you uploaded with the presigned upload (GET /uploads/presign) (`cache_id`), a link to download it from (`document_url`), or the file in base64 (`document_base64`). A PDF template's fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields, and a Word template gets a field for each new tag. To send the file as `multipart/form-data` instead, use PUT /templates/{template_id}/document/upload. 
 
 ### Example
 
@@ -3739,7 +3742,7 @@ const apiInstance = new Client(configuration);
 const request: ClientUpdateTemplateDocumentRequest = {
     // The template's ID.
   templateId: "tpl_1234567890abcdef01",
-    // The new PDF, as one of `cache_id`, `document_url` and `document_base64`.
+    // The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`.
   body: {
     cache_id: "cache_id_example",
     document_url: "document_url_example",
@@ -3747,7 +3750,7 @@ const request: ClientUpdateTemplateDocumentRequest = {
     filename: "filename_example",
     reimport_fields: true,
   },
-    // Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
+    // Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
   wait: true,
 };
 
@@ -3760,9 +3763,9 @@ console.log('API called successfully. Returned data:', data);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **UpdateTemplateDocumentRequest**| The new PDF, as one of `cache_id`, `document_url` and `document_base64`. |
+ **body** | **UpdateTemplateDocumentRequest**| The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`. |
  **templateId** | [**string**] | The template's ID. | defaults to undefined
- **wait** | [**boolean**] | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+ **wait** | [**boolean**] | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
 
 
 ### Return type
@@ -3771,7 +3774,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3790,7 +3793,7 @@ Name | Type | Description  | Notes
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 **504** | On a sync.api host, the wait ran out: the record was saved and is still being processed. Get it by the ID in the error's template_id instead of sending the request again. |  -  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **updateTemplateFields**
 > TemplateFields updateTemplateFields(body)
@@ -3928,7 +3931,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -3945,7 +3948,7 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **updateWebhook**
 > Webhook updateWebhook(body)
@@ -4012,7 +4015,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -4024,17 +4027,18 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | webhook updated |  -  |
+**403** | turning the webhook on would go over the plan's integration limit |  -  |
 **404** | webhook not found |  -  |
 **422** | invalid webhook |  -  |
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **uploadTemplate**
 > Template uploadTemplate()
 
-Creates a PDF template from a PDF sent with the request (`multipart/form-data`). For large files, upload the PDF with the presigned upload (GET /uploads/presign) and create the template with POST /templates. 
+Creates a PDF template from a PDF, or a Word template from a Word document (.docx) or an OpenDocument text file (.odt), sent with the request (`multipart/form-data`). A Word template needs its `output_format`. For large files, upload the file with the presigned upload (GET /uploads/presign) and create the template with POST /templates. 
 
 ### Example
 
@@ -4047,9 +4051,9 @@ const configuration = createConfiguration();
 const apiInstance = new Client(configuration);
 
 const request: ClientUploadTemplateRequest = {
-    // The PDF.
+    // A PDF (for a PDF template) or a Word document (.docx or .odt, for a Word template). DocSpring converts an OpenDocument text file (.odt) to a Word document after responding: the template's `document.state` is `converting` until then (sync.api hosts wait for it).
   document: { data: Buffer.from(fs.readFileSync('/path/to/file', 'utf-8')), name: '/path/to/file' },
-    // Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
+    // Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
   wait: true,
     // The template's name. (optional)
   name: "name_example",
@@ -4067,6 +4071,8 @@ const request: ClientUploadTemplateRequest = {
   fieldNaming: null,
     // With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. (optional)
   fieldLogic: null,
+    // What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document. (optional)
+  outputFormat: null,
 };
 
 const data = await apiInstance.uploadTemplate(request);
@@ -4078,8 +4084,8 @@ console.log('API called successfully. Returned data:', data);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **document** | [**HttpFile**] | The PDF. | defaults to undefined
- **wait** | [**boolean**] | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+ **document** | [**HttpFile**] | A PDF (for a PDF template) or a Word document (.docx or .odt, for a Word template). DocSpring converts an OpenDocument text file (.odt) to a Word document after responding: the template's `document.state` is `converting` until then (sync.api hosts wait for it). | defaults to undefined
+ **wait** | [**boolean**] | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
  **name** | [**string**] | The template's name. | (optional) defaults to undefined
  **description** | [**string**] | The template's description. | (optional) defaults to undefined
  **parentFolderId** | [**string**] | The folder to put the template in. Left out, it's created at the root. | (optional) defaults to undefined
@@ -4088,6 +4094,7 @@ Name | Type | Description  | Notes
  **fieldSource** | **FieldSetupSource** | With `detect_fields`, where the fields come from. `auto` (the default) imports the form fields of a fillable PDF and detects the fields of a PDF without them; `pdf_detection` detects the fields from the page layout, even on a fillable PDF; `pdf_form_fields` only imports the PDF's form fields. | (optional) defaults to undefined
  **fieldNaming** | **FieldSetupNaming** | With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`. | (optional) defaults to undefined
  **fieldLogic** | **FieldSetupLogic** | With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. | (optional) defaults to undefined
+ **outputFormat** | **OutputFormat** | What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document. | (optional) defaults to undefined
 
 
 ### Return type
@@ -4096,7 +4103,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -4114,12 +4121,12 @@ Name | Type | Description  | Notes
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 **504** | On a sync.api host, the wait ran out: the record was saved and is still being processed. Get it by the ID in the error's template_id instead of sending the request again. |  -  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **uploadTemplateDocument**
 > Template uploadTemplateDocument()
 
-Replaces a PDF template's PDF with one sent with the request (`multipart/form-data`). The fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields. 
+Replaces a PDF template's PDF, or a Word template's Word document, with one sent with the request (`multipart/form-data`). A PDF template's fields stay where they are, unless `reimport_fields` replaces them with the new PDF's fillable fields, and a Word template gets a field for each new tag. 
 
 ### Example
 
@@ -4134,11 +4141,11 @@ const apiInstance = new Client(configuration);
 const request: ClientUploadTemplateDocumentRequest = {
     // The template's ID.
   templateId: "tpl_1234567890abcdef01",
-    // The new PDF.
+    // The new PDF, or the new Word document (.docx or .odt) of a Word template.
   document: { data: Buffer.from(fs.readFileSync('/path/to/file', 'utf-8')), name: '/path/to/file' },
-    // Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. (optional)
+    // Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
   wait: true,
-    // Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. (optional)
+    // Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. (optional)
   reimportFields: true,
 };
 
@@ -4152,9 +4159,9 @@ console.log('API called successfully. Returned data:', data);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **templateId** | [**string**] | The template's ID. | defaults to undefined
- **document** | [**HttpFile**] | The new PDF. | defaults to undefined
- **wait** | [**boolean**] | Wait until the PDF has been processed, and a `document_url` downloaded, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
- **reimportFields** | [**boolean**] | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. | (optional) defaults to undefined
+ **document** | [**HttpFile**] | The new PDF, or the new Word document (.docx or .odt) of a Word template. | defaults to undefined
+ **wait** | [**boolean**] | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
+ **reimportFields** | [**boolean**] | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. | (optional) defaults to undefined
 
 
 ### Return type
@@ -4163,7 +4170,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -4175,13 +4182,13 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | PDF replaced |  -  |
-**422** | not a PDF template |  -  |
+**422** | an HTML template |  -  |
 **404** | template not found |  -  |
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 **504** | On a sync.api host, the wait ran out: the record was saved and is still being processed. Get it by the ID in the error's template_id instead of sending the request again. |  -  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 # **validateSubmission**
 > SubmissionValidation validateSubmission(body)
@@ -4327,7 +4334,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[api_token_basic](README.md#api_token_basic)
+[api_token_basic](README.md#install-and-configure)
 
 ### HTTP request headers
 
@@ -4344,6 +4351,6 @@ Name | Type | Description  | Notes
 **401** | authentication failed |  -  |
 **429** | Too many requests: wait the number of seconds in the Retry-After header, then send the request again. |  * Retry-After - Seconds until you can send the request again. <br>  |
 
-[[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
+[[Back to top]](#) [[Back to API list]](README.md#methods) [[Back to Model list]](README.md#methods) [[Back to README]](README.md)
 
 

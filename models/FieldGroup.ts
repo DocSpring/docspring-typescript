@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
  *
  * OpenAPI spec version: v2
  * 
@@ -22,7 +22,7 @@ export class FieldGroup {
     */
     'name': string;
     /**
-    * `array` for a list, whose fields' names number its items after the group's name (`items/0/price`, or `items/~/price` in an HTML template), and `object` for the other groups.
+    * `array` for a list, whose fields' names number its items after the group's name (`items/0/price`, or `items/~/price` in an HTML or Word template), and `object` for the other groups.
     */
     'type': FieldGroupType | (string & {});
     /**
@@ -42,7 +42,7 @@ export class FieldGroup {
     */
     'min_items': number | null;
     /**
-    * HTML templates' lists only: the most items submission data can have. Null for no limit. A PDF template's list takes as many items as its fields are numbered for, or more with `allow_additional_items`.
+    * HTML and Word templates' lists only: the most items submission data can have. Null for no limit. A PDF template's list takes as many items as its fields are numbered for, or more with `allow_additional_items`.
     */
     'max_items': number | null;
     /**

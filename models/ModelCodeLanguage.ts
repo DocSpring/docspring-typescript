@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
  *
  * OpenAPI spec version: v2
  * 
@@ -24,7 +24,8 @@ export const ModelCodeLanguage = {
     Java: 'java',
     Csharp: 'csharp',
     Elixir: 'elixir',
-    Go: 'go'
+    Go: 'go',
+    Rust: 'rust'
 } as const;
 /**
 * One of the values in the ModelCodeLanguage object. A response property can also have a value added to the API after this

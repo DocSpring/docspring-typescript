@@ -906,6 +906,8 @@ export const requestSchemas: any = {
                 "type": "string",
                 "enum": [
                   "pdf",
+                  "docx",
+                  "odt",
                   "png"
                 ]
               }
@@ -1079,6 +1081,8 @@ export const requestSchemas: any = {
                 "type": "string",
                 "enum": [
                   "pdf",
+                  "docx",
+                  "odt",
                   "png"
                 ]
               }
@@ -1114,6 +1118,8 @@ export const requestSchemas: any = {
                       "type": "string",
                       "enum": [
                         "pdf",
+                        "docx",
+                        "odt",
                         "png"
                       ]
                     }
@@ -1185,7 +1191,16 @@ export const requestSchemas: any = {
               "type": "string",
               "enum": [
                 "pdf",
-                "html"
+                "html",
+                "docx"
+              ]
+            },
+            "output_format": {
+              "type": "string",
+              "enum": [
+                "pdf",
+                "docx",
+                "odt"
               ]
             },
             "parent_folder_id": {
@@ -1951,6 +1966,9 @@ export const requestSchemas: any = {
               "items": {
                 "type": "string",
                 "enum": [
+                  "pdf",
+                  "docx",
+                  "odt",
                   "png"
                 ]
               }
@@ -2024,7 +2042,8 @@ export const requestSchemas: any = {
               "java",
               "csharp",
               "elixir",
-              "go"
+              "go",
+              "rust"
             ]
           }
         },
@@ -2641,6 +2660,14 @@ export const requestSchemas: any = {
               "type": [
                 "string",
                 "null"
+              ]
+            },
+            "output_format": {
+              "type": "string",
+              "enum": [
+                "pdf",
+                "docx",
+                "odt"
               ]
             },
             "parent_folder_id": {
@@ -4060,6 +4087,14 @@ export const requestSchemas: any = {
                 "ai",
                 "none"
               ]
+            },
+            "output_format": {
+              "type": "string",
+              "enum": [
+                "pdf",
+                "docx",
+                "odt"
+              ]
             }
           },
           "additionalProperties": false
@@ -4137,6 +4172,8 @@ export const requestSchemas: any = {
                 "type": "string",
                 "enum": [
                   "pdf",
+                  "docx",
+                  "odt",
                   "png"
                 ]
               }

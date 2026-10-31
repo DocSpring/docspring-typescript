@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
  *
  * OpenAPI spec version: v2
  * 
@@ -14,7 +14,7 @@ import { GeneratedFileState } from '../models/GeneratedFileState';
 import { HttpFile } from '../http/http';
 
 /**
-* A file that DocSpring generated, such as a submission's PDF. A file made after its submission was processed is listed while it's being made: check its `state` before using its links.
+* A file that DocSpring generated, such as a submission's PDF or Word document. A file made after its submission was processed is listed while it's being made: check its `state` before using its links.
 */
 export class GeneratedFile {
     /**
@@ -34,11 +34,11 @@ export class GeneratedFile {
     */
     'permanent_url': string | null;
     /**
-    * The file's name, such as `sub_123.pdf`.
+    * The file's name, such as `sub_123.pdf`, `sub_123.docx` or `sub_123.odt`.
     */
     'filename': string;
     /**
-    * The file's media type, such as `application/pdf`.
+    * The file's media type: `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` for a Word document, or `application/vnd.oasis.opendocument.text` for an OpenDocument file.
     */
     'content_type': string;
     /**

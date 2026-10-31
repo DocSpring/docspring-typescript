@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
  *
  * OpenAPI spec version: v2
  * 
@@ -30,6 +30,14 @@ export class SubmissionFiles {
     * The preview PDF from POST /submissions/{submission_id}/generate_preview, such as for a submission still waiting for its signature requests.
     */
     'preview'?: GeneratedFile;
+    /**
+    * The Word document of a Word template's submission, when the submission makes one (`output_formats`).
+    */
+    'docx'?: GeneratedFile;
+    /**
+    * The OpenDocument file (.odt, the format LibreOffice uses) of a Word template's submission, converted from its Word document, when the submission makes one (`output_formats`).
+    */
+    'odt'?: GeneratedFile;
     'png'?: PageImages;
 
     static readonly discriminator: string | undefined = undefined;
@@ -52,6 +60,18 @@ export class SubmissionFiles {
         {
             "name": "preview",
             "baseName": "preview",
+            "type": "GeneratedFile",
+            "format": ""
+        },
+        {
+            "name": "docx",
+            "baseName": "docx",
+            "type": "GeneratedFile",
+            "format": ""
+        },
+        {
+            "name": "odt",
+            "baseName": "odt",
             "type": "GeneratedFile",
             "format": ""
         },

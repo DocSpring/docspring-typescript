@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
  *
  * OpenAPI spec version: v2
  * 
@@ -13,7 +13,7 @@
 import { HttpFile } from '../http/http';
 
 /**
-* Where a template's PDF is in its processing.
+* Where a template's document is in its processing.
 */
 export const TemplateDocumentState = {
     Pending: 'pending',
@@ -22,7 +22,9 @@ export const TemplateDocumentState = {
     MalformedPdf: 'malformed_pdf',
     UnknownError: 'unknown_error',
     Downloading: 'downloading',
-    DownloadFailed: 'download_failed'
+    DownloadFailed: 'download_failed',
+    Converting: 'converting',
+    ConversionFailed: 'conversion_failed'
 } as const;
 /**
 * One of the values in the TemplateDocumentState object. A response property can also have a value added to the API after this

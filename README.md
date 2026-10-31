@@ -1,7 +1,8 @@
 # DocSpring TypeScript SDK
 
 The official TypeScript client for the [DocSpring API](https://docspring.com/docs/api/). DocSpring fills PDF
-templates with your data, generates PDFs from HTML templates, combines PDFs and collects e-signatures.
+forms with your data, generates PDFs and Word documents from HTML and Word templates, combines PDFs and collects
+e-signatures.
 
 [Documentation](https://docspring.com/docs/) · [API reference](https://docspring.com/docs/api/) ·
 [npm](https://www.npmjs.com/package/docspring-ts) · [Changelog](https://github.com/DocSpring/docspring-typescript/blob/main/CHANGELOG.md)
@@ -9,7 +10,7 @@ templates with your data, generates PDFs from HTML templates, combines PDFs and 
 The code in this repository is generated from DocSpring's OpenAPI spec ([About this SDK](#about-this-sdk)). Issues and
 pull requests are welcome.
 
-Version 4.2.0. 
+Version 4.3.0. 
 
 ## Install and configure
 
@@ -144,11 +145,11 @@ TypeScript code for every method.
 | [`testAuthentication`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#testauthentication) | Test authentication |
 | [`updateSignatureRequest`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#updatesignaturerequest) | Update a signature request |
 | [`updateTemplate`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#updatetemplate) | Update a template |
-| [`updateTemplateDocument`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#updatetemplatedocument) | Replace a template's PDF |
+| [`updateTemplateDocument`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#updatetemplatedocument) | Replace a template's document |
 | [`updateTemplateFields`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#updatetemplatefields) | Update a template's fields |
 | [`updateWebhook`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#updatewebhook) | Update a webhook |
-| [`uploadTemplate`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#uploadtemplate) | Create a PDF template from an uploaded PDF |
-| [`uploadTemplateDocument`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#uploadtemplatedocument) | Replace a template's PDF with an uploaded PDF |
+| [`uploadTemplate`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#uploadtemplate) | Create a template from an uploaded PDF or Word document |
+| [`uploadTemplateDocument`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#uploadtemplatedocument) | Replace a template's document with an uploaded file |
 | [`validateSubmission`](https://github.com/DocSpring/docspring-typescript/blob/main/docs/Client.md#validatesubmission) | Check a submission without creating it |
 
 ## Errors
@@ -166,7 +167,7 @@ existing code, such as removing or renaming a field, go in a new API version
 responses that are newer than it is:
 
 - The model leaves out a response field added to the API after this release.
-- Enum values in responses are strings, so a value added to the API after this release comes back as it is: handle values you don't recognize.
+- An enum value added to the API after this release comes back as the API sent it: handle values you don't recognize.
 
 Upgrade the SDK to read new fields and enum values. The [changelog](https://github.com/DocSpring/docspring-typescript/blob/main/CHANGELOG.md) lists
 what each release adds.

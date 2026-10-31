@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
  *
  * OpenAPI spec version: v2
  * 
@@ -13,11 +13,12 @@
 import { HttpFile } from '../http/http';
 
 /**
-* The kind of template: `pdf` (fields placed on an uploaded PDF) or `html` (a PDF rendered from HTML).
+* The kind of template: `pdf` (fields placed on an uploaded PDF), `html` (a PDF rendered from HTML) or `docx` (a Word document with tags where the data goes).
 */
 export const TemplateType = {
     Pdf: 'pdf',
-    Html: 'html'
+    Html: 'html',
+    Docx: 'docx'
 } as const;
 /**
 * One of the values in the TemplateType object. A response property can also have a value added to the API after this

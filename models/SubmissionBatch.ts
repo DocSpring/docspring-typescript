@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
  *
  * OpenAPI spec version: v2
  * 
@@ -15,7 +15,7 @@ import { SubmissionBatchState } from '../models/SubmissionBatchState';
 import { HttpFile } from '../http/http';
 
 /**
-* Submissions created together in one request. Their PDFs are only generated when every submission in the batch is valid.
+* Submissions created together in one request. Their files are only generated when every submission in the batch is valid.
 */
 export class SubmissionBatch {
     /**
@@ -23,7 +23,7 @@ export class SubmissionBatch {
     */
     'id': string;
     /**
-    * `pending` while the PDFs are being generated, then `processed`. `error` as soon as a submission fails, while the others can still be pending: the batch has finished once `processed_at` is set.
+    * `pending` while the files are being generated, then `processed`. `error` as soon as a submission fails, while the others can still be pending: the batch has finished once `processed_at` is set.
     */
     'state': SubmissionBatchState | (string & {});
     /**
@@ -35,11 +35,11 @@ export class SubmissionBatch {
     */
     'total_count': number;
     /**
-    * The submissions whose PDFs haven't been generated yet.
+    * The submissions whose files haven't been generated yet.
     */
     'pending_count': number;
     /**
-    * The submissions that were invalid or whose PDFs couldn't be generated.
+    * The submissions that were invalid or whose files couldn't be generated.
     */
     'error_count': number;
     /**

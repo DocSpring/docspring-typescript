@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
  *
  * OpenAPI spec version: v2
  * 
@@ -28,7 +28,7 @@ export class ValidateSubmissionRequest {
     */
     'editable'?: boolean;
     /**
-    * The values of the template's fields, by field name. Required for a PDF template, unless `signature_requests` collects the values.
+    * The values of the template's fields, by field name. Required for PDF and Word templates, unless `signature_requests` collects them (PDF templates only).
     */
     'data'?: { [key: string]: any; };
     /**
@@ -36,11 +36,11 @@ export class ValidateSubmissionRequest {
     */
     'metadata'?: { [key: string]: any; };
     /**
-    * A password that the PDF needs to be opened with. It's never returned; `has_password` says if it's set.
+    * A password that the PDF needs to be opened with. It's never returned; `has_password` says if it's set. Word documents and OpenDocument files can't be password-protected, so a submission with a password can't make them.
     */
     'password'?: string;
     /**
-    * What the submission makes: `pdf`, and `png` (an image of each page of the PDF, up to 100 pages) when you ask for it. Default `["pdf"]`. POST /submissions/{submission_id}/generate_files adds `png` to a processed submission.
+    * What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission.
     */
     'output_formats'?: Array<OutputFormat>;
     /**

@@ -1,6 +1,6 @@
 /**
  * DocSpring API
- * Use DocSpring's API to programmatically fill out PDF forms, convert HTML to PDFs, merge PDFs, or request legally binding e-signatures.
+ * Use DocSpring's API to fill PDF forms, generate PDFs and Word documents from HTML or Word templates, merge PDFs, and request legally binding e-signatures.
  *
  * OpenAPI spec version: v2
  * 
@@ -14,6 +14,7 @@ import { AiFieldNamingLanguage } from '../models/AiFieldNamingLanguage';
 import { ExpirationInterval } from '../models/ExpirationInterval';
 import { FieldGroupInput } from '../models/FieldGroupInput';
 import { HtmlEngineOptionsInput } from '../models/HtmlEngineOptionsInput';
+import { OutputFormat } from '../models/OutputFormat';
 import { PredefinedFieldInput } from '../models/PredefinedFieldInput';
 import { TemplateDefaultsInput } from '../models/TemplateDefaultsInput';
 import { TemplateFieldDependencyInput } from '../models/TemplateFieldDependencyInput';
@@ -32,6 +33,10 @@ export class UpdateTemplateRequest {
     * Shown under the template's name at the top of its hosted forms, and used as their meta description. Not shown on embedded forms or signature requests.
     */
     'description'?: string | null;
+    /**
+    * What each submission makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. A Word template's is chosen when it's created; PDF and HTML templates always make PDFs. A Word template that encrypts its PDFs makes PDFs, because Word documents and OpenDocument files can't be password-protected.
+    */
+    'output_format'?: OutputFormat;
     /**
     * The ID of the folder the template is in. Null for a template at the root. Setting it moves the template and all of its published versions.
     */
@@ -57,7 +62,7 @@ export class UpdateTemplateRequest {
     */
     'allow_skipping_optional_fields'?: boolean;
     /**
-    * The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). HTML templates have no visual form, so `web` is the only value they accept.
+    * The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). Only PDF templates have a visual form, so other templates accept only `web`.
     */
     'default_form_mode'?: TemplateFormMode;
     /**
@@ -81,7 +86,7 @@ export class UpdateTemplateRequest {
     */
     'embed_edit_allow_document_replacement'?: boolean;
     /**
-    * Encrypt generated PDFs with `encrypt_pdfs_password`.
+    * Encrypt generated PDFs with `encrypt_pdfs_password`. A Word template can only encrypt its PDFs when its `output_format` is `pdf`, because Word documents and OpenDocument files can't be password-protected.
     */
     'encrypt_pdfs'?: boolean;
     /**
@@ -105,7 +110,7 @@ export class UpdateTemplateRequest {
     */
     'merge_audit_trail_pdf'?: boolean;
     /**
-    * Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way.
+    * Date fields also accept NN/NN/YYYY dates (with slashes, dashes or dots), read in the order of the template's default date format: month first for %m/%d/%Y, day first for %d/%m/%Y. When false, date fields only accept YYYY-MM-DD. Applies to PDF templates: an HTML or Word template's date fields only accept YYYY-MM-DD. Date fields that include a time take RFC 3339 date-times either way.
     */
     'parse_dates_using_template_date_format'?: boolean;
     /**
@@ -145,7 +150,7 @@ export class UpdateTemplateRequest {
     */
     'predefined_fields_sample_data'?: { [key: string]: any; } | null;
     /**
-    * The HTML of an HTML template, as a Liquid template. Null for PDF templates.
+    * The HTML of an HTML template, as a Liquid template. Null for PDF and Word templates.
     */
     'html'?: string | null;
     /**
@@ -184,6 +189,12 @@ export class UpdateTemplateRequest {
             "name": "description",
             "baseName": "description",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "output_format",
+            "baseName": "output_format",
+            "type": "OutputFormat",
             "format": ""
         },
         {
