@@ -50,7 +50,7 @@ export class SubmissionSummary {
     */
     'state': SubmissionState | (string & {});
     /**
-    * Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions.
+    * Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions, and the demo API token's are always live.
     */
     'test': boolean;
     /**

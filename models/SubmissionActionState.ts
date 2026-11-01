@@ -13,7 +13,7 @@
 import { HttpFile } from '../http/http';
 
 /**
-* Where a submission action (an upload to your storage) is.
+* Where a submission action (an upload to your storage, or an email) is.
 */
 export const SubmissionActionState = {
     Pending: 'pending',

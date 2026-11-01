@@ -13,7 +13,7 @@
 import { HttpFile } from '../http/http';
 
 /**
-* The kind of storage a submission action uploads the PDF to.
+* The kind of storage a submission action uploads the PDF to, or `email`.
 */
 export const SubmissionActionType = {
     Webhook: 'webhook',

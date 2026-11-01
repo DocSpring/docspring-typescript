@@ -18,7 +18,7 @@ import { HttpFile } from '../http/http';
 */
 export class AddTemplateFieldsRequest {
     /**
-    * The fields to add. Settings left out have their defaults, except that a field with the name of other fields takes their shared settings. Shared settings it sets change them for every field with the name.
+    * The fields to add. Settings left out have their defaults, except that a field with the name of other fields takes their shared settings. It can't set one of them to another value: PUT /templates/{template_id}/fields changes them for every field with the name.
     */
     'fields': Array<FieldInput>;
 

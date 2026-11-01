@@ -13,8 +13,11 @@ export * from '../models/CombinedPdfSourcePdf';
 export * from '../models/CombinedPdfSourceType';
 export * from '../models/CombinedPdfState';
 export * from '../models/CopyTemplateRequest';
+export * from '../models/CreateAccountEmailActionRequest';
 export * from '../models/CreateCombinedPdfRequest';
 export * from '../models/CreateCustomFileFromUploadRequest';
+export * from '../models/CreateEmailActionRequest';
+export * from '../models/CreateEmailDomainRequest';
 export * from '../models/CreateFolderRequest';
 export * from '../models/CreateSignatureRequestEventRequest';
 export * from '../models/CreateSignatureRequestTokenRequest';
@@ -26,6 +29,23 @@ export * from '../models/CreateWebhookRequest';
 export * from '../models/CustomFile';
 export * from '../models/CustomFileList';
 export * from '../models/CustomFileSourcePdf';
+export * from '../models/DnsRecordType';
+export * from '../models/EmailAction';
+export * from '../models/EmailActionConditions';
+export * from '../models/EmailActionConditionsInput';
+export * from '../models/EmailActionCustomization';
+export * from '../models/EmailActionDelivery';
+export * from '../models/EmailActionFileFormats';
+export * from '../models/EmailActionList';
+export * from '../models/EmailActionSetting';
+export * from '../models/EmailActionSubmissionType';
+export * from '../models/EmailActionTestEmail';
+export * from '../models/EmailDomain';
+export * from '../models/EmailDomainDnsRecord';
+export * from '../models/EmailDomainDnsRecordPurpose';
+export * from '../models/EmailDomainList';
+export * from '../models/EmailDomainRecordState';
+export * from '../models/EmailDomainState';
 export * from '../models/ErrorCode';
 export * from '../models/ErrorDetail';
 export * from '../models/ErrorInfo';
@@ -78,17 +98,22 @@ export * from '../models/RemoveTemplateFieldsRequest';
 export * from '../models/RenameFolderRequest';
 export * from '../models/ReorderTemplateFieldsRequest';
 export * from '../models/RestoreTemplateVersionRequest';
+export * from '../models/SendAccountEmailActionTestEmailRequest';
 export * from '../models/ShapeType';
 export * from '../models/SignatureRequest';
 export * from '../models/SignatureRequestAuthSecondFactorType';
 export * from '../models/SignatureRequestAuthType';
+export * from '../models/SignatureRequestEmailAttachments';
+export * from '../models/SignatureRequestEmailStatus';
 export * from '../models/SignatureRequestEvent';
 export * from '../models/SignatureRequestEventType';
 export * from '../models/SignatureRequestInput';
 export * from '../models/SignatureRequestMessageType';
+export * from '../models/SignatureRequestReminders';
 export * from '../models/SignatureRequestState';
 export * from '../models/SignatureRequestToken';
 export * from '../models/SignatureRequestTokenType';
+export * from '../models/SigningOrder';
 export * from '../models/StringConditionType';
 export * from '../models/Submission';
 export * from '../models/SubmissionAction';
@@ -146,6 +171,9 @@ export * from '../models/TextAlignment';
 export * from '../models/TextOverflow';
 export * from '../models/TextVerticalAlignment';
 export * from '../models/Typeface';
+export * from '../models/UpdateAccountEmailActionRequest';
+export * from '../models/UpdateEmailActionCustomizationRequest';
+export * from '../models/UpdateEmailActionRequest';
 export * from '../models/UpdateSignatureRequestRequest';
 export * from '../models/UpdateTemplateDocumentRequest';
 export * from '../models/UpdateTemplateFieldsRequest';
@@ -175,22 +203,42 @@ import { CombinedPdfSourcePdf } from '../models/CombinedPdfSourcePdf';
 import { CombinedPdfSourceType } from '../models/CombinedPdfSourceType';
 import { CombinedPdfState } from '../models/CombinedPdfState';
 import { CopyTemplateRequest } from '../models/CopyTemplateRequest';
+import { CreateAccountEmailActionRequest                    } from '../models/CreateAccountEmailActionRequest';
 import { CreateCombinedPdfRequest } from '../models/CreateCombinedPdfRequest';
 import { CreateCustomFileFromUploadRequest } from '../models/CreateCustomFileFromUploadRequest';
+import { CreateEmailActionRequest                  } from '../models/CreateEmailActionRequest';
+import { CreateEmailDomainRequest } from '../models/CreateEmailDomainRequest';
 import { CreateFolderRequest } from '../models/CreateFolderRequest';
 import { CreateSignatureRequestEventRequest     } from '../models/CreateSignatureRequestEventRequest';
 import { CreateSignatureRequestTokenRequest  } from '../models/CreateSignatureRequestTokenRequest';
 import { CreateSubmissionBatchRequest } from '../models/CreateSubmissionBatchRequest';
-import { CreateSubmissionRequest } from '../models/CreateSubmissionRequest';
+import { CreateSubmissionRequest                     } from '../models/CreateSubmissionRequest';
 import { CreateTemplatePreviewRequest } from '../models/CreateTemplatePreviewRequest';
-import { CreateTemplateRequest                                              } from '../models/CreateTemplateRequest';
+import { CreateTemplateRequest                                                      } from '../models/CreateTemplateRequest';
 import { CreateWebhookRequest            } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
 import { CustomFileList } from '../models/CustomFileList';
 import { CustomFileSourcePdf } from '../models/CustomFileSourcePdf';
+import { DnsRecordType } from '../models/DnsRecordType';
+import { EmailAction                               } from '../models/EmailAction';
+import { EmailActionConditions   } from '../models/EmailActionConditions';
+import { EmailActionConditionsInput   } from '../models/EmailActionConditionsInput';
+import { EmailActionCustomization } from '../models/EmailActionCustomization';
+import { EmailActionDelivery } from '../models/EmailActionDelivery';
+import { EmailActionFileFormats } from '../models/EmailActionFileFormats';
+import { EmailActionList } from '../models/EmailActionList';
+import { EmailActionSetting } from '../models/EmailActionSetting';
+import { EmailActionSubmissionType } from '../models/EmailActionSubmissionType';
+import { EmailActionTestEmail } from '../models/EmailActionTestEmail';
+import { EmailDomain            } from '../models/EmailDomain';
+import { EmailDomainDnsRecord     } from '../models/EmailDomainDnsRecord';
+import { EmailDomainDnsRecordPurpose } from '../models/EmailDomainDnsRecordPurpose';
+import { EmailDomainList } from '../models/EmailDomainList';
+import { EmailDomainRecordState } from '../models/EmailDomainRecordState';
+import { EmailDomainState } from '../models/EmailDomainState';
 import { ErrorCode } from '../models/ErrorCode';
 import { ErrorDetail } from '../models/ErrorDetail';
-import { ErrorInfo         } from '../models/ErrorInfo';
+import { ErrorInfo            } from '../models/ErrorInfo';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { ExpirationInterval } from '../models/ExpirationInterval';
 import { Field                                                                                            } from '../models/Field';
@@ -240,20 +288,25 @@ import { RemoveTemplateFieldsRequest } from '../models/RemoveTemplateFieldsReque
 import { RenameFolderRequest } from '../models/RenameFolderRequest';
 import { ReorderTemplateFieldsRequest } from '../models/ReorderTemplateFieldsRequest';
 import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
+import { SendAccountEmailActionTestEmailRequest } from '../models/SendAccountEmailActionTestEmailRequest';
 import { ShapeType } from '../models/ShapeType';
-import { SignatureRequest                          } from '../models/SignatureRequest';
+import { SignatureRequest                              } from '../models/SignatureRequest';
 import { SignatureRequestAuthSecondFactorType } from '../models/SignatureRequestAuthSecondFactorType';
 import { SignatureRequestAuthType } from '../models/SignatureRequestAuthType';
+import { SignatureRequestEmailAttachments } from '../models/SignatureRequestEmailAttachments';
+import { SignatureRequestEmailStatus } from '../models/SignatureRequestEmailStatus';
 import { SignatureRequestEvent         } from '../models/SignatureRequestEvent';
 import { SignatureRequestEventType } from '../models/SignatureRequestEventType';
-import { SignatureRequestInput                } from '../models/SignatureRequestInput';
+import { SignatureRequestInput                  } from '../models/SignatureRequestInput';
 import { SignatureRequestMessageType } from '../models/SignatureRequestMessageType';
+import { SignatureRequestReminders } from '../models/SignatureRequestReminders';
 import { SignatureRequestState } from '../models/SignatureRequestState';
 import { SignatureRequestToken        } from '../models/SignatureRequestToken';
 import { SignatureRequestTokenType } from '../models/SignatureRequestTokenType';
+import { SigningOrder } from '../models/SigningOrder';
 import { StringConditionType } from '../models/StringConditionType';
-import { Submission                          } from '../models/Submission';
-import { SubmissionAction       } from '../models/SubmissionAction';
+import { Submission                           } from '../models/Submission';
+import { SubmissionAction        } from '../models/SubmissionAction';
 import { SubmissionActionState } from '../models/SubmissionActionState';
 import { SubmissionActionType } from '../models/SubmissionActionType';
 import { SubmissionBatch            } from '../models/SubmissionBatch';
@@ -266,7 +319,7 @@ import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
 import { SubmissionState } from '../models/SubmissionState';
 import { SubmissionSummary                    } from '../models/SubmissionSummary';
 import { SubmissionValidation } from '../models/SubmissionValidation';
-import { Template                                                    } from '../models/Template';
+import { Template                                                            } from '../models/Template';
 import { TemplateActor      } from '../models/TemplateActor';
 import { TemplateActorType } from '../models/TemplateActorType';
 import { TemplateDefaults                     } from '../models/TemplateDefaults';
@@ -308,15 +361,18 @@ import { TextAlignment } from '../models/TextAlignment';
 import { TextOverflow } from '../models/TextOverflow';
 import { TextVerticalAlignment } from '../models/TextVerticalAlignment';
 import { Typeface } from '../models/Typeface';
+import { UpdateAccountEmailActionRequest                    } from '../models/UpdateAccountEmailActionRequest';
+import { UpdateEmailActionCustomizationRequest                } from '../models/UpdateEmailActionCustomizationRequest';
+import { UpdateEmailActionRequest                  } from '../models/UpdateEmailActionRequest';
 import { UpdateSignatureRequestRequest          } from '../models/UpdateSignatureRequestRequest';
 import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
 import { UpdateTemplateFieldsRequest } from '../models/UpdateTemplateFieldsRequest';
-import { UpdateTemplateRequest                                      } from '../models/UpdateTemplateRequest';
+import { UpdateTemplateRequest                                              } from '../models/UpdateTemplateRequest';
 import { UpdateWebhookRequest            } from '../models/UpdateWebhookRequest';
 import { UploadMethod } from '../models/UploadMethod';
 import { UploadPresign     } from '../models/UploadPresign';
 import { UrlSourcePdf } from '../models/UrlSourcePdf';
-import { ValidateSubmissionRequest } from '../models/ValidateSubmissionRequest';
+import { ValidateSubmissionRequest                     } from '../models/ValidateSubmissionRequest';
 import { Webhook                     } from '../models/Webhook';
 import { WebhookEventType } from '../models/WebhookEventType';
 import { WebhookList } from '../models/WebhookList';
@@ -341,6 +397,14 @@ let enumsMap: Set<string> = new Set<string>([
     "CombinedFieldType",
     "CombinedPdfSourceType",
     "CombinedPdfState",
+    "DnsRecordType",
+    "EmailActionDelivery",
+    "EmailActionFileFormats",
+    "EmailActionSetting",
+    "EmailActionSubmissionType",
+    "EmailDomainDnsRecordPurpose",
+    "EmailDomainRecordState",
+    "EmailDomainState",
     "ErrorCode",
     "ExpirationInterval",
     "FieldComparisonOperator",
@@ -364,10 +428,13 @@ let enumsMap: Set<string> = new Set<string>([
     "ShapeType",
     "SignatureRequestAuthSecondFactorType",
     "SignatureRequestAuthType",
+    "SignatureRequestEmailAttachments",
+    "SignatureRequestEmailStatus",
     "SignatureRequestEventType",
     "SignatureRequestMessageType",
     "SignatureRequestState",
     "SignatureRequestTokenType",
+    "SigningOrder",
     "StringConditionType",
     "SubmissionActionState",
     "SubmissionActionType",
@@ -407,8 +474,11 @@ let typeMap: {[index: string]: any} = {
     "CombinedPdfSourceInput": CombinedPdfSourceInputClass,
     "CombinedPdfSourcePdf": CombinedPdfSourcePdf,
     "CopyTemplateRequest": CopyTemplateRequest,
+    "CreateAccountEmailActionRequest": CreateAccountEmailActionRequest,
     "CreateCombinedPdfRequest": CreateCombinedPdfRequest,
     "CreateCustomFileFromUploadRequest": CreateCustomFileFromUploadRequest,
+    "CreateEmailActionRequest": CreateEmailActionRequest,
+    "CreateEmailDomainRequest": CreateEmailDomainRequest,
     "CreateFolderRequest": CreateFolderRequest,
     "CreateSignatureRequestEventRequest": CreateSignatureRequestEventRequest,
     "CreateSignatureRequestTokenRequest": CreateSignatureRequestTokenRequest,
@@ -420,6 +490,15 @@ let typeMap: {[index: string]: any} = {
     "CustomFile": CustomFile,
     "CustomFileList": CustomFileList,
     "CustomFileSourcePdf": CustomFileSourcePdf,
+    "EmailAction": EmailAction,
+    "EmailActionConditions": EmailActionConditions,
+    "EmailActionConditionsInput": EmailActionConditionsInput,
+    "EmailActionCustomization": EmailActionCustomization,
+    "EmailActionList": EmailActionList,
+    "EmailActionTestEmail": EmailActionTestEmail,
+    "EmailDomain": EmailDomain,
+    "EmailDomainDnsRecord": EmailDomainDnsRecord,
+    "EmailDomainList": EmailDomainList,
     "ErrorDetail": ErrorDetail,
     "ErrorInfo": ErrorInfo,
     "ErrorResponse": ErrorResponse,
@@ -452,9 +531,11 @@ let typeMap: {[index: string]: any} = {
     "RenameFolderRequest": RenameFolderRequest,
     "ReorderTemplateFieldsRequest": ReorderTemplateFieldsRequest,
     "RestoreTemplateVersionRequest": RestoreTemplateVersionRequest,
+    "SendAccountEmailActionTestEmailRequest": SendAccountEmailActionTestEmailRequest,
     "SignatureRequest": SignatureRequest,
     "SignatureRequestEvent": SignatureRequestEvent,
     "SignatureRequestInput": SignatureRequestInput,
+    "SignatureRequestReminders": SignatureRequestReminders,
     "SignatureRequestToken": SignatureRequestToken,
     "Submission": Submission,
     "SubmissionAction": SubmissionAction,
@@ -489,6 +570,9 @@ let typeMap: {[index: string]: any} = {
     "TemplateSummary": TemplateSummary,
     "TemplateSummaryList": TemplateSummaryList,
     "TemplateVersion": TemplateVersion,
+    "UpdateAccountEmailActionRequest": UpdateAccountEmailActionRequest,
+    "UpdateEmailActionCustomizationRequest": UpdateEmailActionCustomizationRequest,
+    "UpdateEmailActionRequest": UpdateEmailActionRequest,
     "UpdateSignatureRequestRequest": UpdateSignatureRequestRequest,
     "UpdateTemplateDocumentRequest": UpdateTemplateDocumentRequest,
     "UpdateTemplateFieldsRequest": UpdateTemplateFieldsRequest,

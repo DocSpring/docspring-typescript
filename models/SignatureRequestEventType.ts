@@ -21,7 +21,9 @@ export const SignatureRequestEventType = {
     AcceptedTerms: 'accepted_terms',
     DeclineRequest: 'decline_request',
     SignRequest: 'sign_request',
-    AllCompleted: 'all_completed'
+    AllCompleted: 'all_completed',
+    EmailBounced: 'email_bounced',
+    EmailMarkedAsSpam: 'email_marked_as_spam'
 } as const;
 /**
 * One of the values in the SignatureRequestEventType object. A response property can also have a value added to the API after this

@@ -17,8 +17,11 @@ import { CombinedPdfSourcePdf } from '../models/CombinedPdfSourcePdf';
 import { CombinedPdfSourceType } from '../models/CombinedPdfSourceType';
 import { CombinedPdfState } from '../models/CombinedPdfState';
 import { CopyTemplateRequest } from '../models/CopyTemplateRequest';
+import { CreateAccountEmailActionRequest } from '../models/CreateAccountEmailActionRequest';
 import { CreateCombinedPdfRequest } from '../models/CreateCombinedPdfRequest';
 import { CreateCustomFileFromUploadRequest } from '../models/CreateCustomFileFromUploadRequest';
+import { CreateEmailActionRequest } from '../models/CreateEmailActionRequest';
+import { CreateEmailDomainRequest } from '../models/CreateEmailDomainRequest';
 import { CreateFolderRequest } from '../models/CreateFolderRequest';
 import { CreateSignatureRequestEventRequest } from '../models/CreateSignatureRequestEventRequest';
 import { CreateSignatureRequestTokenRequest } from '../models/CreateSignatureRequestTokenRequest';
@@ -30,6 +33,23 @@ import { CreateWebhookRequest } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
 import { CustomFileList } from '../models/CustomFileList';
 import { CustomFileSourcePdf } from '../models/CustomFileSourcePdf';
+import { DnsRecordType } from '../models/DnsRecordType';
+import { EmailAction } from '../models/EmailAction';
+import { EmailActionConditions } from '../models/EmailActionConditions';
+import { EmailActionConditionsInput } from '../models/EmailActionConditionsInput';
+import { EmailActionCustomization } from '../models/EmailActionCustomization';
+import { EmailActionDelivery } from '../models/EmailActionDelivery';
+import { EmailActionFileFormats } from '../models/EmailActionFileFormats';
+import { EmailActionList } from '../models/EmailActionList';
+import { EmailActionSetting } from '../models/EmailActionSetting';
+import { EmailActionSubmissionType } from '../models/EmailActionSubmissionType';
+import { EmailActionTestEmail } from '../models/EmailActionTestEmail';
+import { EmailDomain } from '../models/EmailDomain';
+import { EmailDomainDnsRecord } from '../models/EmailDomainDnsRecord';
+import { EmailDomainDnsRecordPurpose } from '../models/EmailDomainDnsRecordPurpose';
+import { EmailDomainList } from '../models/EmailDomainList';
+import { EmailDomainRecordState } from '../models/EmailDomainRecordState';
+import { EmailDomainState } from '../models/EmailDomainState';
 import { ErrorCode } from '../models/ErrorCode';
 import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorInfo } from '../models/ErrorInfo';
@@ -82,17 +102,22 @@ import { RemoveTemplateFieldsRequest } from '../models/RemoveTemplateFieldsReque
 import { RenameFolderRequest } from '../models/RenameFolderRequest';
 import { ReorderTemplateFieldsRequest } from '../models/ReorderTemplateFieldsRequest';
 import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
+import { SendAccountEmailActionTestEmailRequest } from '../models/SendAccountEmailActionTestEmailRequest';
 import { ShapeType } from '../models/ShapeType';
 import { SignatureRequest } from '../models/SignatureRequest';
 import { SignatureRequestAuthSecondFactorType } from '../models/SignatureRequestAuthSecondFactorType';
 import { SignatureRequestAuthType } from '../models/SignatureRequestAuthType';
+import { SignatureRequestEmailAttachments } from '../models/SignatureRequestEmailAttachments';
+import { SignatureRequestEmailStatus } from '../models/SignatureRequestEmailStatus';
 import { SignatureRequestEvent } from '../models/SignatureRequestEvent';
 import { SignatureRequestEventType } from '../models/SignatureRequestEventType';
 import { SignatureRequestInput } from '../models/SignatureRequestInput';
 import { SignatureRequestMessageType } from '../models/SignatureRequestMessageType';
+import { SignatureRequestReminders } from '../models/SignatureRequestReminders';
 import { SignatureRequestState } from '../models/SignatureRequestState';
 import { SignatureRequestToken } from '../models/SignatureRequestToken';
 import { SignatureRequestTokenType } from '../models/SignatureRequestTokenType';
+import { SigningOrder } from '../models/SigningOrder';
 import { StringConditionType } from '../models/StringConditionType';
 import { Submission } from '../models/Submission';
 import { SubmissionAction } from '../models/SubmissionAction';
@@ -150,6 +175,9 @@ import { TextAlignment } from '../models/TextAlignment';
 import { TextOverflow } from '../models/TextOverflow';
 import { TextVerticalAlignment } from '../models/TextVerticalAlignment';
 import { Typeface } from '../models/Typeface';
+import { UpdateAccountEmailActionRequest } from '../models/UpdateAccountEmailActionRequest';
+import { UpdateEmailActionCustomizationRequest } from '../models/UpdateEmailActionCustomizationRequest';
+import { UpdateEmailActionRequest } from '../models/UpdateEmailActionRequest';
 import { UpdateSignatureRequestRequest } from '../models/UpdateSignatureRequestRequest';
 import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
 import { UpdateTemplateFieldsRequest } from '../models/UpdateTemplateFieldsRequest';
@@ -181,6 +209,13 @@ export interface ClientAddTemplateFieldsRequest {
      * @memberof ClientaddTemplateFields
      */
     body: AddTemplateFieldsRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientaddTemplateFields
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientCopyTemplateRequest {
@@ -197,6 +232,29 @@ export interface ClientCopyTemplateRequest {
      * @memberof ClientcopyTemplate
      */
     body?: CopyTemplateRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcopyTemplate
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientCreateAccountEmailActionRequest {
+    /**
+     * The account email action to create. Properties left out get their defaults, and it sends for every template unless it lists `template_ids` or `folder_ids`.
+     * @type CreateAccountEmailActionRequest
+     * @memberof ClientcreateAccountEmailAction
+     */
+    body: CreateAccountEmailActionRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateAccountEmailAction
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientCreateCombinedPdfRequest {
@@ -214,7 +272,7 @@ export interface ClientCreateCombinedPdfRequest {
      */
     wait?: boolean
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateCombinedPdf
@@ -229,6 +287,52 @@ export interface ClientCreateCustomFileFromUploadRequest {
      * @memberof ClientcreateCustomFileFromUpload
      */
     body: CreateCustomFileFromUploadRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateCustomFileFromUpload
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientCreateEmailActionRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateEmailAction
+     */
+    templateId: string
+    /**
+     * The email action to create. Properties left out get their defaults.
+     * @type CreateEmailActionRequest
+     * @memberof ClientcreateEmailAction
+     */
+    body: CreateEmailActionRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateEmailAction
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientCreateEmailDomainRequest {
+    /**
+     * The domain to add.
+     * @type CreateEmailDomainRequest
+     * @memberof ClientcreateEmailDomain
+     */
+    body: CreateEmailDomainRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateEmailDomain
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientCreateFolderRequest {
@@ -238,6 +342,13 @@ export interface ClientCreateFolderRequest {
      * @memberof ClientcreateFolder
      */
     body: CreateFolderRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateFolder
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientCreateSignatureRequestEventRequest {
@@ -254,6 +365,13 @@ export interface ClientCreateSignatureRequestEventRequest {
      * @memberof ClientcreateSignatureRequestEvent
      */
     body: CreateSignatureRequestEventRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateSignatureRequestEvent
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientCreateSignatureRequestTokenRequest {
@@ -270,6 +388,13 @@ export interface ClientCreateSignatureRequestTokenRequest {
      * @memberof ClientcreateSignatureRequestToken
      */
     body?: CreateSignatureRequestTokenRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateSignatureRequestToken
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientCreateSubmissionRequest {
@@ -287,7 +412,7 @@ export interface ClientCreateSubmissionRequest {
      */
     body: CreateSubmissionRequest
     /**
-     * The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateSubmission
@@ -301,7 +426,7 @@ export interface ClientCreateSubmissionRequest {
      */
     wait?: boolean
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateSubmission
@@ -324,7 +449,7 @@ export interface ClientCreateSubmissionBatchRequest {
      */
     wait?: boolean
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateSubmissionBatch
@@ -346,6 +471,13 @@ export interface ClientCreateTemplateRequest {
      * @memberof ClientcreateTemplate
      */
     wait?: boolean
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateTemplate
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientCreateTemplatePreviewRequest {
@@ -363,12 +495,19 @@ export interface ClientCreateTemplatePreviewRequest {
      */
     body: CreateTemplatePreviewRequest
     /**
-     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateTemplatePreview
      */
     version?: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateTemplatePreview
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientCreateWebhookRequest {
@@ -378,6 +517,30 @@ export interface ClientCreateWebhookRequest {
      * @memberof ClientcreateWebhook
      */
     body: CreateWebhookRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientcreateWebhook
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientDeleteAccountEmailActionRequest {
+    /**
+     * The account email action's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteAccountEmailAction
+     */
+    emailActionId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteAccountEmailAction
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientDeleteCustomFileRequest {
@@ -388,6 +551,78 @@ export interface ClientDeleteCustomFileRequest {
      * @memberof ClientdeleteCustomFile
      */
     customFileId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteCustomFile
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientDeleteEmailActionRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteEmailAction
+     */
+    templateId: string
+    /**
+     * The email action's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteEmailAction
+     */
+    emailActionId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteEmailAction
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientDeleteEmailActionCustomizationRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteEmailActionCustomization
+     */
+    templateId: string
+    /**
+     * The ID of one of your account's email actions that sends for the template.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteEmailActionCustomization
+     */
+    emailActionId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteEmailActionCustomization
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientDeleteEmailDomainRequest {
+    /**
+     * The email domain's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteEmailDomain
+     */
+    emailDomainId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteEmailDomain
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientDeleteFolderRequest {
@@ -398,6 +633,13 @@ export interface ClientDeleteFolderRequest {
      * @memberof ClientdeleteFolder
      */
     folderId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteFolder
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientDeleteTemplateRequest {
@@ -415,6 +657,13 @@ export interface ClientDeleteTemplateRequest {
      * @memberof ClientdeleteTemplate
      */
     version?: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteTemplate
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientDeleteWebhookRequest {
@@ -425,6 +674,13 @@ export interface ClientDeleteWebhookRequest {
      * @memberof ClientdeleteWebhook
      */
     webhookId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientdeleteWebhook
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientExpireCombinedPdfRequest {
@@ -435,6 +691,13 @@ export interface ClientExpireCombinedPdfRequest {
      * @memberof ClientexpireCombinedPdf
      */
     combinedPdfId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientexpireCombinedPdf
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientExpireSubmissionRequest {
@@ -445,6 +708,13 @@ export interface ClientExpireSubmissionRequest {
      * @memberof ClientexpireSubmission
      */
     submissionId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientexpireSubmission
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientGenerateSubmissionFilesRequest {
@@ -468,6 +738,13 @@ export interface ClientGenerateSubmissionFilesRequest {
      * @memberof ClientgenerateSubmissionFiles
      */
     wait?: boolean
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgenerateSubmissionFiles
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientGenerateSubmissionPreviewRequest {
@@ -478,6 +755,23 @@ export interface ClientGenerateSubmissionPreviewRequest {
      * @memberof ClientgenerateSubmissionPreview
      */
     submissionId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgenerateSubmissionPreview
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientGetAccountEmailActionRequest {
+    /**
+     * The account email action's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetAccountEmailAction
+     */
+    emailActionId: string
 }
 
 export interface ClientGetCombinedPdfRequest {
@@ -498,6 +792,33 @@ export interface ClientGetCustomFileRequest {
      * @memberof ClientgetCustomFile
      */
     customFileId: string
+}
+
+export interface ClientGetEmailActionRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetEmailAction
+     */
+    templateId: string
+    /**
+     * The email action's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetEmailAction
+     */
+    emailActionId: string
+}
+
+export interface ClientGetEmailDomainRequest {
+    /**
+     * The email domain's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientgetEmailDomain
+     */
+    emailDomainId: string
 }
 
 export interface ClientGetFolderRequest {
@@ -559,7 +880,7 @@ export interface ClientGetTemplateRequest {
      */
     templateId: string
     /**
-     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetTemplate
@@ -576,7 +897,7 @@ export interface ClientGetTemplateDiffRequest {
      */
     templateId: string
     /**
-     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetTemplateDiff
@@ -600,7 +921,7 @@ export interface ClientGetTemplateModelCodeRequest {
      */
     lang: ModelCodeLanguage
     /**
-     * The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetTemplateModelCode
@@ -624,7 +945,7 @@ export interface ClientGetTemplatePageImagesRequest {
      */
     templateId: string
     /**
-     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetTemplatePageImages
@@ -658,7 +979,7 @@ export interface ClientGetTemplateSchemaRequest {
      */
     templateId: string
     /**
-     * The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgetTemplateSchema
@@ -674,6 +995,23 @@ export interface ClientGetWebhookRequest {
      * @memberof ClientgetWebhook
      */
     webhookId: string
+}
+
+export interface ClientListAccountEmailActionsRequest {
+    /**
+     * How many items to return (1-100, default 50).
+     * Defaults to: 50
+     * @type number
+     * @memberof ClientlistAccountEmailActions
+     */
+    limit?: number
+    /**
+     * The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientlistAccountEmailActions
+     */
+    cursor?: string
 }
 
 export interface ClientListCombinedPdfsRequest {
@@ -706,6 +1044,47 @@ export interface ClientListCustomFilesRequest {
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistCustomFiles
+     */
+    cursor?: string
+}
+
+export interface ClientListEmailActionsRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientlistEmailActions
+     */
+    templateId: string
+    /**
+     * How many items to return (1-100, default 50).
+     * Defaults to: 50
+     * @type number
+     * @memberof ClientlistEmailActions
+     */
+    limit?: number
+    /**
+     * The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientlistEmailActions
+     */
+    cursor?: string
+}
+
+export interface ClientListEmailDomainsRequest {
+    /**
+     * How many items to return (1-100, default 50).
+     * Defaults to: 50
+     * @type number
+     * @memberof ClientlistEmailDomains
+     */
+    limit?: number
+    /**
+     * The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientlistEmailDomains
      */
     cursor?: string
 }
@@ -809,7 +1188,7 @@ export interface ClientListTemplateFieldsRequest {
      */
     templateId: string
     /**
-     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistTemplateFields
@@ -885,7 +1264,7 @@ export interface ClientListTemplateSubmissionsRequest {
 
 export interface ClientListTemplatesRequest {
     /**
-     * Only list templates whose name contains this text (ignoring case).
+     * Only list templates whose name contains this text (ignoring case). `%` and `_` match themselves.
      * Defaults to: undefined
      * @type string
      * @memberof ClientlistTemplates
@@ -980,6 +1359,13 @@ export interface ClientMoveFolderRequest {
      * @memberof ClientmoveFolder
      */
     body: MoveFolderRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientmoveFolder
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientMoveTemplateRequest {
@@ -996,6 +1382,13 @@ export interface ClientMoveTemplateRequest {
      * @memberof ClientmoveTemplate
      */
     body: MoveTemplateRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientmoveTemplate
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientPublishTemplateVersionRequest {
@@ -1012,6 +1405,13 @@ export interface ClientPublishTemplateVersionRequest {
      * @memberof ClientpublishTemplateVersion
      */
     body: PublishTemplateVersionRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientpublishTemplateVersion
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientRemoveTemplateFieldsRequest {
@@ -1028,6 +1428,13 @@ export interface ClientRemoveTemplateFieldsRequest {
      * @memberof ClientremoveTemplateFields
      */
     body: RemoveTemplateFieldsRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientremoveTemplateFields
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientRenameFolderRequest {
@@ -1044,6 +1451,13 @@ export interface ClientRenameFolderRequest {
      * @memberof ClientrenameFolder
      */
     body: RenameFolderRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientrenameFolder
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientReorderTemplateFieldsRequest {
@@ -1060,6 +1474,13 @@ export interface ClientReorderTemplateFieldsRequest {
      * @memberof ClientreorderTemplateFields
      */
     body: ReorderTemplateFieldsRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientreorderTemplateFields
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientRestoreTemplateVersionRequest {
@@ -1076,9 +1497,146 @@ export interface ClientRestoreTemplateVersionRequest {
      * @memberof ClientrestoreTemplateVersion
      */
     body: RestoreTemplateVersionRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientrestoreTemplateVersion
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientSendAccountEmailActionTestEmailRequest {
+    /**
+     * The account email action's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientsendAccountEmailActionTestEmail
+     */
+    emailActionId: string
+    /**
+     * Which template the test email is for.
+     * @type SendAccountEmailActionTestEmailRequest
+     * @memberof ClientsendAccountEmailActionTestEmail
+     */
+    body?: SendAccountEmailActionTestEmailRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientsendAccountEmailActionTestEmail
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientSendEmailActionTestEmailRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientsendEmailActionTestEmail
+     */
+    templateId: string
+    /**
+     * The email action's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientsendEmailActionTestEmail
+     */
+    emailActionId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientsendEmailActionTestEmail
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientTestAuthenticationRequest {
+}
+
+export interface ClientUpdateAccountEmailActionRequest {
+    /**
+     * The account email action's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateAccountEmailAction
+     */
+    emailActionId: string
+    /**
+     * The settings to change. Properties left out keep their values.
+     * @type UpdateAccountEmailActionRequest
+     * @memberof ClientupdateAccountEmailAction
+     */
+    body: UpdateAccountEmailActionRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateAccountEmailAction
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientUpdateEmailActionRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateEmailAction
+     */
+    templateId: string
+    /**
+     * The email action's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateEmailAction
+     */
+    emailActionId: string
+    /**
+     * The settings to change. Properties left out keep their values.
+     * @type UpdateEmailActionRequest
+     * @memberof ClientupdateEmailAction
+     */
+    body: UpdateEmailActionRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateEmailAction
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientUpdateEmailActionCustomizationRequest {
+    /**
+     * The template's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateEmailActionCustomization
+     */
+    templateId: string
+    /**
+     * The ID of one of your account's email actions that sends for the template.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateEmailActionCustomization
+     */
+    emailActionId: string
+    /**
+     * The template's changes to the account email action, replacing any it had. Each setting you send is changed for this template, and the ones you leave out follow the account email action. `enabled: false` stops it sending for this template; left out, it sends.
+     * @type UpdateEmailActionCustomizationRequest
+     * @memberof ClientupdateEmailActionCustomization
+     */
+    body: UpdateEmailActionCustomizationRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateEmailActionCustomization
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientUpdateSignatureRequestRequest {
@@ -1095,6 +1653,13 @@ export interface ClientUpdateSignatureRequestRequest {
      * @memberof ClientupdateSignatureRequest
      */
     body: UpdateSignatureRequestRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateSignatureRequest
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientUpdateTemplateRequest {
@@ -1111,6 +1676,13 @@ export interface ClientUpdateTemplateRequest {
      * @memberof ClientupdateTemplate
      */
     body: UpdateTemplateRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateTemplate
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientUpdateTemplateDocumentRequest {
@@ -1134,6 +1706,13 @@ export interface ClientUpdateTemplateDocumentRequest {
      * @memberof ClientupdateTemplateDocument
      */
     wait?: boolean
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateTemplateDocument
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientUpdateTemplateFieldsRequest {
@@ -1150,6 +1729,13 @@ export interface ClientUpdateTemplateFieldsRequest {
      * @memberof ClientupdateTemplateFields
      */
     body: UpdateTemplateFieldsRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateTemplateFields
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientUpdateWebhookRequest {
@@ -1166,6 +1752,13 @@ export interface ClientUpdateWebhookRequest {
      * @memberof ClientupdateWebhook
      */
     body: UpdateWebhookRequest
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientupdateWebhook
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientUploadTemplateRequest {
@@ -1246,6 +1839,13 @@ export interface ClientUploadTemplateRequest {
      * @memberof ClientuploadTemplate
      */
     outputFormat?: OutputFormat
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientuploadTemplate
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientUploadTemplateDocumentRequest {
@@ -1277,6 +1877,13 @@ export interface ClientUploadTemplateDocumentRequest {
      * @memberof ClientuploadTemplateDocument
      */
     reimportFields?: boolean
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientuploadTemplateDocument
+     */
+    idempotencyKey?: string
 }
 
 export interface ClientValidateSubmissionRequest {
@@ -1294,12 +1901,36 @@ export interface ClientValidateSubmissionRequest {
      */
     body: ValidateSubmissionRequest
     /**
-     * The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
      * Defaults to: undefined
      * @type string
      * @memberof ClientvalidateSubmission
      */
     version?: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientvalidateSubmission
+     */
+    idempotencyKey?: string
+}
+
+export interface ClientVerifyEmailDomainRequest {
+    /**
+     * The email domain's ID.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientverifyEmailDomain
+     */
+    emailDomainId: string
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * Defaults to: undefined
+     * @type string
+     * @memberof ClientverifyEmailDomain
+     */
+    idempotencyKey?: string
 }
 
 export class ObjectClient {
@@ -1310,21 +1941,21 @@ export class ObjectClient {
     }
 
     /**
-     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. 
+     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. A field with the name of one of the template's fields shares its settings (`type`, `required`, `default`, ...), so a field that sets one to another value is refused: PUT /templates/{template_id}/fields changes them for every field with the name. 
      * Add fields to a template
      * @param param the request object
      */
     public addTemplateFieldsWithHttpInfo(param: ClientAddTemplateFieldsRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
-        return this.api.addTemplateFieldsWithHttpInfo(param.templateId, param.body,  options).toPromise();
+        return this.api.addTemplateFieldsWithHttpInfo(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
-     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. 
+     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. A field with the name of one of the template's fields shares its settings (`type`, `required`, `default`, ...), so a field that sets one to another value is refused: PUT /templates/{template_id}/fields changes them for every field with the name. 
      * Add fields to a template
      * @param param the request object
      */
     public addTemplateFields(param: ClientAddTemplateFieldsRequest, options?: ConfigurationOptions): Promise<TemplateFields> {
-        return this.api.addTemplateFields(param.templateId, param.body,  options).toPromise();
+        return this.api.addTemplateFields(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1333,7 +1964,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public copyTemplateWithHttpInfo(param: ClientCopyTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.copyTemplateWithHttpInfo(param.templateId, param.body,  options).toPromise();
+        return this.api.copyTemplateWithHttpInfo(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1342,7 +1973,25 @@ export class ObjectClient {
      * @param param the request object
      */
     public copyTemplate(param: ClientCopyTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.copyTemplate(param.templateId, param.body,  options).toPromise();
+        return this.api.copyTemplate(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Adds an email action to your account. It sends for every template, or only for the templates in `template_ids` and the templates in the folders in `folder_ids` (and the folders inside them). Each template can turn it off or change its settings for that template only (`PUT /templates/{template_id}/email_actions/{email_action_id}/customization`). Without a paid plan (Starter or higher), email actions only email your team: test submissions' emails go to your account's users, and live submissions' emails aren't sent. 
+     * Create an account email action
+     * @param param the request object
+     */
+    public createAccountEmailActionWithHttpInfo(param: ClientCreateAccountEmailActionRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailAction>> {
+        return this.api.createAccountEmailActionWithHttpInfo(param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Adds an email action to your account. It sends for every template, or only for the templates in `template_ids` and the templates in the folders in `folder_ids` (and the folders inside them). Each template can turn it off or change its settings for that template only (`PUT /templates/{template_id}/email_actions/{email_action_id}/customization`). Without a paid plan (Starter or higher), email actions only email your team: test submissions' emails go to your account's users, and live submissions' emails aren't sent. 
+     * Create an account email action
+     * @param param the request object
+     */
+    public createAccountEmailAction(param: ClientCreateAccountEmailActionRequest, options?: ConfigurationOptions): Promise<EmailAction> {
+        return this.api.createAccountEmailAction(param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1369,7 +2018,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public createCustomFileFromUploadWithHttpInfo(param: ClientCreateCustomFileFromUploadRequest, options?: ConfigurationOptions): Promise<HttpInfo<CustomFile>> {
-        return this.api.createCustomFileFromUploadWithHttpInfo(param.body,  options).toPromise();
+        return this.api.createCustomFileFromUploadWithHttpInfo(param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1378,7 +2027,43 @@ export class ObjectClient {
      * @param param the request object
      */
     public createCustomFileFromUpload(param: ClientCreateCustomFileFromUploadRequest, options?: ConfigurationOptions): Promise<CustomFile> {
-        return this.api.createCustomFileFromUpload(param.body,  options).toPromise();
+        return this.api.createCustomFileFromUpload(param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Adds an email action to a template's draft. From then on, each processed submission emails its PDF to the recipients in `to`, `cc` and `bcc`: addresses, and tags for the address in one of the submission's fields (`{{ data.tenant_email }}`) or in its metadata (`{{ metadata.agent_email }}`). With `send_when`, only the submissions whose values meet its conditions send one. Without a paid plan (Starter or higher), email actions only email your team: test submissions' emails go to your account's users, and live submissions' emails aren't sent. 
+     * Create an email action
+     * @param param the request object
+     */
+    public createEmailActionWithHttpInfo(param: ClientCreateEmailActionRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailAction>> {
+        return this.api.createEmailActionWithHttpInfo(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Adds an email action to a template's draft. From then on, each processed submission emails its PDF to the recipients in `to`, `cc` and `bcc`: addresses, and tags for the address in one of the submission's fields (`{{ data.tenant_email }}`) or in its metadata (`{{ metadata.agent_email }}`). With `send_when`, only the submissions whose values meet its conditions send one. Without a paid plan (Starter or higher), email actions only email your team: test submissions' emails go to your account's users, and live submissions' emails aren't sent. 
+     * Create an email action
+     * @param param the request object
+     */
+    public createEmailAction(param: ClientCreateEmailActionRequest, options?: ConfigurationOptions): Promise<EmailAction> {
+        return this.api.createEmailAction(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Adds a domain for email actions to send from, and returns the DNS records to add to it. DocSpring checks for them every few minutes, and the domain is verified once its DKIM and DMARC records are found. Needs a paid monthly plan. 
+     * Add an email domain
+     * @param param the request object
+     */
+    public createEmailDomainWithHttpInfo(param: ClientCreateEmailDomainRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailDomain>> {
+        return this.api.createEmailDomainWithHttpInfo(param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Adds a domain for email actions to send from, and returns the DNS records to add to it. DocSpring checks for them every few minutes, and the domain is verified once its DKIM and DMARC records are found. Needs a paid monthly plan. 
+     * Add an email domain
+     * @param param the request object
+     */
+    public createEmailDomain(param: ClientCreateEmailDomainRequest, options?: ConfigurationOptions): Promise<EmailDomain> {
+        return this.api.createEmailDomain(param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1387,7 +2072,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public createFolderWithHttpInfo(param: ClientCreateFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
-        return this.api.createFolderWithHttpInfo(param.body,  options).toPromise();
+        return this.api.createFolderWithHttpInfo(param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1396,7 +2081,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public createFolder(param: ClientCreateFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
-        return this.api.createFolder(param.body,  options).toPromise();
+        return this.api.createFolder(param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1405,7 +2090,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public createSignatureRequestEventWithHttpInfo(param: ClientCreateSignatureRequestEventRequest, options?: ConfigurationOptions): Promise<HttpInfo<SignatureRequestEvent>> {
-        return this.api.createSignatureRequestEventWithHttpInfo(param.signatureRequestId, param.body,  options).toPromise();
+        return this.api.createSignatureRequestEventWithHttpInfo(param.signatureRequestId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1414,7 +2099,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public createSignatureRequestEvent(param: ClientCreateSignatureRequestEventRequest, options?: ConfigurationOptions): Promise<SignatureRequestEvent> {
-        return this.api.createSignatureRequestEvent(param.signatureRequestId, param.body,  options).toPromise();
+        return this.api.createSignatureRequestEvent(param.signatureRequestId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1423,7 +2108,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public createSignatureRequestTokenWithHttpInfo(param: ClientCreateSignatureRequestTokenRequest, options?: ConfigurationOptions): Promise<HttpInfo<SignatureRequestToken>> {
-        return this.api.createSignatureRequestTokenWithHttpInfo(param.signatureRequestId, param.body,  options).toPromise();
+        return this.api.createSignatureRequestTokenWithHttpInfo(param.signatureRequestId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1432,11 +2117,11 @@ export class ObjectClient {
      * @param param the request object
      */
     public createSignatureRequestToken(param: ClientCreateSignatureRequestTokenRequest, options?: ConfigurationOptions): Promise<SignatureRequestToken> {
-        return this.api.createSignatureRequestToken(param.signatureRequestId, param.body,  options).toPromise();
+        return this.api.createSignatureRequestToken(param.signatureRequestId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
-     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID. 
+     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID.  With `signature_requests`, the PDF is generated once everyone has signed. DocSpring emails each signer a link to sign, unless `send_email` is false, and can send reminders and the completed document. 
      * Generate a PDF
      * @param param the request object
      */
@@ -1445,7 +2130,7 @@ export class ObjectClient {
     }
 
     /**
-     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID. 
+     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID.  With `signature_requests`, the PDF is generated once everyone has signed. DocSpring emails each signer a link to sign, unless `send_email` is false, and can send reminders and the completed document. 
      * Generate a PDF
      * @param param the request object
      */
@@ -1472,39 +2157,39 @@ export class ObjectClient {
     }
 
     /**
-     * Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+     * Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF. A page design (`page_designer`) takes its `layout` in the Page Designer layout format, or starts with an empty page without one.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
      * Create a template
      * @param param the request object
      */
     public createTemplateWithHttpInfo(param: ClientCreateTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.createTemplateWithHttpInfo(param.body, param.wait,  options).toPromise();
+        return this.api.createTemplateWithHttpInfo(param.body, param.wait, param.idempotencyKey,  options).toPromise();
     }
 
     /**
-     * Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+     * Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF. A page design (`page_designer`) takes its `layout` in the Page Designer layout format, or starts with an empty page without one.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
      * Create a template
      * @param param the request object
      */
     public createTemplate(param: ClientCreateTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.createTemplate(param.body, param.wait,  options).toPromise();
+        return this.api.createTemplate(param.body, param.wait, param.idempotencyKey,  options).toPromise();
     }
 
     /**
-     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
+     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template or a page design prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
      * Preview a template with data
      * @param param the request object
      */
     public createTemplatePreviewWithHttpInfo(param: ClientCreateTemplatePreviewRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplatePreview>> {
-        return this.api.createTemplatePreviewWithHttpInfo(param.templateId, param.body, param.version,  options).toPromise();
+        return this.api.createTemplatePreviewWithHttpInfo(param.templateId, param.body, param.version, param.idempotencyKey,  options).toPromise();
     }
 
     /**
-     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
+     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template or a page design prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
      * Preview a template with data
      * @param param the request object
      */
     public createTemplatePreview(param: ClientCreateTemplatePreviewRequest, options?: ConfigurationOptions): Promise<TemplatePreview> {
-        return this.api.createTemplatePreview(param.templateId, param.body, param.version,  options).toPromise();
+        return this.api.createTemplatePreview(param.templateId, param.body, param.version, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1513,7 +2198,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public createWebhookWithHttpInfo(param: ClientCreateWebhookRequest, options?: ConfigurationOptions): Promise<HttpInfo<Webhook>> {
-        return this.api.createWebhookWithHttpInfo(param.body,  options).toPromise();
+        return this.api.createWebhookWithHttpInfo(param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1522,7 +2207,25 @@ export class ObjectClient {
      * @param param the request object
      */
     public createWebhook(param: ClientCreateWebhookRequest, options?: ConfigurationOptions): Promise<Webhook> {
-        return this.api.createWebhook(param.body,  options).toPromise();
+        return this.api.createWebhook(param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Deletes one of your account's email actions, with every template's customization of it. Emails it has already queued for submissions aren't sent. Submissions keep the record of the emails it sent. 
+     * Delete an account email action
+     * @param param the request object
+     */
+    public deleteAccountEmailActionWithHttpInfo(param: ClientDeleteAccountEmailActionRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailAction>> {
+        return this.api.deleteAccountEmailActionWithHttpInfo(param.emailActionId, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Deletes one of your account's email actions, with every template's customization of it. Emails it has already queued for submissions aren't sent. Submissions keep the record of the emails it sent. 
+     * Delete an account email action
+     * @param param the request object
+     */
+    public deleteAccountEmailAction(param: ClientDeleteAccountEmailActionRequest, options?: ConfigurationOptions): Promise<EmailAction> {
+        return this.api.deleteAccountEmailAction(param.emailActionId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1531,7 +2234,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public deleteCustomFileWithHttpInfo(param: ClientDeleteCustomFileRequest, options?: ConfigurationOptions): Promise<HttpInfo<CustomFile>> {
-        return this.api.deleteCustomFileWithHttpInfo(param.customFileId,  options).toPromise();
+        return this.api.deleteCustomFileWithHttpInfo(param.customFileId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1540,7 +2243,61 @@ export class ObjectClient {
      * @param param the request object
      */
     public deleteCustomFile(param: ClientDeleteCustomFileRequest, options?: ConfigurationOptions): Promise<CustomFile> {
-        return this.api.deleteCustomFile(param.customFileId,  options).toPromise();
+        return this.api.deleteCustomFile(param.customFileId, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Deletes an email action. Emails it has already queued for submissions aren't sent. Submissions keep the record of the emails it sent. 
+     * Delete an email action
+     * @param param the request object
+     */
+    public deleteEmailActionWithHttpInfo(param: ClientDeleteEmailActionRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailAction>> {
+        return this.api.deleteEmailActionWithHttpInfo(param.templateId, param.emailActionId, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Deletes an email action. Emails it has already queued for submissions aren't sent. Submissions keep the record of the emails it sent. 
+     * Delete an email action
+     * @param param the request object
+     */
+    public deleteEmailAction(param: ClientDeleteEmailActionRequest, options?: ConfigurationOptions): Promise<EmailAction> {
+        return this.api.deleteEmailAction(param.templateId, param.emailActionId, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Removes the template's changes to one of your account's email actions: it sends for this template as it is, and again if the template had turned it off. 
+     * Reset an account email action's customization
+     * @param param the request object
+     */
+    public deleteEmailActionCustomizationWithHttpInfo(param: ClientDeleteEmailActionCustomizationRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailAction>> {
+        return this.api.deleteEmailActionCustomizationWithHttpInfo(param.templateId, param.emailActionId, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Removes the template's changes to one of your account's email actions: it sends for this template as it is, and again if the template had turned it off. 
+     * Reset an account email action's customization
+     * @param param the request object
+     */
+    public deleteEmailActionCustomization(param: ClientDeleteEmailActionCustomizationRequest, options?: ConfigurationOptions): Promise<EmailAction> {
+        return this.api.deleteEmailActionCustomization(param.templateId, param.emailActionId, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Removes an email domain. Email actions that send from an address at it fail until you add and verify it again, or change their `from_address`. You can then remove its DNS records. 
+     * Remove an email domain
+     * @param param the request object
+     */
+    public deleteEmailDomainWithHttpInfo(param: ClientDeleteEmailDomainRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailDomain>> {
+        return this.api.deleteEmailDomainWithHttpInfo(param.emailDomainId, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Removes an email domain. Email actions that send from an address at it fail until you add and verify it again, or change their `from_address`. You can then remove its DNS records. 
+     * Remove an email domain
+     * @param param the request object
+     */
+    public deleteEmailDomain(param: ClientDeleteEmailDomainRequest, options?: ConfigurationOptions): Promise<EmailDomain> {
+        return this.api.deleteEmailDomain(param.emailDomainId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1549,7 +2306,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public deleteFolderWithHttpInfo(param: ClientDeleteFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
-        return this.api.deleteFolderWithHttpInfo(param.folderId,  options).toPromise();
+        return this.api.deleteFolderWithHttpInfo(param.folderId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1558,7 +2315,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public deleteFolder(param: ClientDeleteFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
-        return this.api.deleteFolder(param.folderId,  options).toPromise();
+        return this.api.deleteFolder(param.folderId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1567,7 +2324,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public deleteTemplateWithHttpInfo(param: ClientDeleteTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.deleteTemplateWithHttpInfo(param.templateId, param.version,  options).toPromise();
+        return this.api.deleteTemplateWithHttpInfo(param.templateId, param.version, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1576,7 +2333,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public deleteTemplate(param: ClientDeleteTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.deleteTemplate(param.templateId, param.version,  options).toPromise();
+        return this.api.deleteTemplate(param.templateId, param.version, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1585,7 +2342,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public deleteWebhookWithHttpInfo(param: ClientDeleteWebhookRequest, options?: ConfigurationOptions): Promise<HttpInfo<Webhook>> {
-        return this.api.deleteWebhookWithHttpInfo(param.webhookId,  options).toPromise();
+        return this.api.deleteWebhookWithHttpInfo(param.webhookId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1594,7 +2351,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public deleteWebhook(param: ClientDeleteWebhookRequest, options?: ConfigurationOptions): Promise<Webhook> {
-        return this.api.deleteWebhook(param.webhookId,  options).toPromise();
+        return this.api.deleteWebhook(param.webhookId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1603,7 +2360,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public expireCombinedPdfWithHttpInfo(param: ClientExpireCombinedPdfRequest, options?: ConfigurationOptions): Promise<HttpInfo<CombinedPdf>> {
-        return this.api.expireCombinedPdfWithHttpInfo(param.combinedPdfId,  options).toPromise();
+        return this.api.expireCombinedPdfWithHttpInfo(param.combinedPdfId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1612,7 +2369,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public expireCombinedPdf(param: ClientExpireCombinedPdfRequest, options?: ConfigurationOptions): Promise<CombinedPdf> {
-        return this.api.expireCombinedPdf(param.combinedPdfId,  options).toPromise();
+        return this.api.expireCombinedPdf(param.combinedPdfId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1621,7 +2378,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public expireSubmissionWithHttpInfo(param: ClientExpireSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<Submission>> {
-        return this.api.expireSubmissionWithHttpInfo(param.submissionId,  options).toPromise();
+        return this.api.expireSubmissionWithHttpInfo(param.submissionId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1630,7 +2387,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public expireSubmission(param: ClientExpireSubmissionRequest, options?: ConfigurationOptions): Promise<Submission> {
-        return this.api.expireSubmission(param.submissionId,  options).toPromise();
+        return this.api.expireSubmission(param.submissionId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1639,7 +2396,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public generateSubmissionFilesWithHttpInfo(param: ClientGenerateSubmissionFilesRequest, options?: ConfigurationOptions): Promise<HttpInfo<Submission>> {
-        return this.api.generateSubmissionFilesWithHttpInfo(param.submissionId, param.body, param.wait,  options).toPromise();
+        return this.api.generateSubmissionFilesWithHttpInfo(param.submissionId, param.body, param.wait, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1648,7 +2405,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public generateSubmissionFiles(param: ClientGenerateSubmissionFilesRequest, options?: ConfigurationOptions): Promise<Submission> {
-        return this.api.generateSubmissionFiles(param.submissionId, param.body, param.wait,  options).toPromise();
+        return this.api.generateSubmissionFiles(param.submissionId, param.body, param.wait, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1657,7 +2414,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public generateSubmissionPreviewWithHttpInfo(param: ClientGenerateSubmissionPreviewRequest, options?: ConfigurationOptions): Promise<HttpInfo<Submission>> {
-        return this.api.generateSubmissionPreviewWithHttpInfo(param.submissionId,  options).toPromise();
+        return this.api.generateSubmissionPreviewWithHttpInfo(param.submissionId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -1666,7 +2423,25 @@ export class ObjectClient {
      * @param param the request object
      */
     public generateSubmissionPreview(param: ClientGenerateSubmissionPreviewRequest, options?: ConfigurationOptions): Promise<Submission> {
-        return this.api.generateSubmissionPreview(param.submissionId,  options).toPromise();
+        return this.api.generateSubmissionPreview(param.submissionId, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Returns one of your account's email actions, with its settings and whether its emails are failing.
+     * Get an account email action
+     * @param param the request object
+     */
+    public getAccountEmailActionWithHttpInfo(param: ClientGetAccountEmailActionRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailAction>> {
+        return this.api.getAccountEmailActionWithHttpInfo(param.emailActionId,  options).toPromise();
+    }
+
+    /**
+     * Returns one of your account's email actions, with its settings and whether its emails are failing.
+     * Get an account email action
+     * @param param the request object
+     */
+    public getAccountEmailAction(param: ClientGetAccountEmailActionRequest, options?: ConfigurationOptions): Promise<EmailAction> {
+        return this.api.getAccountEmailAction(param.emailActionId,  options).toPromise();
     }
 
     /**
@@ -1703,6 +2478,42 @@ export class ObjectClient {
      */
     public getCustomFile(param: ClientGetCustomFileRequest, options?: ConfigurationOptions): Promise<CustomFile> {
         return this.api.getCustomFile(param.customFileId,  options).toPromise();
+    }
+
+    /**
+     * Returns one of a template's email actions, with its settings and whether its emails are failing.
+     * Get an email action
+     * @param param the request object
+     */
+    public getEmailActionWithHttpInfo(param: ClientGetEmailActionRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailAction>> {
+        return this.api.getEmailActionWithHttpInfo(param.templateId, param.emailActionId,  options).toPromise();
+    }
+
+    /**
+     * Returns one of a template's email actions, with its settings and whether its emails are failing.
+     * Get an email action
+     * @param param the request object
+     */
+    public getEmailAction(param: ClientGetEmailActionRequest, options?: ConfigurationOptions): Promise<EmailAction> {
+        return this.api.getEmailAction(param.templateId, param.emailActionId,  options).toPromise();
+    }
+
+    /**
+     * Returns an email domain, whether it's verified, and the DNS records to add to it.
+     * Get an email domain
+     * @param param the request object
+     */
+    public getEmailDomainWithHttpInfo(param: ClientGetEmailDomainRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailDomain>> {
+        return this.api.getEmailDomainWithHttpInfo(param.emailDomainId,  options).toPromise();
+    }
+
+    /**
+     * Returns an email domain, whether it's verified, and the DNS records to add to it.
+     * Get an email domain
+     * @param param the request object
+     */
+    public getEmailDomain(param: ClientGetEmailDomainRequest, options?: ConfigurationOptions): Promise<EmailDomain> {
+        return this.api.getEmailDomain(param.emailDomainId,  options).toPromise();
     }
 
     /**
@@ -1922,6 +2733,24 @@ export class ObjectClient {
     }
 
     /**
+     * Returns your account's email actions, newest first, one page at a time. Each one emails the files of every template's processed submissions, or of the templates and folders it lists. A template's own email actions are listed with the template (`GET /templates/{template_id}/email_actions`). 
+     * List account email actions
+     * @param param the request object
+     */
+    public listAccountEmailActionsWithHttpInfo(param: ClientListAccountEmailActionsRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<EmailActionList>> {
+        return this.api.listAccountEmailActionsWithHttpInfo(param.limit, param.cursor,  options).toPromise();
+    }
+
+    /**
+     * Returns your account's email actions, newest first, one page at a time. Each one emails the files of every template's processed submissions, or of the templates and folders it lists. A template's own email actions are listed with the template (`GET /templates/{template_id}/email_actions`). 
+     * List account email actions
+     * @param param the request object
+     */
+    public listAccountEmailActions(param: ClientListAccountEmailActionsRequest = {}, options?: ConfigurationOptions): Promise<EmailActionList> {
+        return this.api.listAccountEmailActions(param.limit, param.cursor,  options).toPromise();
+    }
+
+    /**
      * Returns the combined PDFs in your account, newest first, one page at a time.
      * List combined PDFs
      * @param param the request object
@@ -1955,6 +2784,42 @@ export class ObjectClient {
      */
     public listCustomFiles(param: ClientListCustomFilesRequest = {}, options?: ConfigurationOptions): Promise<CustomFileList> {
         return this.api.listCustomFiles(param.limit, param.cursor,  options).toPromise();
+    }
+
+    /**
+     * Returns the email actions of a template's draft, and your account's email actions that send for it, newest first, one page at a time. Each one emails every processed submission's files to the people it lists. An account email action (`template_id` null) shows the settings it sends for this template, with the template's changes in `customization`. 
+     * List email actions
+     * @param param the request object
+     */
+    public listEmailActionsWithHttpInfo(param: ClientListEmailActionsRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailActionList>> {
+        return this.api.listEmailActionsWithHttpInfo(param.templateId, param.limit, param.cursor,  options).toPromise();
+    }
+
+    /**
+     * Returns the email actions of a template's draft, and your account's email actions that send for it, newest first, one page at a time. Each one emails every processed submission's files to the people it lists. An account email action (`template_id` null) shows the settings it sends for this template, with the template's changes in `customization`. 
+     * List email actions
+     * @param param the request object
+     */
+    public listEmailActions(param: ClientListEmailActionsRequest, options?: ConfigurationOptions): Promise<EmailActionList> {
+        return this.api.listEmailActions(param.templateId, param.limit, param.cursor,  options).toPromise();
+    }
+
+    /**
+     * Returns the domains in your account that email actions can send from once they're verified, newest first, one page at a time. 
+     * List email domains
+     * @param param the request object
+     */
+    public listEmailDomainsWithHttpInfo(param: ClientListEmailDomainsRequest = {}, options?: ConfigurationOptions): Promise<HttpInfo<EmailDomainList>> {
+        return this.api.listEmailDomainsWithHttpInfo(param.limit, param.cursor,  options).toPromise();
+    }
+
+    /**
+     * Returns the domains in your account that email actions can send from once they're verified, newest first, one page at a time. 
+     * List email domains
+     * @param param the request object
+     */
+    public listEmailDomains(param: ClientListEmailDomainsRequest = {}, options?: ConfigurationOptions): Promise<EmailDomainList> {
+        return this.api.listEmailDomains(param.limit, param.cursor,  options).toPromise();
     }
 
     /**
@@ -2071,7 +2936,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public moveFolderWithHttpInfo(param: ClientMoveFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
-        return this.api.moveFolderWithHttpInfo(param.folderId, param.body,  options).toPromise();
+        return this.api.moveFolderWithHttpInfo(param.folderId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2080,7 +2945,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public moveFolder(param: ClientMoveFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
-        return this.api.moveFolder(param.folderId, param.body,  options).toPromise();
+        return this.api.moveFolder(param.folderId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2089,7 +2954,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public moveTemplateWithHttpInfo(param: ClientMoveTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.moveTemplateWithHttpInfo(param.templateId, param.body,  options).toPromise();
+        return this.api.moveTemplateWithHttpInfo(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2098,7 +2963,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public moveTemplate(param: ClientMoveTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.moveTemplate(param.templateId, param.body,  options).toPromise();
+        return this.api.moveTemplate(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2107,7 +2972,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public publishTemplateVersionWithHttpInfo(param: ClientPublishTemplateVersionRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateVersion>> {
-        return this.api.publishTemplateVersionWithHttpInfo(param.templateId, param.body,  options).toPromise();
+        return this.api.publishTemplateVersionWithHttpInfo(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2116,7 +2981,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public publishTemplateVersion(param: ClientPublishTemplateVersionRequest, options?: ConfigurationOptions): Promise<TemplateVersion> {
-        return this.api.publishTemplateVersion(param.templateId, param.body,  options).toPromise();
+        return this.api.publishTemplateVersion(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2125,7 +2990,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public removeTemplateFieldsWithHttpInfo(param: ClientRemoveTemplateFieldsRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
-        return this.api.removeTemplateFieldsWithHttpInfo(param.templateId, param.body,  options).toPromise();
+        return this.api.removeTemplateFieldsWithHttpInfo(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2134,7 +2999,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public removeTemplateFields(param: ClientRemoveTemplateFieldsRequest, options?: ConfigurationOptions): Promise<TemplateFields> {
-        return this.api.removeTemplateFields(param.templateId, param.body,  options).toPromise();
+        return this.api.removeTemplateFields(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2143,7 +3008,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public renameFolderWithHttpInfo(param: ClientRenameFolderRequest, options?: ConfigurationOptions): Promise<HttpInfo<Folder>> {
-        return this.api.renameFolderWithHttpInfo(param.folderId, param.body,  options).toPromise();
+        return this.api.renameFolderWithHttpInfo(param.folderId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2152,7 +3017,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public renameFolder(param: ClientRenameFolderRequest, options?: ConfigurationOptions): Promise<Folder> {
-        return this.api.renameFolder(param.folderId, param.body,  options).toPromise();
+        return this.api.renameFolder(param.folderId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2161,7 +3026,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public reorderTemplateFieldsWithHttpInfo(param: ClientReorderTemplateFieldsRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
-        return this.api.reorderTemplateFieldsWithHttpInfo(param.templateId, param.body,  options).toPromise();
+        return this.api.reorderTemplateFieldsWithHttpInfo(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2170,7 +3035,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public reorderTemplateFields(param: ClientReorderTemplateFieldsRequest, options?: ConfigurationOptions): Promise<TemplateFields> {
-        return this.api.reorderTemplateFields(param.templateId, param.body,  options).toPromise();
+        return this.api.reorderTemplateFields(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2179,7 +3044,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public restoreTemplateVersionWithHttpInfo(param: ClientRestoreTemplateVersionRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.restoreTemplateVersionWithHttpInfo(param.templateId, param.body,  options).toPromise();
+        return this.api.restoreTemplateVersionWithHttpInfo(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2188,7 +3053,43 @@ export class ObjectClient {
      * @param param the request object
      */
     public restoreTemplateVersion(param: ClientRestoreTemplateVersionRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.restoreTemplateVersion(param.templateId, param.body,  options).toPromise();
+        return this.api.restoreTemplateVersion(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Sends the account email action's email to the API token's user only, as it would go for one template it sends for, with each field shown as its name in brackets, so you can check how it looks. When the email action attaches its files and that template is a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. 
+     * Send a test email for an account email action
+     * @param param the request object
+     */
+    public sendAccountEmailActionTestEmailWithHttpInfo(param: ClientSendAccountEmailActionTestEmailRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailActionTestEmail>> {
+        return this.api.sendAccountEmailActionTestEmailWithHttpInfo(param.emailActionId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Sends the account email action's email to the API token's user only, as it would go for one template it sends for, with each field shown as its name in brackets, so you can check how it looks. When the email action attaches its files and that template is a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. 
+     * Send a test email for an account email action
+     * @param param the request object
+     */
+    public sendAccountEmailActionTestEmail(param: ClientSendAccountEmailActionTestEmailRequest, options?: ConfigurationOptions): Promise<EmailActionTestEmail> {
+        return this.api.sendAccountEmailActionTestEmail(param.emailActionId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Sends the email action's email to the API token's user only, with each field and metadata value shown as its name in brackets, so you can check how it looks. When the email action attaches its files and the template is a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. Without a paid plan, the user needs a confirmed email address. 
+     * Send a test email
+     * @param param the request object
+     */
+    public sendEmailActionTestEmailWithHttpInfo(param: ClientSendEmailActionTestEmailRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailActionTestEmail>> {
+        return this.api.sendEmailActionTestEmailWithHttpInfo(param.templateId, param.emailActionId, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Sends the email action's email to the API token's user only, with each field and metadata value shown as its name in brackets, so you can check how it looks. When the email action attaches its files and the template is a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. Without a paid plan, the user needs a confirmed email address. 
+     * Send a test email
+     * @param param the request object
+     */
+    public sendEmailActionTestEmail(param: ClientSendEmailActionTestEmailRequest, options?: ConfigurationOptions): Promise<EmailActionTestEmail> {
+        return this.api.sendEmailActionTestEmail(param.templateId, param.emailActionId, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2210,12 +3111,66 @@ export class ObjectClient {
     }
 
     /**
+     * Changes one of your account's email actions. Properties left out keep their values. Its templates' customizations keep their own changes, and follow the rest. Set `enabled` to false to stop its emails for every template. 
+     * Update an account email action
+     * @param param the request object
+     */
+    public updateAccountEmailActionWithHttpInfo(param: ClientUpdateAccountEmailActionRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailAction>> {
+        return this.api.updateAccountEmailActionWithHttpInfo(param.emailActionId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Changes one of your account's email actions. Properties left out keep their values. Its templates' customizations keep their own changes, and follow the rest. Set `enabled` to false to stop its emails for every template. 
+     * Update an account email action
+     * @param param the request object
+     */
+    public updateAccountEmailAction(param: ClientUpdateAccountEmailActionRequest, options?: ConfigurationOptions): Promise<EmailAction> {
+        return this.api.updateAccountEmailAction(param.emailActionId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Changes an email action's settings. Properties left out keep their values. Set `enabled` to false to stop its emails, or to true to turn it back on after DocSpring turned it off. 
+     * Update an email action
+     * @param param the request object
+     */
+    public updateEmailActionWithHttpInfo(param: ClientUpdateEmailActionRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailAction>> {
+        return this.api.updateEmailActionWithHttpInfo(param.templateId, param.emailActionId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Changes an email action's settings. Properties left out keep their values. Set `enabled` to false to stop its emails, or to true to turn it back on after DocSpring turned it off. 
+     * Update an email action
+     * @param param the request object
+     */
+    public updateEmailAction(param: ClientUpdateEmailActionRequest, options?: ConfigurationOptions): Promise<EmailAction> {
+        return this.api.updateEmailAction(param.templateId, param.emailActionId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Changes one of your account's email actions for this template only, replacing any changes the template had. Each setting you send is changed for this template, and the ones you leave out follow the account email action, including later changes to it. Set `enabled` to false to stop it sending for this template. 
+     * Customize an account email action for a template
+     * @param param the request object
+     */
+    public updateEmailActionCustomizationWithHttpInfo(param: ClientUpdateEmailActionCustomizationRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailAction>> {
+        return this.api.updateEmailActionCustomizationWithHttpInfo(param.templateId, param.emailActionId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Changes one of your account's email actions for this template only, replacing any changes the template had. Each setting you send is changed for this template, and the ones you leave out follow the account email action, including later changes to it. Set `enabled` to false to stop it sending for this template. 
+     * Customize an account email action for a template
+     * @param param the request object
+     */
+    public updateEmailActionCustomization(param: ClientUpdateEmailActionCustomizationRequest, options?: ConfigurationOptions): Promise<EmailAction> {
+        return this.api.updateEmailActionCustomization(param.templateId, param.emailActionId, param.body, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
      * Changes a pending signature request's metadata, or how your app authenticated the person (for the audit trail). Once the person has opened it, only its metadata can be changed, and a completed or declined signature request can't be changed. 
      * Update a signature request
      * @param param the request object
      */
     public updateSignatureRequestWithHttpInfo(param: ClientUpdateSignatureRequestRequest, options?: ConfigurationOptions): Promise<HttpInfo<SignatureRequest>> {
-        return this.api.updateSignatureRequestWithHttpInfo(param.signatureRequestId, param.body,  options).toPromise();
+        return this.api.updateSignatureRequestWithHttpInfo(param.signatureRequestId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2224,25 +3179,25 @@ export class ObjectClient {
      * @param param the request object
      */
     public updateSignatureRequest(param: ClientUpdateSignatureRequestRequest, options?: ConfigurationOptions): Promise<SignatureRequest> {
-        return this.api.updateSignatureRequest(param.signatureRequestId, param.body,  options).toPromise();
+        return this.api.updateSignatureRequest(param.signatureRequestId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
-     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
+     * Changes a template's draft. Properties left out keep their values. `defaults`, `html_engine_options` and a page design's `layout` replace the whole object, and `field_groups` changes only the groups it lists. A new layout adds a field for each new value it reads. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
      * Update a template
      * @param param the request object
      */
     public updateTemplateWithHttpInfo(param: ClientUpdateTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.updateTemplateWithHttpInfo(param.templateId, param.body,  options).toPromise();
+        return this.api.updateTemplateWithHttpInfo(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
-     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
+     * Changes a template's draft. Properties left out keep their values. `defaults`, `html_engine_options` and a page design's `layout` replace the whole object, and `field_groups` changes only the groups it lists. A new layout adds a field for each new value it reads. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
      * Update a template
      * @param param the request object
      */
     public updateTemplate(param: ClientUpdateTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.updateTemplate(param.templateId, param.body,  options).toPromise();
+        return this.api.updateTemplate(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2251,7 +3206,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public updateTemplateDocumentWithHttpInfo(param: ClientUpdateTemplateDocumentRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.updateTemplateDocumentWithHttpInfo(param.templateId, param.body, param.wait,  options).toPromise();
+        return this.api.updateTemplateDocumentWithHttpInfo(param.templateId, param.body, param.wait, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2260,7 +3215,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public updateTemplateDocument(param: ClientUpdateTemplateDocumentRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.updateTemplateDocument(param.templateId, param.body, param.wait,  options).toPromise();
+        return this.api.updateTemplateDocument(param.templateId, param.body, param.wait, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2269,7 +3224,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public updateTemplateFieldsWithHttpInfo(param: ClientUpdateTemplateFieldsRequest, options?: ConfigurationOptions): Promise<HttpInfo<TemplateFields>> {
-        return this.api.updateTemplateFieldsWithHttpInfo(param.templateId, param.body,  options).toPromise();
+        return this.api.updateTemplateFieldsWithHttpInfo(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2278,7 +3233,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public updateTemplateFields(param: ClientUpdateTemplateFieldsRequest, options?: ConfigurationOptions): Promise<TemplateFields> {
-        return this.api.updateTemplateFields(param.templateId, param.body,  options).toPromise();
+        return this.api.updateTemplateFields(param.templateId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2287,7 +3242,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public updateWebhookWithHttpInfo(param: ClientUpdateWebhookRequest, options?: ConfigurationOptions): Promise<HttpInfo<Webhook>> {
-        return this.api.updateWebhookWithHttpInfo(param.webhookId, param.body,  options).toPromise();
+        return this.api.updateWebhookWithHttpInfo(param.webhookId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2296,7 +3251,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public updateWebhook(param: ClientUpdateWebhookRequest, options?: ConfigurationOptions): Promise<Webhook> {
-        return this.api.updateWebhook(param.webhookId, param.body,  options).toPromise();
+        return this.api.updateWebhook(param.webhookId, param.body, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2305,7 +3260,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public uploadTemplateWithHttpInfo(param: ClientUploadTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.uploadTemplateWithHttpInfo(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat,  options).toPromise();
+        return this.api.uploadTemplateWithHttpInfo(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2314,7 +3269,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public uploadTemplate(param: ClientUploadTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.uploadTemplate(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat,  options).toPromise();
+        return this.api.uploadTemplate(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2323,7 +3278,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public uploadTemplateDocumentWithHttpInfo(param: ClientUploadTemplateDocumentRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.uploadTemplateDocumentWithHttpInfo(param.templateId, param.document, param.wait, param.reimportFields,  options).toPromise();
+        return this.api.uploadTemplateDocumentWithHttpInfo(param.templateId, param.document, param.wait, param.reimportFields, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2332,7 +3287,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public uploadTemplateDocument(param: ClientUploadTemplateDocumentRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.uploadTemplateDocument(param.templateId, param.document, param.wait, param.reimportFields,  options).toPromise();
+        return this.api.uploadTemplateDocument(param.templateId, param.document, param.wait, param.reimportFields, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2341,7 +3296,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public validateSubmissionWithHttpInfo(param: ClientValidateSubmissionRequest, options?: ConfigurationOptions): Promise<HttpInfo<SubmissionValidation>> {
-        return this.api.validateSubmissionWithHttpInfo(param.templateId, param.body, param.version,  options).toPromise();
+        return this.api.validateSubmissionWithHttpInfo(param.templateId, param.body, param.version, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -2350,7 +3305,25 @@ export class ObjectClient {
      * @param param the request object
      */
     public validateSubmission(param: ClientValidateSubmissionRequest, options?: ConfigurationOptions): Promise<SubmissionValidation> {
-        return this.api.validateSubmission(param.templateId, param.body, param.version,  options).toPromise();
+        return this.api.validateSubmission(param.templateId, param.body, param.version, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Checks the email domain's DNS records now, instead of waiting for the next check. If DocSpring has stopped looking for its DKIM records (3 days after they were created), it starts again with new ones: replace the CNAME records with them. 
+     * Verify an email domain
+     * @param param the request object
+     */
+    public verifyEmailDomainWithHttpInfo(param: ClientVerifyEmailDomainRequest, options?: ConfigurationOptions): Promise<HttpInfo<EmailDomain>> {
+        return this.api.verifyEmailDomainWithHttpInfo(param.emailDomainId, param.idempotencyKey,  options).toPromise();
+    }
+
+    /**
+     * Checks the email domain's DNS records now, instead of waiting for the next check. If DocSpring has stopped looking for its DKIM records (3 days after they were created), it starts again with new ones: replace the CNAME records with them. 
+     * Verify an email domain
+     * @param param the request object
+     */
+    public verifyEmailDomain(param: ClientVerifyEmailDomainRequest, options?: ConfigurationOptions): Promise<EmailDomain> {
+        return this.api.verifyEmailDomain(param.emailDomainId, param.idempotencyKey,  options).toPromise();
     }
 
 }

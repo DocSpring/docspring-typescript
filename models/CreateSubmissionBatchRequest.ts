@@ -27,7 +27,7 @@ export class CreateSubmissionBatchRequest {
     */
     'template_id'?: string;
     /**
-    * The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+    * The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
     */
     'template_version'?: string;
     /**
@@ -39,7 +39,7 @@ export class CreateSubmissionBatchRequest {
     */
     'output_formats'?: Array<OutputFormat>;
     /**
-    * Up to 50 submissions. Each one takes the properties of POST /templates/{template_id}/submissions except `signature_requests`, plus `template_id` and `template_version` when it uses a different template from the batch.
+    * Up to 50 submissions. Each one takes the properties of POST /templates/{template_id}/submissions except `signature_requests` and the options for DocSpring's emails to signers (`send_email`, `signing_order`, `email_subject`, `email_message`, `cc`, `reply_to`, `notification_emails`, `notify_when_signed` and `reminders`), plus `template_id` and `template_version` when it uses a different template from the batch.
     */
     'submissions': Array<SubmissionInput>;
 

@@ -12,6 +12,7 @@
 
 import { SignatureRequestAuthSecondFactorType } from '../models/SignatureRequestAuthSecondFactorType';
 import { SignatureRequestAuthType } from '../models/SignatureRequestAuthType';
+import { SignatureRequestEmailStatus } from '../models/SignatureRequestEmailStatus';
 import { SignatureRequestState } from '../models/SignatureRequestState';
 import { HttpFile } from '../http/http';
 
@@ -32,7 +33,7 @@ export class SignatureRequest {
     */
     'name': string | null;
     /**
-    * Their email address.
+    * Their email address. Null when they have none.
     */
     'email': string | null;
     /**
@@ -51,6 +52,22 @@ export class SignatureRequest {
     * The signer's position, from 0: `Signer 1` is 0. The template's `@@signature_requests/<sort_order>` fields print this signature request's details.
     */
     'sort_order': number;
+    /**
+    * Whether DocSpring emails this person their signing link.
+    */
+    'send_email': boolean;
+    /**
+    * When this person signs, when the submission's `signing_order` is `sequential`: everyone in step 1 first, then step 2, and so on. Null when everyone can sign at once.
+    */
+    'signing_step': number | null;
+    /**
+    * When DocSpring first emailed this person their signing link. Null until it has, and when it doesn't email them (`send_email` is false).
+    */
+    'sent_at': Date | null;
+    /**
+    * What happened to the latest email DocSpring sent this person with their signing link: `sent` until the email service reports on it, then `delayed` (still trying), `delivered`, `undelivered` (it stopped trying, as with a full mailbox), `bounced` (the address doesn't exist) or `complained` (marked as spam). `failed` means DocSpring couldn't send the first email with their link, and `unknown` that it couldn't tell whether that email went: neither is sent again. Null until DocSpring has emailed them or tried to.
+    */
+    'email_status': SignatureRequestEmailStatus | (string & {}) | null;
     /**
     * `pending` until the person completes the signature request (`completed`) or declines it (`declined`).
     */
@@ -171,6 +188,30 @@ export class SignatureRequest {
             "name": "sort_order",
             "baseName": "sort_order",
             "type": "number",
+            "format": ""
+        },
+        {
+            "name": "send_email",
+            "baseName": "send_email",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "signing_step",
+            "baseName": "signing_step",
+            "type": "number",
+            "format": ""
+        },
+        {
+            "name": "sent_at",
+            "baseName": "sent_at",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
+            "name": "email_status",
+            "baseName": "email_status",
+            "type": "SignatureRequestEmailStatus",
             "format": ""
         },
         {

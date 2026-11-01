@@ -15,7 +15,7 @@ import { SubmissionActionType } from '../models/SubmissionActionType';
 import { HttpFile } from '../http/http';
 
 /**
-* An upload of a PDF to your storage, such as an S3 bucket.
+* An upload of a PDF to your storage, such as an S3 bucket, or an email action's email.
 */
 export class SubmissionAction {
     /**
@@ -27,15 +27,19 @@ export class SubmissionAction {
     */
     'integration_id': string | null;
     /**
-    * `pending` until the upload has run, then `processed`. `failed`: your storage rejected it. `error`: it failed in DocSpring.
+    * The ID of the email action that sent the email. Null for an upload, or once the email action is deleted.
+    */
+    'email_action_id': string | null;
+    /**
+    * `pending` until the upload or email has run, then `processed`. `failed`: your storage or the email service rejected it. `error`: it failed in DocSpring.
     */
     'state': SubmissionActionState | (string & {});
     /**
-    * The kind of storage, such as `aws_s3_upload` for an S3 bucket.
+    * The kind of storage, such as `aws_s3_upload` for an S3 bucket, or `email` for an email action's email.
     */
     'action_type': SubmissionActionType | (string & {});
     /**
-    * Where the PDF was uploaded, such as the S3 bucket and key.
+    * Where the PDF was uploaded, such as the S3 bucket and key. For an email: its `subject`, `recipients`, each with its `address`, `kind` (`to`, `cc` or `bcc`), `source`, `field` or `metadata` when the address came from one, and `status` (`sent`, `delivered`, `bounced`, `complained`, `skipped` and others), `sent_at`, `delivery`, and `files` (the files it sent: `pdf`, `docx`, `odt`). An email whose submission didn't meet the email action's `send_when` conditions has only `skipped`, `conditions_not_met`, and its state is `processed`. An email whose submission made none of the files the email action sends has `skipped`, `no_files` and the action's `file_formats`, and its state is `processed` too. When the submission's data is left out (a batch, or a webhook without submission data), the subject and the addresses that came from fields or metadata are null.
     */
     'result_data': { [key: string]: any; };
     /**
@@ -57,6 +61,12 @@ export class SubmissionAction {
         {
             "name": "integration_id",
             "baseName": "integration_id",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "email_action_id",
+            "baseName": "email_action_id",
             "type": "string",
             "format": ""
         },

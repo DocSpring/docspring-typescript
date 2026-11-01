@@ -13,6 +13,7 @@
 import { ErrorDetail } from '../models/ErrorDetail';
 import { OutputFormat } from '../models/OutputFormat';
 import { SignatureRequest } from '../models/SignatureRequest';
+import { SigningOrder } from '../models/SigningOrder';
 import { SubmissionAction } from '../models/SubmissionAction';
 import { SubmissionFiles } from '../models/SubmissionFiles';
 import { SubmissionSource } from '../models/SubmissionSource';
@@ -53,7 +54,7 @@ export class Submission {
     */
     'state': SubmissionState | (string & {});
     /**
-    * Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions.
+    * Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions, and the demo API token's are always live.
     */
     'test': boolean;
     /**
@@ -109,7 +110,11 @@ export class Submission {
     */
     'signature_requests': Array<SignatureRequest>;
     /**
-    * The uploads of the submission's PDF to your storage (account integrations).
+    * `parallel`: everyone can sign at once. `sequential`: people sign one step at a time (each signature request's `signing_step`).
+    */
+    'signing_order': SigningOrder | (string & {});
+    /**
+    * The uploads of the submission's PDF to your storage (account integrations), and the emails its template's email actions sent.
     */
     'actions': Array<SubmissionAction>;
     /**
@@ -254,6 +259,12 @@ export class Submission {
             "name": "signature_requests",
             "baseName": "signature_requests",
             "type": "Array<SignatureRequest>",
+            "format": ""
+        },
+        {
+            "name": "signing_order",
+            "baseName": "signing_order",
+            "type": "SigningOrder",
             "format": ""
         },
         {

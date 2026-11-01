@@ -17,10 +17,17 @@ import { HttpFile } from '../http/http';
 */
 export const StringConditionType = {
     Equals: 'equals',
+    NotEquals: 'not_equals',
     Contains: 'contains',
+    NotContains: 'not_contains',
     StartsWith: 'starts_with',
+    NotStartsWith: 'not_starts_with',
     EndsWith: 'ends_with',
-    Regex: 'regex'
+    NotEndsWith: 'not_ends_with',
+    Regex: 'regex',
+    NotRegex: 'not_regex',
+    Blank: 'blank',
+    NotBlank: 'not_blank'
 } as const;
 /**
 * One of the values in the StringConditionType object. A response property can also have a value added to the API after this

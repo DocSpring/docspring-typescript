@@ -30,7 +30,7 @@ export class CombinedPdfSource {
     */
     'url'?: string;
     /**
-    * For a `template` source, the version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+    * For a `template` source, the version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
     */
     'template_version'?: string;
     /**

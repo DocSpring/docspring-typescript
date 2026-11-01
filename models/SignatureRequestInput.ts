@@ -23,7 +23,7 @@ export class SignatureRequestInput {
     */
     'name'?: string | null;
     /**
-    * Their email address.
+    * Their email address. Null when they have none.
     */
     'email'?: string | null;
     /**
@@ -41,7 +41,7 @@ export class SignatureRequestInput {
     /**
     * How your app authenticated the person before it showed them the signature request.
     */
-    'auth_type': SignatureRequestAuthType;
+    'auth_type'?: SignatureRequestAuthType;
     /**
     * The second factor your app authenticated them with, if any.
     */
@@ -78,6 +78,14 @@ export class SignatureRequestInput {
     * Let the person change the values that `data` already has for fields in `fields`. Without it, those fields are a 422.
     */
     'prefilled_values_editable'?: boolean;
+    /**
+    * Whether DocSpring emails this person their signing link. Default: the submission's `send_email`. Set it to false for someone who signs in your app (embedded signing) or whose link you send yourself. When DocSpring emails them, `email` is required and `auth_type` is `email_link` (the default). Otherwise `auth_type` is required.
+    */
+    'send_email'?: boolean;
+    /**
+    * When this person signs, with `signing_order: sequential`: everyone in step 1 first, then step 2, and so on. People in the same step sign in any order. Only the order of the numbers matters. Either every signature request has a `signing_step` or none does; without them, each person is a step of their own, in the order of `signature_requests`.
+    */
+    'signing_step'?: number;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -172,6 +180,18 @@ export class SignatureRequestInput {
             "name": "prefilled_values_editable",
             "baseName": "prefilled_values_editable",
             "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "send_email",
+            "baseName": "send_email",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "signing_step",
+            "baseName": "signing_step",
+            "type": "number",
             "format": ""
         }    ];
 

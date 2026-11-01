@@ -13,6 +13,8 @@
 import { FieldOverride } from '../models/FieldOverride';
 import { OutputFormat } from '../models/OutputFormat';
 import { SignatureRequestInput } from '../models/SignatureRequestInput';
+import { SignatureRequestReminders } from '../models/SignatureRequestReminders';
+import { SigningOrder } from '../models/SigningOrder';
 import { HttpFile } from '../http/http';
 
 /**
@@ -20,7 +22,7 @@ import { HttpFile } from '../http/http';
 */
 export class ValidateSubmissionRequest {
     /**
-    * Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions.
+    * Test PDFs have a watermark and are free. Live PDFs use credits. Submissions made with a test API token are always test submissions, and the demo API token's are always live.
     */
     'test'?: boolean;
     /**
@@ -28,7 +30,7 @@ export class ValidateSubmissionRequest {
     */
     'editable'?: boolean;
     /**
-    * The values of the template's fields, by field name. Required for PDF and Word templates, unless `signature_requests` collects them (PDF templates only).
+    * The values of the template's fields, by field name. Required for PDF templates, Word templates and page designs, unless `signature_requests` collects them (PDF templates only).
     */
     'data'?: { [key: string]: any; };
     /**
@@ -44,7 +46,7 @@ export class ValidateSubmissionRequest {
     */
     'output_formats'?: Array<OutputFormat>;
     /**
-    * Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours.
+    * Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours. The demo API token's submissions expire within an hour: up to 3600, and that's their default.
     */
     'expires_in'?: number;
     /**
@@ -63,6 +65,42 @@ export class ValidateSubmissionRequest {
     * The people who sign the PDF, and fill in their fields first. The PDF is generated once every signature request is completed. PDF templates only. Without `role`s, the first signature request is `Signer 1`, the second `Signer 2`, and so on. To leave a signer out, give every signature request its `role` and leave that one's out. Only the signers sign: a value for a signature or initials field in `data` makes the submission `invalid_data`.
     */
     'signature_requests'?: Array<SignatureRequestInput>;
+    /**
+    * Whether DocSpring emails the signers their signing links, and sends the reminders and the completed document. Default true. Each signature request's own `send_email` overrides it. A test submission only emails your DocSpring team: every other address is a 422. `true` needs `signature_requests`. DocSpring doesn't email the signers of a form library template: leave `send_email` out, and send them their links yourself.
+    */
+    'send_email'?: boolean;
+    /**
+    * `parallel` (the default): everyone can sign at once. `sequential`: people sign one step at a time (`signing_step`), and DocSpring emails each step when the one before it is done. Needs `signature_requests`.
+    */
+    'signing_order'?: SigningOrder;
+    /**
+    * The subject of the emails that ask people to sign. You can use `{{ signer.name }}`, `{{ signer.email }}`, `{{ document.name }}`, `{{ sender.name }}` and `{{ account.name }}`. Default "<sender> sent you <document> to sign" when you leave it out (a blank subject is a 422). Links and web addresses are shown as plain text (`example[.]com`).
+    */
+    'email_subject'?: string;
+    /**
+    * A message for the people who sign, shown above the signing button. It takes the same variables as `email_subject`. Links and web addresses are shown as plain text. Leave it out for none: a blank message is a 422.
+    */
+    'email_message'?: string;
+    /**
+    * People who get a copy of the completed document. They don't sign.
+    */
+    'cc'?: Array<string>;
+    /**
+    * Where replies to the emails go: a member of your DocSpring team, or an address at one of your verified email domains. Leave it out for the template's reply-to address (the account owner when it has none).
+    */
+    'reply_to'?: string;
+    /**
+    * Who DocSpring tells when the document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Leave it out for the template's notification addresses (the account owner when it has none); an empty list means the account owner.
+    */
+    'notification_emails'?: Array<string>;
+    /**
+    * Also email `notification_emails` each time someone signs. Default false.
+    */
+    'notify_when_signed'?: boolean;
+    /**
+    * Remind people who haven't signed: every `interval_days` days, up to `max_count` times. Each reminder has a new signing link. Without it, DocSpring sends no reminders.
+    */
+    'reminders'?: SignatureRequestReminders;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -134,6 +172,60 @@ export class ValidateSubmissionRequest {
             "baseName": "signature_requests",
             "type": "Array<SignatureRequestInput>",
             "format": ""
+        },
+        {
+            "name": "send_email",
+            "baseName": "send_email",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "signing_order",
+            "baseName": "signing_order",
+            "type": "SigningOrder",
+            "format": ""
+        },
+        {
+            "name": "email_subject",
+            "baseName": "email_subject",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "email_message",
+            "baseName": "email_message",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "cc",
+            "baseName": "cc",
+            "type": "Array<string>",
+            "format": ""
+        },
+        {
+            "name": "reply_to",
+            "baseName": "reply_to",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "notification_emails",
+            "baseName": "notification_emails",
+            "type": "Array<string>",
+            "format": ""
+        },
+        {
+            "name": "notify_when_signed",
+            "baseName": "notify_when_signed",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "reminders",
+            "baseName": "reminders",
+            "type": "SignatureRequestReminders",
+            "format": ""
         }    ];
 
     static getAttributeTypeMap() {
@@ -143,3 +235,5 @@ export class ValidateSubmissionRequest {
     public constructor() {
     }
 }
+
+

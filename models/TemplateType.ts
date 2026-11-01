@@ -18,7 +18,8 @@ import { HttpFile } from '../http/http';
 export const TemplateType = {
     Pdf: 'pdf',
     Html: 'html',
-    Docx: 'docx'
+    Docx: 'docx',
+    PageDesigner: 'page_designer'
 } as const;
 /**
 * One of the values in the TemplateType object. A response property can also have a value added to the API after this

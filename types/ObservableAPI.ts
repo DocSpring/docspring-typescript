@@ -18,8 +18,11 @@ import { CombinedPdfSourcePdf } from '../models/CombinedPdfSourcePdf';
 import { CombinedPdfSourceType } from '../models/CombinedPdfSourceType';
 import { CombinedPdfState } from '../models/CombinedPdfState';
 import { CopyTemplateRequest } from '../models/CopyTemplateRequest';
+import { CreateAccountEmailActionRequest } from '../models/CreateAccountEmailActionRequest';
 import { CreateCombinedPdfRequest } from '../models/CreateCombinedPdfRequest';
 import { CreateCustomFileFromUploadRequest } from '../models/CreateCustomFileFromUploadRequest';
+import { CreateEmailActionRequest } from '../models/CreateEmailActionRequest';
+import { CreateEmailDomainRequest } from '../models/CreateEmailDomainRequest';
 import { CreateFolderRequest } from '../models/CreateFolderRequest';
 import { CreateSignatureRequestEventRequest } from '../models/CreateSignatureRequestEventRequest';
 import { CreateSignatureRequestTokenRequest } from '../models/CreateSignatureRequestTokenRequest';
@@ -31,6 +34,23 @@ import { CreateWebhookRequest } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
 import { CustomFileList } from '../models/CustomFileList';
 import { CustomFileSourcePdf } from '../models/CustomFileSourcePdf';
+import { DnsRecordType } from '../models/DnsRecordType';
+import { EmailAction } from '../models/EmailAction';
+import { EmailActionConditions } from '../models/EmailActionConditions';
+import { EmailActionConditionsInput } from '../models/EmailActionConditionsInput';
+import { EmailActionCustomization } from '../models/EmailActionCustomization';
+import { EmailActionDelivery } from '../models/EmailActionDelivery';
+import { EmailActionFileFormats } from '../models/EmailActionFileFormats';
+import { EmailActionList } from '../models/EmailActionList';
+import { EmailActionSetting } from '../models/EmailActionSetting';
+import { EmailActionSubmissionType } from '../models/EmailActionSubmissionType';
+import { EmailActionTestEmail } from '../models/EmailActionTestEmail';
+import { EmailDomain } from '../models/EmailDomain';
+import { EmailDomainDnsRecord } from '../models/EmailDomainDnsRecord';
+import { EmailDomainDnsRecordPurpose } from '../models/EmailDomainDnsRecordPurpose';
+import { EmailDomainList } from '../models/EmailDomainList';
+import { EmailDomainRecordState } from '../models/EmailDomainRecordState';
+import { EmailDomainState } from '../models/EmailDomainState';
 import { ErrorCode } from '../models/ErrorCode';
 import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorInfo } from '../models/ErrorInfo';
@@ -83,17 +103,22 @@ import { RemoveTemplateFieldsRequest } from '../models/RemoveTemplateFieldsReque
 import { RenameFolderRequest } from '../models/RenameFolderRequest';
 import { ReorderTemplateFieldsRequest } from '../models/ReorderTemplateFieldsRequest';
 import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
+import { SendAccountEmailActionTestEmailRequest } from '../models/SendAccountEmailActionTestEmailRequest';
 import { ShapeType } from '../models/ShapeType';
 import { SignatureRequest } from '../models/SignatureRequest';
 import { SignatureRequestAuthSecondFactorType } from '../models/SignatureRequestAuthSecondFactorType';
 import { SignatureRequestAuthType } from '../models/SignatureRequestAuthType';
+import { SignatureRequestEmailAttachments } from '../models/SignatureRequestEmailAttachments';
+import { SignatureRequestEmailStatus } from '../models/SignatureRequestEmailStatus';
 import { SignatureRequestEvent } from '../models/SignatureRequestEvent';
 import { SignatureRequestEventType } from '../models/SignatureRequestEventType';
 import { SignatureRequestInput } from '../models/SignatureRequestInput';
 import { SignatureRequestMessageType } from '../models/SignatureRequestMessageType';
+import { SignatureRequestReminders } from '../models/SignatureRequestReminders';
 import { SignatureRequestState } from '../models/SignatureRequestState';
 import { SignatureRequestToken } from '../models/SignatureRequestToken';
 import { SignatureRequestTokenType } from '../models/SignatureRequestTokenType';
+import { SigningOrder } from '../models/SigningOrder';
 import { StringConditionType } from '../models/StringConditionType';
 import { Submission } from '../models/Submission';
 import { SubmissionAction } from '../models/SubmissionAction';
@@ -151,6 +176,9 @@ import { TextAlignment } from '../models/TextAlignment';
 import { TextOverflow } from '../models/TextOverflow';
 import { TextVerticalAlignment } from '../models/TextVerticalAlignment';
 import { Typeface } from '../models/Typeface';
+import { UpdateAccountEmailActionRequest } from '../models/UpdateAccountEmailActionRequest';
+import { UpdateEmailActionCustomizationRequest } from '../models/UpdateEmailActionCustomizationRequest';
+import { UpdateEmailActionRequest } from '../models/UpdateEmailActionRequest';
 import { UpdateSignatureRequestRequest } from '../models/UpdateSignatureRequestRequest';
 import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
 import { UpdateTemplateFieldsRequest } from '../models/UpdateTemplateFieldsRequest';
@@ -182,15 +210,16 @@ export class ObservableClient {
     }
 
     /**
-     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. 
+     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. A field with the name of one of the template's fields shares its settings (`type`, `required`, `default`, ...), so a field that sets one to another value is refused: PUT /templates/{template_id}/fields changes them for every field with the name. 
      * Add fields to a template
      * @param templateId The template's ID.
      * @param body The fields to add to the template's draft.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public addTemplateFieldsWithHttpInfo(templateId: string, body: AddTemplateFieldsRequest, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateFields>> {
+    public addTemplateFieldsWithHttpInfo(templateId: string, body: AddTemplateFieldsRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateFields>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.addTemplateFields(templateId, body, _config);
+        const requestContextPromise = this.requestFactory.addTemplateFields(templateId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -208,13 +237,14 @@ export class ObservableClient {
     }
 
     /**
-     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. 
+     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. A field with the name of one of the template's fields shares its settings (`type`, `required`, `default`, ...), so a field that sets one to another value is refused: PUT /templates/{template_id}/fields changes them for every field with the name. 
      * Add fields to a template
      * @param templateId The template's ID.
      * @param body The fields to add to the template's draft.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public addTemplateFields(templateId: string, body: AddTemplateFieldsRequest, _options?: ConfigurationOptions): Observable<TemplateFields> {
-        return this.addTemplateFieldsWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<TemplateFields>) => apiResponse.data));
+    public addTemplateFields(templateId: string, body: AddTemplateFieldsRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<TemplateFields> {
+        return this.addTemplateFieldsWithHttpInfo(templateId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<TemplateFields>) => apiResponse.data));
     }
 
     /**
@@ -222,11 +252,12 @@ export class ObservableClient {
      * Copy a template
      * @param templateId The template's ID.
      * @param [body] Settings for the copy.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public copyTemplateWithHttpInfo(templateId: string, body?: CopyTemplateRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+    public copyTemplateWithHttpInfo(templateId: string, body?: CopyTemplateRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.copyTemplate(templateId, body, _config);
+        const requestContextPromise = this.requestFactory.copyTemplate(templateId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -248,9 +279,46 @@ export class ObservableClient {
      * Copy a template
      * @param templateId The template's ID.
      * @param [body] Settings for the copy.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public copyTemplate(templateId: string, body?: CopyTemplateRequest, _options?: ConfigurationOptions): Observable<Template> {
-        return this.copyTemplateWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    public copyTemplate(templateId: string, body?: CopyTemplateRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.copyTemplateWithHttpInfo(templateId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    }
+
+    /**
+     * Adds an email action to your account. It sends for every template, or only for the templates in `template_ids` and the templates in the folders in `folder_ids` (and the folders inside them). Each template can turn it off or change its settings for that template only (`PUT /templates/{template_id}/email_actions/{email_action_id}/customization`). Without a paid plan (Starter or higher), email actions only email your team: test submissions' emails go to your account's users, and live submissions' emails aren't sent. 
+     * Create an account email action
+     * @param body The account email action to create. Properties left out get their defaults, and it sends for every template unless it lists `template_ids` or `folder_ids`.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public createAccountEmailActionWithHttpInfo(body: CreateAccountEmailActionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailAction>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.createAccountEmailAction(body, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createAccountEmailActionWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Adds an email action to your account. It sends for every template, or only for the templates in `template_ids` and the templates in the folders in `folder_ids` (and the folders inside them). Each template can turn it off or change its settings for that template only (`PUT /templates/{template_id}/email_actions/{email_action_id}/customization`). Without a paid plan (Starter or higher), email actions only email your team: test submissions' emails go to your account's users, and live submissions' emails aren't sent. 
+     * Create an account email action
+     * @param body The account email action to create. Properties left out get their defaults, and it sends for every template unless it lists `template_ids` or `folder_ids`.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public createAccountEmailAction(body: CreateAccountEmailActionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailAction> {
+        return this.createAccountEmailActionWithHttpInfo(body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailAction>) => apiResponse.data));
     }
 
     /**
@@ -258,7 +326,7 @@ export class ObservableClient {
      * Combine PDFs
      * @param body The PDFs to merge, and the combined PDF's settings.
      * @param [wait] Wait until the PDF has been generated before responding. Default true on sync.api hosts.
-     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
     public createCombinedPdfWithHttpInfo(body: CreateCombinedPdfRequest, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<CombinedPdf>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -285,7 +353,7 @@ export class ObservableClient {
      * Combine PDFs
      * @param body The PDFs to merge, and the combined PDF's settings.
      * @param [wait] Wait until the PDF has been generated before responding. Default true on sync.api hosts.
-     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
     public createCombinedPdf(body: CreateCombinedPdfRequest, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<CombinedPdf> {
         return this.createCombinedPdfWithHttpInfo(body, wait, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<CombinedPdf>) => apiResponse.data));
@@ -295,11 +363,12 @@ export class ObservableClient {
      * Creates a custom file from a PDF you uploaded, so you can merge it with other PDFs. Upload the file with the presigned upload (GET /uploads/presign) first, then pass its `fields.key` as `cache_id`. 
      * Create a custom file from an upload
      * @param body The uploaded file to create the custom file from.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createCustomFileFromUploadWithHttpInfo(body: CreateCustomFileFromUploadRequest, _options?: ConfigurationOptions): Observable<HttpInfo<CustomFile>> {
+    public createCustomFileFromUploadWithHttpInfo(body: CreateCustomFileFromUploadRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<CustomFile>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createCustomFileFromUpload(body, _config);
+        const requestContextPromise = this.requestFactory.createCustomFileFromUpload(body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -320,20 +389,96 @@ export class ObservableClient {
      * Creates a custom file from a PDF you uploaded, so you can merge it with other PDFs. Upload the file with the presigned upload (GET /uploads/presign) first, then pass its `fields.key` as `cache_id`. 
      * Create a custom file from an upload
      * @param body The uploaded file to create the custom file from.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createCustomFileFromUpload(body: CreateCustomFileFromUploadRequest, _options?: ConfigurationOptions): Observable<CustomFile> {
-        return this.createCustomFileFromUploadWithHttpInfo(body, _options).pipe(map((apiResponse: HttpInfo<CustomFile>) => apiResponse.data));
+    public createCustomFileFromUpload(body: CreateCustomFileFromUploadRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<CustomFile> {
+        return this.createCustomFileFromUploadWithHttpInfo(body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<CustomFile>) => apiResponse.data));
+    }
+
+    /**
+     * Adds an email action to a template's draft. From then on, each processed submission emails its PDF to the recipients in `to`, `cc` and `bcc`: addresses, and tags for the address in one of the submission's fields (`{{ data.tenant_email }}`) or in its metadata (`{{ metadata.agent_email }}`). With `send_when`, only the submissions whose values meet its conditions send one. Without a paid plan (Starter or higher), email actions only email your team: test submissions' emails go to your account's users, and live submissions' emails aren't sent. 
+     * Create an email action
+     * @param templateId The template's ID.
+     * @param body The email action to create. Properties left out get their defaults.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public createEmailActionWithHttpInfo(templateId: string, body: CreateEmailActionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailAction>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.createEmailAction(templateId, body, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createEmailActionWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Adds an email action to a template's draft. From then on, each processed submission emails its PDF to the recipients in `to`, `cc` and `bcc`: addresses, and tags for the address in one of the submission's fields (`{{ data.tenant_email }}`) or in its metadata (`{{ metadata.agent_email }}`). With `send_when`, only the submissions whose values meet its conditions send one. Without a paid plan (Starter or higher), email actions only email your team: test submissions' emails go to your account's users, and live submissions' emails aren't sent. 
+     * Create an email action
+     * @param templateId The template's ID.
+     * @param body The email action to create. Properties left out get their defaults.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public createEmailAction(templateId: string, body: CreateEmailActionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailAction> {
+        return this.createEmailActionWithHttpInfo(templateId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailAction>) => apiResponse.data));
+    }
+
+    /**
+     * Adds a domain for email actions to send from, and returns the DNS records to add to it. DocSpring checks for them every few minutes, and the domain is verified once its DKIM and DMARC records are found. Needs a paid monthly plan. 
+     * Add an email domain
+     * @param body The domain to add.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public createEmailDomainWithHttpInfo(body: CreateEmailDomainRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailDomain>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.createEmailDomain(body, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.createEmailDomainWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Adds a domain for email actions to send from, and returns the DNS records to add to it. DocSpring checks for them every few minutes, and the domain is verified once its DKIM and DMARC records are found. Needs a paid monthly plan. 
+     * Add an email domain
+     * @param body The domain to add.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public createEmailDomain(body: CreateEmailDomainRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailDomain> {
+        return this.createEmailDomainWithHttpInfo(body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailDomain>) => apiResponse.data));
     }
 
     /**
      * Creates a folder for organizing templates. Pass `parent_folder_id` to create it inside another folder. Folder names are unique within their parent folder. 
      * Create a folder
      * @param body The folder to create.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createFolderWithHttpInfo(body: CreateFolderRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
+    public createFolderWithHttpInfo(body: CreateFolderRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createFolder(body, _config);
+        const requestContextPromise = this.requestFactory.createFolder(body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -354,9 +499,10 @@ export class ObservableClient {
      * Creates a folder for organizing templates. Pass `parent_folder_id` to create it inside another folder. Folder names are unique within their parent folder. 
      * Create a folder
      * @param body The folder to create.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createFolder(body: CreateFolderRequest, _options?: ConfigurationOptions): Observable<Folder> {
-        return this.createFolderWithHttpInfo(body, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
+    public createFolder(body: CreateFolderRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Folder> {
+        return this.createFolderWithHttpInfo(body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
     }
 
     /**
@@ -364,11 +510,12 @@ export class ObservableClient {
      * Record a signature request event
      * @param signatureRequestId The signature request's ID.
      * @param body The event to record.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createSignatureRequestEventWithHttpInfo(signatureRequestId: string, body: CreateSignatureRequestEventRequest, _options?: ConfigurationOptions): Observable<HttpInfo<SignatureRequestEvent>> {
+    public createSignatureRequestEventWithHttpInfo(signatureRequestId: string, body: CreateSignatureRequestEventRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<SignatureRequestEvent>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createSignatureRequestEvent(signatureRequestId, body, _config);
+        const requestContextPromise = this.requestFactory.createSignatureRequestEvent(signatureRequestId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -390,9 +537,10 @@ export class ObservableClient {
      * Record a signature request event
      * @param signatureRequestId The signature request's ID.
      * @param body The event to record.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createSignatureRequestEvent(signatureRequestId: string, body: CreateSignatureRequestEventRequest, _options?: ConfigurationOptions): Observable<SignatureRequestEvent> {
-        return this.createSignatureRequestEventWithHttpInfo(signatureRequestId, body, _options).pipe(map((apiResponse: HttpInfo<SignatureRequestEvent>) => apiResponse.data));
+    public createSignatureRequestEvent(signatureRequestId: string, body: CreateSignatureRequestEventRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<SignatureRequestEvent> {
+        return this.createSignatureRequestEventWithHttpInfo(signatureRequestId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<SignatureRequestEvent>) => apiResponse.data));
     }
 
     /**
@@ -400,11 +548,12 @@ export class ObservableClient {
      * Create a signature request token
      * @param signatureRequestId The signature request's ID.
      * @param [body] The kind of link to make. Send no body for an `api` token.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createSignatureRequestTokenWithHttpInfo(signatureRequestId: string, body?: CreateSignatureRequestTokenRequest, _options?: ConfigurationOptions): Observable<HttpInfo<SignatureRequestToken>> {
+    public createSignatureRequestTokenWithHttpInfo(signatureRequestId: string, body?: CreateSignatureRequestTokenRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<SignatureRequestToken>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createSignatureRequestToken(signatureRequestId, body, _config);
+        const requestContextPromise = this.requestFactory.createSignatureRequestToken(signatureRequestId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -426,19 +575,20 @@ export class ObservableClient {
      * Create a signature request token
      * @param signatureRequestId The signature request's ID.
      * @param [body] The kind of link to make. Send no body for an `api` token.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createSignatureRequestToken(signatureRequestId: string, body?: CreateSignatureRequestTokenRequest, _options?: ConfigurationOptions): Observable<SignatureRequestToken> {
-        return this.createSignatureRequestTokenWithHttpInfo(signatureRequestId, body, _options).pipe(map((apiResponse: HttpInfo<SignatureRequestToken>) => apiResponse.data));
+    public createSignatureRequestToken(signatureRequestId: string, body?: CreateSignatureRequestTokenRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<SignatureRequestToken> {
+        return this.createSignatureRequestTokenWithHttpInfo(signatureRequestId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<SignatureRequestToken>) => apiResponse.data));
     }
 
     /**
-     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID. 
+     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID.  With `signature_requests`, the PDF is generated once everyone has signed. DocSpring emails each signer a link to sign, unless `send_email` is false, and can send reminders and the completed document. 
      * Generate a PDF
      * @param templateId The template's ID.
      * @param body The submission's data and settings.
-     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
      * @param [wait] Wait until the files have been generated before responding. Default true on sync.api hosts.
-     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
     public createSubmissionWithHttpInfo(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -461,13 +611,13 @@ export class ObservableClient {
     }
 
     /**
-     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID. 
+     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID.  With `signature_requests`, the PDF is generated once everyone has signed. DocSpring emails each signer a link to sign, unless `send_email` is false, and can send reminders and the completed document. 
      * Generate a PDF
      * @param templateId The template's ID.
      * @param body The submission's data and settings.
-     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
      * @param [wait] Wait until the files have been generated before responding. Default true on sync.api hosts.
-     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
     public createSubmission(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Submission> {
         return this.createSubmissionWithHttpInfo(templateId, body, version, wait, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
@@ -478,7 +628,7 @@ export class ObservableClient {
      * Generate PDFs in a batch
      * @param body The submissions to create, and the settings they share.
      * @param [wait] Wait until every file in the batch has been generated before responding. Default true on sync.api hosts.
-     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
     public createSubmissionBatchWithHttpInfo(body: CreateSubmissionBatchRequest, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<SubmissionBatch>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -505,22 +655,23 @@ export class ObservableClient {
      * Generate PDFs in a batch
      * @param body The submissions to create, and the settings they share.
      * @param [wait] Wait until every file in the batch has been generated before responding. Default true on sync.api hosts.
-     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
     public createSubmissionBatch(body: CreateSubmissionBatchRequest, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<SubmissionBatch> {
         return this.createSubmissionBatchWithHttpInfo(body, wait, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<SubmissionBatch>) => apiResponse.data));
     }
 
     /**
-     * Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+     * Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF. A page design (`page_designer`) takes its `layout` in the Page Designer layout format, or starts with an empty page without one.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
      * Create a template
      * @param body The template to create.
      * @param [wait] Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createTemplateWithHttpInfo(body: CreateTemplateRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+    public createTemplateWithHttpInfo(body: CreateTemplateRequest, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createTemplate(body, wait, _config);
+        const requestContextPromise = this.requestFactory.createTemplate(body, wait, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -538,26 +689,28 @@ export class ObservableClient {
     }
 
     /**
-     * Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+     * Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF. A page design (`page_designer`) takes its `layout` in the Page Designer layout format, or starts with an empty page without one.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
      * Create a template
      * @param body The template to create.
      * @param [wait] Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createTemplate(body: CreateTemplateRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<Template> {
-        return this.createTemplateWithHttpInfo(body, wait, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    public createTemplate(body: CreateTemplateRequest, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.createTemplateWithHttpInfo(body, wait, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
-     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
+     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template or a page design prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
      * Preview a template with data
      * @param templateId The template's ID.
      * @param body The data to render the template with.
-     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createTemplatePreviewWithHttpInfo(templateId: string, body: CreateTemplatePreviewRequest, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplatePreview>> {
+    public createTemplatePreviewWithHttpInfo(templateId: string, body: CreateTemplatePreviewRequest, version?: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplatePreview>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createTemplatePreview(templateId, body, version, _config);
+        const requestContextPromise = this.requestFactory.createTemplatePreview(templateId, body, version, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -575,25 +728,27 @@ export class ObservableClient {
     }
 
     /**
-     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
+     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template or a page design prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
      * Preview a template with data
      * @param templateId The template's ID.
      * @param body The data to render the template with.
-     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createTemplatePreview(templateId: string, body: CreateTemplatePreviewRequest, version?: string, _options?: ConfigurationOptions): Observable<TemplatePreview> {
-        return this.createTemplatePreviewWithHttpInfo(templateId, body, version, _options).pipe(map((apiResponse: HttpInfo<TemplatePreview>) => apiResponse.data));
+    public createTemplatePreview(templateId: string, body: CreateTemplatePreviewRequest, version?: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<TemplatePreview> {
+        return this.createTemplatePreviewWithHttpInfo(templateId, body, version, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<TemplatePreview>) => apiResponse.data));
     }
 
     /**
      * Creates a webhook that sends a POST request to your endpoint whenever a subscribed event happens. Scope it to API tokens, templates or folders to receive only their events. 
      * Create a webhook
      * @param body The webhook to create.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createWebhookWithHttpInfo(body: CreateWebhookRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
+    public createWebhookWithHttpInfo(body: CreateWebhookRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.createWebhook(body, _config);
+        const requestContextPromise = this.requestFactory.createWebhook(body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -614,20 +769,58 @@ export class ObservableClient {
      * Creates a webhook that sends a POST request to your endpoint whenever a subscribed event happens. Scope it to API tokens, templates or folders to receive only their events. 
      * Create a webhook
      * @param body The webhook to create.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public createWebhook(body: CreateWebhookRequest, _options?: ConfigurationOptions): Observable<Webhook> {
-        return this.createWebhookWithHttpInfo(body, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
+    public createWebhook(body: CreateWebhookRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Webhook> {
+        return this.createWebhookWithHttpInfo(body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
+    }
+
+    /**
+     * Deletes one of your account's email actions, with every template's customization of it. Emails it has already queued for submissions aren't sent. Submissions keep the record of the emails it sent. 
+     * Delete an account email action
+     * @param emailActionId The account email action's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public deleteAccountEmailActionWithHttpInfo(emailActionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailAction>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.deleteAccountEmailAction(emailActionId, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteAccountEmailActionWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Deletes one of your account's email actions, with every template's customization of it. Emails it has already queued for submissions aren't sent. Submissions keep the record of the emails it sent. 
+     * Delete an account email action
+     * @param emailActionId The account email action's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public deleteAccountEmailAction(emailActionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailAction> {
+        return this.deleteAccountEmailActionWithHttpInfo(emailActionId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailAction>) => apiResponse.data));
     }
 
     /**
      * Deletes a custom file and returns it. Use a live API token: test tokens can't delete custom files. 
      * Delete a custom file
      * @param customFileId The custom file's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public deleteCustomFileWithHttpInfo(customFileId: string, _options?: ConfigurationOptions): Observable<HttpInfo<CustomFile>> {
+    public deleteCustomFileWithHttpInfo(customFileId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<CustomFile>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.deleteCustomFile(customFileId, _config);
+        const requestContextPromise = this.requestFactory.deleteCustomFile(customFileId, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -648,20 +841,134 @@ export class ObservableClient {
      * Deletes a custom file and returns it. Use a live API token: test tokens can't delete custom files. 
      * Delete a custom file
      * @param customFileId The custom file's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public deleteCustomFile(customFileId: string, _options?: ConfigurationOptions): Observable<CustomFile> {
-        return this.deleteCustomFileWithHttpInfo(customFileId, _options).pipe(map((apiResponse: HttpInfo<CustomFile>) => apiResponse.data));
+    public deleteCustomFile(customFileId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<CustomFile> {
+        return this.deleteCustomFileWithHttpInfo(customFileId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<CustomFile>) => apiResponse.data));
+    }
+
+    /**
+     * Deletes an email action. Emails it has already queued for submissions aren't sent. Submissions keep the record of the emails it sent. 
+     * Delete an email action
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public deleteEmailActionWithHttpInfo(templateId: string, emailActionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailAction>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.deleteEmailAction(templateId, emailActionId, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteEmailActionWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Deletes an email action. Emails it has already queued for submissions aren't sent. Submissions keep the record of the emails it sent. 
+     * Delete an email action
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public deleteEmailAction(templateId: string, emailActionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailAction> {
+        return this.deleteEmailActionWithHttpInfo(templateId, emailActionId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailAction>) => apiResponse.data));
+    }
+
+    /**
+     * Removes the template's changes to one of your account's email actions: it sends for this template as it is, and again if the template had turned it off. 
+     * Reset an account email action's customization
+     * @param templateId The template's ID.
+     * @param emailActionId The ID of one of your account's email actions that sends for the template.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public deleteEmailActionCustomizationWithHttpInfo(templateId: string, emailActionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailAction>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.deleteEmailActionCustomization(templateId, emailActionId, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteEmailActionCustomizationWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Removes the template's changes to one of your account's email actions: it sends for this template as it is, and again if the template had turned it off. 
+     * Reset an account email action's customization
+     * @param templateId The template's ID.
+     * @param emailActionId The ID of one of your account's email actions that sends for the template.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public deleteEmailActionCustomization(templateId: string, emailActionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailAction> {
+        return this.deleteEmailActionCustomizationWithHttpInfo(templateId, emailActionId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailAction>) => apiResponse.data));
+    }
+
+    /**
+     * Removes an email domain. Email actions that send from an address at it fail until you add and verify it again, or change their `from_address`. You can then remove its DNS records. 
+     * Remove an email domain
+     * @param emailDomainId The email domain's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public deleteEmailDomainWithHttpInfo(emailDomainId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailDomain>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.deleteEmailDomain(emailDomainId, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.deleteEmailDomainWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Removes an email domain. Email actions that send from an address at it fail until you add and verify it again, or change their `from_address`. You can then remove its DNS records. 
+     * Remove an email domain
+     * @param emailDomainId The email domain's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public deleteEmailDomain(emailDomainId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailDomain> {
+        return this.deleteEmailDomainWithHttpInfo(emailDomainId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailDomain>) => apiResponse.data));
     }
 
     /**
      * Deletes an empty folder and returns it. A folder that still has templates or folders in it can't be deleted. 
      * Delete a folder
      * @param folderId The folder's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public deleteFolderWithHttpInfo(folderId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
+    public deleteFolderWithHttpInfo(folderId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.deleteFolder(folderId, _config);
+        const requestContextPromise = this.requestFactory.deleteFolder(folderId, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -682,9 +989,10 @@ export class ObservableClient {
      * Deletes an empty folder and returns it. A folder that still has templates or folders in it can't be deleted. 
      * Delete a folder
      * @param folderId The folder's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public deleteFolder(folderId: string, _options?: ConfigurationOptions): Observable<Folder> {
-        return this.deleteFolderWithHttpInfo(folderId, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
+    public deleteFolder(folderId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Folder> {
+        return this.deleteFolderWithHttpInfo(folderId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
     }
 
     /**
@@ -692,11 +1000,12 @@ export class ObservableClient {
      * Delete a template
      * @param templateId The template's ID.
      * @param [version] Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public deleteTemplateWithHttpInfo(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+    public deleteTemplateWithHttpInfo(templateId: string, version?: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.deleteTemplate(templateId, version, _config);
+        const requestContextPromise = this.requestFactory.deleteTemplate(templateId, version, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -718,20 +1027,22 @@ export class ObservableClient {
      * Delete a template
      * @param templateId The template's ID.
      * @param [version] Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public deleteTemplate(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<Template> {
-        return this.deleteTemplateWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    public deleteTemplate(templateId: string, version?: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.deleteTemplateWithHttpInfo(templateId, version, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
      * Deletes a webhook so it stops receiving events, and returns it.
      * Delete a webhook
      * @param webhookId The webhook's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public deleteWebhookWithHttpInfo(webhookId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
+    public deleteWebhookWithHttpInfo(webhookId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.deleteWebhook(webhookId, _config);
+        const requestContextPromise = this.requestFactory.deleteWebhook(webhookId, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -752,20 +1063,22 @@ export class ObservableClient {
      * Deletes a webhook so it stops receiving events, and returns it.
      * Delete a webhook
      * @param webhookId The webhook's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public deleteWebhook(webhookId: string, _options?: ConfigurationOptions): Observable<Webhook> {
-        return this.deleteWebhookWithHttpInfo(webhookId, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
+    public deleteWebhook(webhookId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Webhook> {
+        return this.deleteWebhookWithHttpInfo(webhookId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
     }
 
     /**
      * Deletes a combined PDF's PDF and returns the expired combined PDF.
      * Expire a combined PDF
      * @param combinedPdfId The combined PDF's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public expireCombinedPdfWithHttpInfo(combinedPdfId: string, _options?: ConfigurationOptions): Observable<HttpInfo<CombinedPdf>> {
+    public expireCombinedPdfWithHttpInfo(combinedPdfId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<CombinedPdf>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.expireCombinedPdf(combinedPdfId, _config);
+        const requestContextPromise = this.requestFactory.expireCombinedPdf(combinedPdfId, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -786,20 +1099,22 @@ export class ObservableClient {
      * Deletes a combined PDF's PDF and returns the expired combined PDF.
      * Expire a combined PDF
      * @param combinedPdfId The combined PDF's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public expireCombinedPdf(combinedPdfId: string, _options?: ConfigurationOptions): Observable<CombinedPdf> {
-        return this.expireCombinedPdfWithHttpInfo(combinedPdfId, _options).pipe(map((apiResponse: HttpInfo<CombinedPdf>) => apiResponse.data));
+    public expireCombinedPdf(combinedPdfId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<CombinedPdf> {
+        return this.expireCombinedPdfWithHttpInfo(combinedPdfId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<CombinedPdf>) => apiResponse.data));
     }
 
     /**
      * Deletes a submission's data and PDF now, and returns the expired submission.
      * Expire a submission
      * @param submissionId The submission's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public expireSubmissionWithHttpInfo(submissionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
+    public expireSubmissionWithHttpInfo(submissionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.expireSubmission(submissionId, _config);
+        const requestContextPromise = this.requestFactory.expireSubmission(submissionId, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -820,9 +1135,10 @@ export class ObservableClient {
      * Deletes a submission's data and PDF now, and returns the expired submission.
      * Expire a submission
      * @param submissionId The submission's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public expireSubmission(submissionId: string, _options?: ConfigurationOptions): Observable<Submission> {
-        return this.expireSubmissionWithHttpInfo(submissionId, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
+    public expireSubmission(submissionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Submission> {
+        return this.expireSubmissionWithHttpInfo(submissionId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
     }
 
     /**
@@ -831,11 +1147,12 @@ export class ObservableClient {
      * @param submissionId The submission's ID.
      * @param body The formats to make.
      * @param [wait] Wait until the files have been generated before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public generateSubmissionFilesWithHttpInfo(submissionId: string, body: GenerateSubmissionFilesRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
+    public generateSubmissionFilesWithHttpInfo(submissionId: string, body: GenerateSubmissionFilesRequest, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.generateSubmissionFiles(submissionId, body, wait, _config);
+        const requestContextPromise = this.requestFactory.generateSubmissionFiles(submissionId, body, wait, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -858,20 +1175,22 @@ export class ObservableClient {
      * @param submissionId The submission's ID.
      * @param body The formats to make.
      * @param [wait] Wait until the files have been generated before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public generateSubmissionFiles(submissionId: string, body: GenerateSubmissionFilesRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<Submission> {
-        return this.generateSubmissionFilesWithHttpInfo(submissionId, body, wait, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
+    public generateSubmissionFiles(submissionId: string, body: GenerateSubmissionFilesRequest, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Submission> {
+        return this.generateSubmissionFilesWithHttpInfo(submissionId, body, wait, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
     }
 
     /**
      * Generates a preview of a submission's PDF in the background, such as for a submission still waiting for its signature requests. It's in `files.preview` once `preview_generated_at` changes. 
      * Generate a preview PDF
      * @param submissionId The submission's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public generateSubmissionPreviewWithHttpInfo(submissionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
+    public generateSubmissionPreviewWithHttpInfo(submissionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Submission>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.generateSubmissionPreview(submissionId, _config);
+        const requestContextPromise = this.requestFactory.generateSubmissionPreview(submissionId, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -892,9 +1211,44 @@ export class ObservableClient {
      * Generates a preview of a submission's PDF in the background, such as for a submission still waiting for its signature requests. It's in `files.preview` once `preview_generated_at` changes. 
      * Generate a preview PDF
      * @param submissionId The submission's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public generateSubmissionPreview(submissionId: string, _options?: ConfigurationOptions): Observable<Submission> {
-        return this.generateSubmissionPreviewWithHttpInfo(submissionId, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
+    public generateSubmissionPreview(submissionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Submission> {
+        return this.generateSubmissionPreviewWithHttpInfo(submissionId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Submission>) => apiResponse.data));
+    }
+
+    /**
+     * Returns one of your account's email actions, with its settings and whether its emails are failing.
+     * Get an account email action
+     * @param emailActionId The account email action's ID.
+     */
+    public getAccountEmailActionWithHttpInfo(emailActionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailAction>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.getAccountEmailAction(emailActionId, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getAccountEmailActionWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Returns one of your account's email actions, with its settings and whether its emails are failing.
+     * Get an account email action
+     * @param emailActionId The account email action's ID.
+     */
+    public getAccountEmailAction(emailActionId: string, _options?: ConfigurationOptions): Observable<EmailAction> {
+        return this.getAccountEmailActionWithHttpInfo(emailActionId, _options).pipe(map((apiResponse: HttpInfo<EmailAction>) => apiResponse.data));
     }
 
     /**
@@ -963,6 +1317,76 @@ export class ObservableClient {
      */
     public getCustomFile(customFileId: string, _options?: ConfigurationOptions): Observable<CustomFile> {
         return this.getCustomFileWithHttpInfo(customFileId, _options).pipe(map((apiResponse: HttpInfo<CustomFile>) => apiResponse.data));
+    }
+
+    /**
+     * Returns one of a template's email actions, with its settings and whether its emails are failing.
+     * Get an email action
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     */
+    public getEmailActionWithHttpInfo(templateId: string, emailActionId: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailAction>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.getEmailAction(templateId, emailActionId, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getEmailActionWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Returns one of a template's email actions, with its settings and whether its emails are failing.
+     * Get an email action
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     */
+    public getEmailAction(templateId: string, emailActionId: string, _options?: ConfigurationOptions): Observable<EmailAction> {
+        return this.getEmailActionWithHttpInfo(templateId, emailActionId, _options).pipe(map((apiResponse: HttpInfo<EmailAction>) => apiResponse.data));
+    }
+
+    /**
+     * Returns an email domain, whether it's verified, and the DNS records to add to it.
+     * Get an email domain
+     * @param emailDomainId The email domain's ID.
+     */
+    public getEmailDomainWithHttpInfo(emailDomainId: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailDomain>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.getEmailDomain(emailDomainId, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getEmailDomainWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Returns an email domain, whether it's verified, and the DNS records to add to it.
+     * Get an email domain
+     * @param emailDomainId The email domain's ID.
+     */
+    public getEmailDomain(emailDomainId: string, _options?: ConfigurationOptions): Observable<EmailDomain> {
+        return this.getEmailDomainWithHttpInfo(emailDomainId, _options).pipe(map((apiResponse: HttpInfo<EmailDomain>) => apiResponse.data));
     }
 
     /**
@@ -1139,7 +1563,7 @@ export class ObservableClient {
      * Returns a template: its draft, or one of its published versions.
      * Get a template
      * @param templateId The template's ID.
-     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public getTemplateWithHttpInfo(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -1165,7 +1589,7 @@ export class ObservableClient {
      * Returns a template: its draft, or one of its published versions.
      * Get a template
      * @param templateId The template's ID.
-     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public getTemplate(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<Template> {
         return this.getTemplateWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
@@ -1175,7 +1599,7 @@ export class ObservableClient {
      * Returns what changed in the template's draft since its latest published version (or in a published version since the one before it): fields added, removed, changed and moved, the settings that changed, and whether the document was replaced. Check it before you publish a version. 
      * Compare a version of a template with the one before it
      * @param templateId The template's ID.
-     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public getTemplateDiffWithHttpInfo(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateDiff>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -1201,7 +1625,7 @@ export class ObservableClient {
      * Returns what changed in the template's draft since its latest published version (or in a published version since the one before it): fields added, removed, changed and moved, the settings that changed, and whether the document was replaced. Check it before you publish a version. 
      * Compare a version of a template with the one before it
      * @param templateId The template's ID.
-     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public getTemplateDiff(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<TemplateDiff> {
         return this.getTemplateDiffWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<TemplateDiff>) => apiResponse.data));
@@ -1212,7 +1636,7 @@ export class ObservableClient {
      * Generate typed code for a template's submission data
      * @param templateId The template's ID.
      * @param lang The language to generate the code in.
-     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default.
      * @param [justTypes] Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types, PHP has no types-only code, and Rust's code is only types (serde converts the JSON), so theirs is the same either way.
      */
     public getTemplateModelCodeWithHttpInfo(templateId: string, lang: ModelCodeLanguage, version?: string, justTypes?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateModelCode>> {
@@ -1240,7 +1664,7 @@ export class ObservableClient {
      * Generate typed code for a template's submission data
      * @param templateId The template's ID.
      * @param lang The language to generate the code in.
-     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default.
      * @param [justTypes] Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types, PHP has no types-only code, and Rust's code is only types (serde converts the JSON), so theirs is the same either way.
      */
     public getTemplateModelCode(templateId: string, lang: ModelCodeLanguage, version?: string, justTypes?: boolean, _options?: ConfigurationOptions): Observable<TemplateModelCode> {
@@ -1251,7 +1675,7 @@ export class ObservableClient {
      * Returns a JPEG image of each page of a PDF template's PDF, with temporary links to download them: the draft's PDF, or a published version's. Use them to see the pages that fields are placed on. 
      * Get images of a template's pages
      * @param templateId The template's ID.
-     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public getTemplatePageImagesWithHttpInfo(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplatePageImages>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -1277,7 +1701,7 @@ export class ObservableClient {
      * Returns a JPEG image of each page of a PDF template's PDF, with temporary links to download them: the draft's PDF, or a published version's. Use them to see the pages that fields are placed on. 
      * Get images of a template's pages
      * @param templateId The template's ID.
-     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public getTemplatePageImages(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<TemplatePageImages> {
         return this.getTemplatePageImagesWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<TemplatePageImages>) => apiResponse.data));
@@ -1323,7 +1747,7 @@ export class ObservableClient {
      * Returns the JSON Schema that a submission's `data` must match. Use it to check data before you create submissions, or to build a form for the template's fields. 
      * Get the JSON Schema of a template's submission data
      * @param templateId The template's ID.
-     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default.
      */
     public getTemplateSchemaWithHttpInfo(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<{ [key: string]: any; }>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -1349,7 +1773,7 @@ export class ObservableClient {
      * Returns the JSON Schema that a submission's `data` must match. Use it to check data before you create submissions, or to build a form for the template's fields. 
      * Get the JSON Schema of a template's submission data
      * @param templateId The template's ID.
-     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * @param [version] The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default.
      */
     public getTemplateSchema(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<{ [key: string]: any; }> {
         return this.getTemplateSchemaWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<{ [key: string]: any; }>) => apiResponse.data));
@@ -1387,6 +1811,42 @@ export class ObservableClient {
      */
     public getWebhook(webhookId: string, _options?: ConfigurationOptions): Observable<Webhook> {
         return this.getWebhookWithHttpInfo(webhookId, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
+    }
+
+    /**
+     * Returns your account's email actions, newest first, one page at a time. Each one emails the files of every template's processed submissions, or of the templates and folders it lists. A template's own email actions are listed with the template (`GET /templates/{template_id}/email_actions`). 
+     * List account email actions
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public listAccountEmailActionsWithHttpInfo(limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailActionList>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.listAccountEmailActions(limit, cursor, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.listAccountEmailActionsWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Returns your account's email actions, newest first, one page at a time. Each one emails the files of every template's processed submissions, or of the templates and folders it lists. A template's own email actions are listed with the template (`GET /templates/{template_id}/email_actions`). 
+     * List account email actions
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public listAccountEmailActions(limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<EmailActionList> {
+        return this.listAccountEmailActionsWithHttpInfo(limit, cursor, _options).pipe(map((apiResponse: HttpInfo<EmailActionList>) => apiResponse.data));
     }
 
     /**
@@ -1459,6 +1919,80 @@ export class ObservableClient {
      */
     public listCustomFiles(limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<CustomFileList> {
         return this.listCustomFilesWithHttpInfo(limit, cursor, _options).pipe(map((apiResponse: HttpInfo<CustomFileList>) => apiResponse.data));
+    }
+
+    /**
+     * Returns the email actions of a template's draft, and your account's email actions that send for it, newest first, one page at a time. Each one emails every processed submission's files to the people it lists. An account email action (`template_id` null) shows the settings it sends for this template, with the template's changes in `customization`. 
+     * List email actions
+     * @param templateId The template's ID.
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public listEmailActionsWithHttpInfo(templateId: string, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailActionList>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.listEmailActions(templateId, limit, cursor, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.listEmailActionsWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Returns the email actions of a template's draft, and your account's email actions that send for it, newest first, one page at a time. Each one emails every processed submission's files to the people it lists. An account email action (`template_id` null) shows the settings it sends for this template, with the template's changes in `customization`. 
+     * List email actions
+     * @param templateId The template's ID.
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public listEmailActions(templateId: string, limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<EmailActionList> {
+        return this.listEmailActionsWithHttpInfo(templateId, limit, cursor, _options).pipe(map((apiResponse: HttpInfo<EmailActionList>) => apiResponse.data));
+    }
+
+    /**
+     * Returns the domains in your account that email actions can send from once they're verified, newest first, one page at a time. 
+     * List email domains
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public listEmailDomainsWithHttpInfo(limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailDomainList>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.listEmailDomains(limit, cursor, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.listEmailDomainsWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Returns the domains in your account that email actions can send from once they're verified, newest first, one page at a time. 
+     * List email domains
+     * @param [limit] How many items to return (1-100, default 50).
+     * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public listEmailDomains(limit?: number, cursor?: string, _options?: ConfigurationOptions): Observable<EmailDomainList> {
+        return this.listEmailDomainsWithHttpInfo(limit, cursor, _options).pipe(map((apiResponse: HttpInfo<EmailDomainList>) => apiResponse.data));
     }
 
     /**
@@ -1553,7 +2087,7 @@ export class ObservableClient {
      * Returns a template's fields with all of their settings, page by page: the draft's fields, or a published version's. A PDF template's fields are placed on its pages: GET /templates/{template_id}/page_images has images of the pages. 
      * List a template's fields
      * @param templateId The template's ID.
-     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public listTemplateFieldsWithHttpInfo(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateFields>> {
         const _config = mergeConfiguration(this.configuration, _options);
@@ -1579,7 +2113,7 @@ export class ObservableClient {
      * Returns a template's fields with all of their settings, page by page: the draft's fields, or a published version's. A PDF template's fields are placed on its pages: GET /templates/{template_id}/page_images has images of the pages. 
      * List a template's fields
      * @param templateId The template's ID.
-     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param [version] A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public listTemplateFields(templateId: string, version?: string, _options?: ConfigurationOptions): Observable<TemplateFields> {
         return this.listTemplateFieldsWithHttpInfo(templateId, version, _options).pipe(map((apiResponse: HttpInfo<TemplateFields>) => apiResponse.data));
@@ -1638,7 +2172,7 @@ export class ObservableClient {
     /**
      * Returns the templates in your account (their drafts), newest first, one page at a time. Each one is a summary: get a template by its ID for its settings, its PDF in full, its HTML, defaults and published versions. 
      * List templates
-     * @param [query] Only list templates whose name contains this text (ignoring case).
+     * @param [query] Only list templates whose name contains this text (ignoring case). `%` and `_` match themselves.
      * @param [parentFolderId] Only list the templates in this folder (not in its subfolders).
      * @param [limit] How many items to return (1-100, default 50).
      * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
@@ -1666,7 +2200,7 @@ export class ObservableClient {
     /**
      * Returns the templates in your account (their drafts), newest first, one page at a time. Each one is a summary: get a template by its ID for its settings, its PDF in full, its HTML, defaults and published versions. 
      * List templates
-     * @param [query] Only list templates whose name contains this text (ignoring case).
+     * @param [query] Only list templates whose name contains this text (ignoring case). `%` and `_` match themselves.
      * @param [parentFolderId] Only list the templates in this folder (not in its subfolders).
      * @param [limit] How many items to return (1-100, default 50).
      * @param [cursor] The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
@@ -1726,11 +2260,12 @@ export class ObservableClient {
      * Move a folder
      * @param folderId The folder's ID.
      * @param body Where to move the folder.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public moveFolderWithHttpInfo(folderId: string, body: MoveFolderRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
+    public moveFolderWithHttpInfo(folderId: string, body: MoveFolderRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.moveFolder(folderId, body, _config);
+        const requestContextPromise = this.requestFactory.moveFolder(folderId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1752,9 +2287,10 @@ export class ObservableClient {
      * Move a folder
      * @param folderId The folder's ID.
      * @param body Where to move the folder.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public moveFolder(folderId: string, body: MoveFolderRequest, _options?: ConfigurationOptions): Observable<Folder> {
-        return this.moveFolderWithHttpInfo(folderId, body, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
+    public moveFolder(folderId: string, body: MoveFolderRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Folder> {
+        return this.moveFolderWithHttpInfo(folderId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
     }
 
     /**
@@ -1762,11 +2298,12 @@ export class ObservableClient {
      * Move a template to a folder
      * @param templateId The template's ID.
      * @param body Where to move the template.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public moveTemplateWithHttpInfo(templateId: string, body: MoveTemplateRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+    public moveTemplateWithHttpInfo(templateId: string, body: MoveTemplateRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.moveTemplate(templateId, body, _config);
+        const requestContextPromise = this.requestFactory.moveTemplate(templateId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1788,9 +2325,10 @@ export class ObservableClient {
      * Move a template to a folder
      * @param templateId The template's ID.
      * @param body Where to move the template.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public moveTemplate(templateId: string, body: MoveTemplateRequest, _options?: ConfigurationOptions): Observable<Template> {
-        return this.moveTemplateWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    public moveTemplate(templateId: string, body: MoveTemplateRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.moveTemplateWithHttpInfo(templateId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
@@ -1798,11 +2336,12 @@ export class ObservableClient {
      * Publish a template version
      * @param templateId The template's ID.
      * @param body The version to publish.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public publishTemplateVersionWithHttpInfo(templateId: string, body: PublishTemplateVersionRequest, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateVersion>> {
+    public publishTemplateVersionWithHttpInfo(templateId: string, body: PublishTemplateVersionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateVersion>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.publishTemplateVersion(templateId, body, _config);
+        const requestContextPromise = this.requestFactory.publishTemplateVersion(templateId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1824,9 +2363,10 @@ export class ObservableClient {
      * Publish a template version
      * @param templateId The template's ID.
      * @param body The version to publish.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public publishTemplateVersion(templateId: string, body: PublishTemplateVersionRequest, _options?: ConfigurationOptions): Observable<TemplateVersion> {
-        return this.publishTemplateVersionWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<TemplateVersion>) => apiResponse.data));
+    public publishTemplateVersion(templateId: string, body: PublishTemplateVersionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<TemplateVersion> {
+        return this.publishTemplateVersionWithHttpInfo(templateId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<TemplateVersion>) => apiResponse.data));
     }
 
     /**
@@ -1834,11 +2374,12 @@ export class ObservableClient {
      * Remove fields from a template
      * @param templateId The template's ID.
      * @param body The fields to remove from the template's draft.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public removeTemplateFieldsWithHttpInfo(templateId: string, body: RemoveTemplateFieldsRequest, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateFields>> {
+    public removeTemplateFieldsWithHttpInfo(templateId: string, body: RemoveTemplateFieldsRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateFields>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.removeTemplateFields(templateId, body, _config);
+        const requestContextPromise = this.requestFactory.removeTemplateFields(templateId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1860,9 +2401,10 @@ export class ObservableClient {
      * Remove fields from a template
      * @param templateId The template's ID.
      * @param body The fields to remove from the template's draft.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public removeTemplateFields(templateId: string, body: RemoveTemplateFieldsRequest, _options?: ConfigurationOptions): Observable<TemplateFields> {
-        return this.removeTemplateFieldsWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<TemplateFields>) => apiResponse.data));
+    public removeTemplateFields(templateId: string, body: RemoveTemplateFieldsRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<TemplateFields> {
+        return this.removeTemplateFieldsWithHttpInfo(templateId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<TemplateFields>) => apiResponse.data));
     }
 
     /**
@@ -1870,11 +2412,12 @@ export class ObservableClient {
      * Rename a folder
      * @param folderId The folder's ID.
      * @param body The folder's new name.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public renameFolderWithHttpInfo(folderId: string, body: RenameFolderRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
+    public renameFolderWithHttpInfo(folderId: string, body: RenameFolderRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Folder>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.renameFolder(folderId, body, _config);
+        const requestContextPromise = this.requestFactory.renameFolder(folderId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1896,9 +2439,10 @@ export class ObservableClient {
      * Rename a folder
      * @param folderId The folder's ID.
      * @param body The folder's new name.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public renameFolder(folderId: string, body: RenameFolderRequest, _options?: ConfigurationOptions): Observable<Folder> {
-        return this.renameFolderWithHttpInfo(folderId, body, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
+    public renameFolder(folderId: string, body: RenameFolderRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Folder> {
+        return this.renameFolderWithHttpInfo(folderId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Folder>) => apiResponse.data));
     }
 
     /**
@@ -1906,11 +2450,12 @@ export class ObservableClient {
      * Reorder a template's fields
      * @param templateId The template's ID.
      * @param body The new order of the fields in the template's draft.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public reorderTemplateFieldsWithHttpInfo(templateId: string, body: ReorderTemplateFieldsRequest, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateFields>> {
+    public reorderTemplateFieldsWithHttpInfo(templateId: string, body: ReorderTemplateFieldsRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateFields>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.reorderTemplateFields(templateId, body, _config);
+        const requestContextPromise = this.requestFactory.reorderTemplateFields(templateId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1932,9 +2477,10 @@ export class ObservableClient {
      * Reorder a template's fields
      * @param templateId The template's ID.
      * @param body The new order of the fields in the template's draft.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public reorderTemplateFields(templateId: string, body: ReorderTemplateFieldsRequest, _options?: ConfigurationOptions): Observable<TemplateFields> {
-        return this.reorderTemplateFieldsWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<TemplateFields>) => apiResponse.data));
+    public reorderTemplateFields(templateId: string, body: ReorderTemplateFieldsRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<TemplateFields> {
+        return this.reorderTemplateFieldsWithHttpInfo(templateId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<TemplateFields>) => apiResponse.data));
     }
 
     /**
@@ -1942,11 +2488,12 @@ export class ObservableClient {
      * Restore a template version
      * @param templateId The template's ID.
      * @param body The version to restore.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public restoreTemplateVersionWithHttpInfo(templateId: string, body: RestoreTemplateVersionRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+    public restoreTemplateVersionWithHttpInfo(templateId: string, body: RestoreTemplateVersionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.restoreTemplateVersion(templateId, body, _config);
+        const requestContextPromise = this.requestFactory.restoreTemplateVersion(templateId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -1968,9 +2515,86 @@ export class ObservableClient {
      * Restore a template version
      * @param templateId The template's ID.
      * @param body The version to restore.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public restoreTemplateVersion(templateId: string, body: RestoreTemplateVersionRequest, _options?: ConfigurationOptions): Observable<Template> {
-        return this.restoreTemplateVersionWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    public restoreTemplateVersion(templateId: string, body: RestoreTemplateVersionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.restoreTemplateVersionWithHttpInfo(templateId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    }
+
+    /**
+     * Sends the account email action's email to the API token's user only, as it would go for one template it sends for, with each field shown as its name in brackets, so you can check how it looks. When the email action attaches its files and that template is a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. 
+     * Send a test email for an account email action
+     * @param emailActionId The account email action's ID.
+     * @param [body] Which template the test email is for.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public sendAccountEmailActionTestEmailWithHttpInfo(emailActionId: string, body?: SendAccountEmailActionTestEmailRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailActionTestEmail>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.sendAccountEmailActionTestEmail(emailActionId, body, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.sendAccountEmailActionTestEmailWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Sends the account email action's email to the API token's user only, as it would go for one template it sends for, with each field shown as its name in brackets, so you can check how it looks. When the email action attaches its files and that template is a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. 
+     * Send a test email for an account email action
+     * @param emailActionId The account email action's ID.
+     * @param [body] Which template the test email is for.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public sendAccountEmailActionTestEmail(emailActionId: string, body?: SendAccountEmailActionTestEmailRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailActionTestEmail> {
+        return this.sendAccountEmailActionTestEmailWithHttpInfo(emailActionId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailActionTestEmail>) => apiResponse.data));
+    }
+
+    /**
+     * Sends the email action's email to the API token's user only, with each field and metadata value shown as its name in brackets, so you can check how it looks. When the email action attaches its files and the template is a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. Without a paid plan, the user needs a confirmed email address. 
+     * Send a test email
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public sendEmailActionTestEmailWithHttpInfo(templateId: string, emailActionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailActionTestEmail>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.sendEmailActionTestEmail(templateId, emailActionId, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.sendEmailActionTestEmailWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Sends the email action's email to the API token's user only, with each field and metadata value shown as its name in brackets, so you can check how it looks. When the email action attaches its files and the template is a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. Without a paid plan, the user needs a confirmed email address. 
+     * Send a test email
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public sendEmailActionTestEmail(templateId: string, emailActionId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailActionTestEmail> {
+        return this.sendEmailActionTestEmailWithHttpInfo(templateId, emailActionId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailActionTestEmail>) => apiResponse.data));
     }
 
     /**
@@ -2006,15 +2630,134 @@ export class ObservableClient {
     }
 
     /**
+     * Changes one of your account's email actions. Properties left out keep their values. Its templates' customizations keep their own changes, and follow the rest. Set `enabled` to false to stop its emails for every template. 
+     * Update an account email action
+     * @param emailActionId The account email action's ID.
+     * @param body The settings to change. Properties left out keep their values.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public updateAccountEmailActionWithHttpInfo(emailActionId: string, body: UpdateAccountEmailActionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailAction>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.updateAccountEmailAction(emailActionId, body, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.updateAccountEmailActionWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Changes one of your account's email actions. Properties left out keep their values. Its templates' customizations keep their own changes, and follow the rest. Set `enabled` to false to stop its emails for every template. 
+     * Update an account email action
+     * @param emailActionId The account email action's ID.
+     * @param body The settings to change. Properties left out keep their values.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public updateAccountEmailAction(emailActionId: string, body: UpdateAccountEmailActionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailAction> {
+        return this.updateAccountEmailActionWithHttpInfo(emailActionId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailAction>) => apiResponse.data));
+    }
+
+    /**
+     * Changes an email action's settings. Properties left out keep their values. Set `enabled` to false to stop its emails, or to true to turn it back on after DocSpring turned it off. 
+     * Update an email action
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     * @param body The settings to change. Properties left out keep their values.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public updateEmailActionWithHttpInfo(templateId: string, emailActionId: string, body: UpdateEmailActionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailAction>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.updateEmailAction(templateId, emailActionId, body, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.updateEmailActionWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Changes an email action's settings. Properties left out keep their values. Set `enabled` to false to stop its emails, or to true to turn it back on after DocSpring turned it off. 
+     * Update an email action
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     * @param body The settings to change. Properties left out keep their values.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public updateEmailAction(templateId: string, emailActionId: string, body: UpdateEmailActionRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailAction> {
+        return this.updateEmailActionWithHttpInfo(templateId, emailActionId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailAction>) => apiResponse.data));
+    }
+
+    /**
+     * Changes one of your account's email actions for this template only, replacing any changes the template had. Each setting you send is changed for this template, and the ones you leave out follow the account email action, including later changes to it. Set `enabled` to false to stop it sending for this template. 
+     * Customize an account email action for a template
+     * @param templateId The template's ID.
+     * @param emailActionId The ID of one of your account's email actions that sends for the template.
+     * @param body The template's changes to the account email action, replacing any it had. Each setting you send is changed for this template, and the ones you leave out follow the account email action. `enabled: false` stops it sending for this template; left out, it sends.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public updateEmailActionCustomizationWithHttpInfo(templateId: string, emailActionId: string, body: UpdateEmailActionCustomizationRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailAction>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.updateEmailActionCustomization(templateId, emailActionId, body, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.updateEmailActionCustomizationWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Changes one of your account's email actions for this template only, replacing any changes the template had. Each setting you send is changed for this template, and the ones you leave out follow the account email action, including later changes to it. Set `enabled` to false to stop it sending for this template. 
+     * Customize an account email action for a template
+     * @param templateId The template's ID.
+     * @param emailActionId The ID of one of your account's email actions that sends for the template.
+     * @param body The template's changes to the account email action, replacing any it had. Each setting you send is changed for this template, and the ones you leave out follow the account email action. `enabled: false` stops it sending for this template; left out, it sends.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public updateEmailActionCustomization(templateId: string, emailActionId: string, body: UpdateEmailActionCustomizationRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailAction> {
+        return this.updateEmailActionCustomizationWithHttpInfo(templateId, emailActionId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailAction>) => apiResponse.data));
+    }
+
+    /**
      * Changes a pending signature request's metadata, or how your app authenticated the person (for the audit trail). Once the person has opened it, only its metadata can be changed, and a completed or declined signature request can't be changed. 
      * Update a signature request
      * @param signatureRequestId The signature request's ID.
      * @param body The settings to change. Properties left out keep their values.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public updateSignatureRequestWithHttpInfo(signatureRequestId: string, body: UpdateSignatureRequestRequest, _options?: ConfigurationOptions): Observable<HttpInfo<SignatureRequest>> {
+    public updateSignatureRequestWithHttpInfo(signatureRequestId: string, body: UpdateSignatureRequestRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<SignatureRequest>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.updateSignatureRequest(signatureRequestId, body, _config);
+        const requestContextPromise = this.requestFactory.updateSignatureRequest(signatureRequestId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -2036,21 +2779,23 @@ export class ObservableClient {
      * Update a signature request
      * @param signatureRequestId The signature request's ID.
      * @param body The settings to change. Properties left out keep their values.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public updateSignatureRequest(signatureRequestId: string, body: UpdateSignatureRequestRequest, _options?: ConfigurationOptions): Observable<SignatureRequest> {
-        return this.updateSignatureRequestWithHttpInfo(signatureRequestId, body, _options).pipe(map((apiResponse: HttpInfo<SignatureRequest>) => apiResponse.data));
+    public updateSignatureRequest(signatureRequestId: string, body: UpdateSignatureRequestRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<SignatureRequest> {
+        return this.updateSignatureRequestWithHttpInfo(signatureRequestId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<SignatureRequest>) => apiResponse.data));
     }
 
     /**
-     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
+     * Changes a template's draft. Properties left out keep their values. `defaults`, `html_engine_options` and a page design's `layout` replace the whole object, and `field_groups` changes only the groups it lists. A new layout adds a field for each new value it reads. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
      * Update a template
      * @param templateId The template's ID.
      * @param body The settings to change. Properties left out keep their values.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public updateTemplateWithHttpInfo(templateId: string, body: UpdateTemplateRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+    public updateTemplateWithHttpInfo(templateId: string, body: UpdateTemplateRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.updateTemplate(templateId, body, _config);
+        const requestContextPromise = this.requestFactory.updateTemplate(templateId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -2068,13 +2813,14 @@ export class ObservableClient {
     }
 
     /**
-     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
+     * Changes a template's draft. Properties left out keep their values. `defaults`, `html_engine_options` and a page design's `layout` replace the whole object, and `field_groups` changes only the groups it lists. A new layout adds a field for each new value it reads. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
      * Update a template
      * @param templateId The template's ID.
      * @param body The settings to change. Properties left out keep their values.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public updateTemplate(templateId: string, body: UpdateTemplateRequest, _options?: ConfigurationOptions): Observable<Template> {
-        return this.updateTemplateWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    public updateTemplate(templateId: string, body: UpdateTemplateRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.updateTemplateWithHttpInfo(templateId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
@@ -2083,11 +2829,12 @@ export class ObservableClient {
      * @param templateId The template's ID.
      * @param body The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`.
      * @param [wait] Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public updateTemplateDocumentWithHttpInfo(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+    public updateTemplateDocumentWithHttpInfo(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.updateTemplateDocument(templateId, body, wait, _config);
+        const requestContextPromise = this.requestFactory.updateTemplateDocument(templateId, body, wait, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -2110,9 +2857,10 @@ export class ObservableClient {
      * @param templateId The template's ID.
      * @param body The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`.
      * @param [wait] Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public updateTemplateDocument(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, _options?: ConfigurationOptions): Observable<Template> {
-        return this.updateTemplateDocumentWithHttpInfo(templateId, body, wait, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    public updateTemplateDocument(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.updateTemplateDocumentWithHttpInfo(templateId, body, wait, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
@@ -2120,11 +2868,12 @@ export class ObservableClient {
      * Update a template's fields
      * @param templateId The template's ID.
      * @param body The fields to change in the template's draft.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public updateTemplateFieldsWithHttpInfo(templateId: string, body: UpdateTemplateFieldsRequest, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateFields>> {
+    public updateTemplateFieldsWithHttpInfo(templateId: string, body: UpdateTemplateFieldsRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<TemplateFields>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.updateTemplateFields(templateId, body, _config);
+        const requestContextPromise = this.requestFactory.updateTemplateFields(templateId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -2146,9 +2895,10 @@ export class ObservableClient {
      * Update a template's fields
      * @param templateId The template's ID.
      * @param body The fields to change in the template's draft.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public updateTemplateFields(templateId: string, body: UpdateTemplateFieldsRequest, _options?: ConfigurationOptions): Observable<TemplateFields> {
-        return this.updateTemplateFieldsWithHttpInfo(templateId, body, _options).pipe(map((apiResponse: HttpInfo<TemplateFields>) => apiResponse.data));
+    public updateTemplateFields(templateId: string, body: UpdateTemplateFieldsRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<TemplateFields> {
+        return this.updateTemplateFieldsWithHttpInfo(templateId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<TemplateFields>) => apiResponse.data));
     }
 
     /**
@@ -2156,11 +2906,12 @@ export class ObservableClient {
      * Update a webhook
      * @param webhookId The webhook's ID.
      * @param body The settings to change. Properties left out keep their values.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public updateWebhookWithHttpInfo(webhookId: string, body: UpdateWebhookRequest, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
+    public updateWebhookWithHttpInfo(webhookId: string, body: UpdateWebhookRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Webhook>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.updateWebhook(webhookId, body, _config);
+        const requestContextPromise = this.requestFactory.updateWebhook(webhookId, body, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -2182,9 +2933,10 @@ export class ObservableClient {
      * Update a webhook
      * @param webhookId The webhook's ID.
      * @param body The settings to change. Properties left out keep their values.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public updateWebhook(webhookId: string, body: UpdateWebhookRequest, _options?: ConfigurationOptions): Observable<Webhook> {
-        return this.updateWebhookWithHttpInfo(webhookId, body, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
+    public updateWebhook(webhookId: string, body: UpdateWebhookRequest, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Webhook> {
+        return this.updateWebhookWithHttpInfo(webhookId, body, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Webhook>) => apiResponse.data));
     }
 
     /**
@@ -2201,11 +2953,12 @@ export class ObservableClient {
      * @param [fieldNaming] With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`.
      * @param [fieldLogic] With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
      * @param [outputFormat] What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public uploadTemplateWithHttpInfo(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, outputFormat?: OutputFormat, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+    public uploadTemplateWithHttpInfo(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, outputFormat?: OutputFormat, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.uploadTemplate(document, wait, name, description, parentFolderId, aiFieldNamingLanguage, detectFields, fieldSource, fieldNaming, fieldLogic, outputFormat, _config);
+        const requestContextPromise = this.requestFactory.uploadTemplate(document, wait, name, description, parentFolderId, aiFieldNamingLanguage, detectFields, fieldSource, fieldNaming, fieldLogic, outputFormat, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -2236,9 +2989,10 @@ export class ObservableClient {
      * @param [fieldNaming] With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`.
      * @param [fieldLogic] With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
      * @param [outputFormat] What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public uploadTemplate(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, outputFormat?: OutputFormat, _options?: ConfigurationOptions): Observable<Template> {
-        return this.uploadTemplateWithHttpInfo(document, wait, name, description, parentFolderId, aiFieldNamingLanguage, detectFields, fieldSource, fieldNaming, fieldLogic, outputFormat, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    public uploadTemplate(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, outputFormat?: OutputFormat, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.uploadTemplateWithHttpInfo(document, wait, name, description, parentFolderId, aiFieldNamingLanguage, detectFields, fieldSource, fieldNaming, fieldLogic, outputFormat, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
@@ -2248,11 +3002,12 @@ export class ObservableClient {
      * @param document The new PDF, or the new Word document (.docx or .odt) of a Word template.
      * @param [wait] Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
      * @param [reimportFields] Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public uploadTemplateDocumentWithHttpInfo(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
+    public uploadTemplateDocumentWithHttpInfo(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<Template>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.uploadTemplateDocument(templateId, document, wait, reimportFields, _config);
+        const requestContextPromise = this.requestFactory.uploadTemplateDocument(templateId, document, wait, reimportFields, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -2276,9 +3031,10 @@ export class ObservableClient {
      * @param document The new PDF, or the new Word document (.docx or .odt) of a Word template.
      * @param [wait] Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
      * @param [reimportFields] Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public uploadTemplateDocument(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, _options?: ConfigurationOptions): Observable<Template> {
-        return this.uploadTemplateDocumentWithHttpInfo(templateId, document, wait, reimportFields, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
+    public uploadTemplateDocument(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<Template> {
+        return this.uploadTemplateDocumentWithHttpInfo(templateId, document, wait, reimportFields, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<Template>) => apiResponse.data));
     }
 
     /**
@@ -2286,12 +3042,13 @@ export class ObservableClient {
      * Check a submission without creating it
      * @param templateId The template's ID.
      * @param body The submission's data and settings.
-     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public validateSubmissionWithHttpInfo(templateId: string, body: ValidateSubmissionRequest, version?: string, _options?: ConfigurationOptions): Observable<HttpInfo<SubmissionValidation>> {
+    public validateSubmissionWithHttpInfo(templateId: string, body: ValidateSubmissionRequest, version?: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<SubmissionValidation>> {
         const _config = mergeConfiguration(this.configuration, _options);
 
-        const requestContextPromise = this.requestFactory.validateSubmission(templateId, body, version, _config);
+        const requestContextPromise = this.requestFactory.validateSubmission(templateId, body, version, idempotencyKey, _config);
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
         for (const middleware of _config.middleware) {
@@ -2313,10 +3070,47 @@ export class ObservableClient {
      * Check a submission without creating it
      * @param templateId The template's ID.
      * @param body The submission's data and settings.
-     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * @param [version] The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public validateSubmission(templateId: string, body: ValidateSubmissionRequest, version?: string, _options?: ConfigurationOptions): Observable<SubmissionValidation> {
-        return this.validateSubmissionWithHttpInfo(templateId, body, version, _options).pipe(map((apiResponse: HttpInfo<SubmissionValidation>) => apiResponse.data));
+    public validateSubmission(templateId: string, body: ValidateSubmissionRequest, version?: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<SubmissionValidation> {
+        return this.validateSubmissionWithHttpInfo(templateId, body, version, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<SubmissionValidation>) => apiResponse.data));
+    }
+
+    /**
+     * Checks the email domain's DNS records now, instead of waiting for the next check. If DocSpring has stopped looking for its DKIM records (3 days after they were created), it starts again with new ones: replace the CNAME records with them. 
+     * Verify an email domain
+     * @param emailDomainId The email domain's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public verifyEmailDomainWithHttpInfo(emailDomainId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<HttpInfo<EmailDomain>> {
+        const _config = mergeConfiguration(this.configuration, _options);
+
+        const requestContextPromise = this.requestFactory.verifyEmailDomain(emailDomainId, idempotencyKey, _config);
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (const middleware of _config.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => _config.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (const middleware of _config.middleware.reverse()) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.verifyEmailDomainWithHttpInfo(rsp)));
+            }));
+    }
+
+    /**
+     * Checks the email domain's DNS records now, instead of waiting for the next check. If DocSpring has stopped looking for its DKIM records (3 days after they were created), it starts again with new ones: replace the CNAME records with them. 
+     * Verify an email domain
+     * @param emailDomainId The email domain's ID.
+     * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public verifyEmailDomain(emailDomainId: string, idempotencyKey?: string, _options?: ConfigurationOptions): Observable<EmailDomain> {
+        return this.verifyEmailDomainWithHttpInfo(emailDomainId, idempotencyKey, _options).pipe(map((apiResponse: HttpInfo<EmailDomain>) => apiResponse.data));
     }
 
 }

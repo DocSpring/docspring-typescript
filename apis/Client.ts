@@ -15,8 +15,11 @@ import { AuthenticationCheck } from '../models/AuthenticationCheck';
 import { CombinedPdf } from '../models/CombinedPdf';
 import { CombinedPdfList } from '../models/CombinedPdfList';
 import { CopyTemplateRequest } from '../models/CopyTemplateRequest';
+import { CreateAccountEmailActionRequest } from '../models/CreateAccountEmailActionRequest';
 import { CreateCombinedPdfRequest } from '../models/CreateCombinedPdfRequest';
 import { CreateCustomFileFromUploadRequest } from '../models/CreateCustomFileFromUploadRequest';
+import { CreateEmailActionRequest } from '../models/CreateEmailActionRequest';
+import { CreateEmailDomainRequest } from '../models/CreateEmailDomainRequest';
 import { CreateFolderRequest } from '../models/CreateFolderRequest';
 import { CreateSignatureRequestEventRequest } from '../models/CreateSignatureRequestEventRequest';
 import { CreateSignatureRequestTokenRequest } from '../models/CreateSignatureRequestTokenRequest';
@@ -27,6 +30,11 @@ import { CreateTemplateRequest } from '../models/CreateTemplateRequest';
 import { CreateWebhookRequest } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
 import { CustomFileList } from '../models/CustomFileList';
+import { EmailAction } from '../models/EmailAction';
+import { EmailActionList } from '../models/EmailActionList';
+import { EmailActionTestEmail } from '../models/EmailActionTestEmail';
+import { EmailDomain } from '../models/EmailDomain';
+import { EmailDomainList } from '../models/EmailDomainList';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { FieldSetupLogic } from '../models/FieldSetupLogic';
 import { FieldSetupNaming } from '../models/FieldSetupNaming';
@@ -43,6 +51,7 @@ import { RemoveTemplateFieldsRequest } from '../models/RemoveTemplateFieldsReque
 import { RenameFolderRequest } from '../models/RenameFolderRequest';
 import { ReorderTemplateFieldsRequest } from '../models/ReorderTemplateFieldsRequest';
 import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
+import { SendAccountEmailActionTestEmailRequest } from '../models/SendAccountEmailActionTestEmailRequest';
 import { SignatureRequest } from '../models/SignatureRequest';
 import { SignatureRequestEvent } from '../models/SignatureRequestEvent';
 import { SignatureRequestToken } from '../models/SignatureRequestToken';
@@ -59,6 +68,9 @@ import { TemplatePageImages } from '../models/TemplatePageImages';
 import { TemplatePreview } from '../models/TemplatePreview';
 import { TemplateSummaryList } from '../models/TemplateSummaryList';
 import { TemplateVersion } from '../models/TemplateVersion';
+import { UpdateAccountEmailActionRequest } from '../models/UpdateAccountEmailActionRequest';
+import { UpdateEmailActionCustomizationRequest } from '../models/UpdateEmailActionCustomizationRequest';
+import { UpdateEmailActionRequest } from '../models/UpdateEmailActionRequest';
 import { UpdateSignatureRequestRequest } from '../models/UpdateSignatureRequestRequest';
 import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
 import { UpdateTemplateFieldsRequest } from '../models/UpdateTemplateFieldsRequest';
@@ -77,12 +89,13 @@ import { WebhookMode } from '../models/WebhookMode';
 export class ClientRequestFactory extends BaseAPIRequestFactory {
 
     /**
-     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. 
+     * Adds fields to a template's draft and returns all of its fields. Publish a version for submissions of published versions to have them. A field with the name of one of the template's fields shares its settings (`type`, `required`, `default`, ...), so a field that sets one to another value is refused: PUT /templates/{template_id}/fields changes them for every field with the name. 
      * Add fields to a template
      * @param templateId The template's ID.
      * @param body The fields to add to the template's draft.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async addTemplateFields(templateId: string, body: AddTemplateFieldsRequest, _options?: Configuration): Promise<RequestContext> {
+    public async addTemplateFields(templateId: string, body: AddTemplateFieldsRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -97,6 +110,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/fields'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -104,6 +118,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -141,14 +158,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Copy a template
      * @param templateId The template's ID.
      * @param body Settings for the copy.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async copyTemplate(templateId: string, body?: CopyTemplateRequest, _options?: Configuration): Promise<RequestContext> {
+    public async copyTemplate(templateId: string, body?: CopyTemplateRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
         if (templateId === null || templateId === undefined) {
             throw new RequiredError("Client", "copyTemplate", "templateId");
         }
+
 
 
 
@@ -159,6 +178,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -192,11 +214,68 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
+     * Adds an email action to your account. It sends for every template, or only for the templates in `template_ids` and the templates in the folders in `folder_ids` (and the folders inside them). Each template can turn it off or change its settings for that template only (`PUT /templates/{template_id}/email_actions/{email_action_id}/customization`). Without a paid plan (Starter or higher), email actions only email your team: test submissions' emails go to your account's users, and live submissions' emails aren't sent. 
+     * Create an account email action
+     * @param body The account email action to create. Properties left out get their defaults, and it sends for every template unless it lists `template_ids` or `folder_ids`.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async createAccountEmailAction(body: CreateAccountEmailActionRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createAccountEmailAction", "body");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/email_actions';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "CreateAccountEmailActionRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("createAccountEmailAction", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
      * Merges PDFs into one: submissions, other combined PDFs, templates, custom files (POST /custom_files) and PDFs from URLs, in the order of `source_pdfs`. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /combined_pdfs/{combined_pdf_id} until `state` isn't `pending`.  A template source merges the template's processed PDF by default: the PDF submissions are filled in on, decrypted and with its form fields removed. Pass `processed: false` to merge the PDF as it was uploaded. 
      * Combine PDFs
      * @param body The PDFs to merge, and the combined PDF's settings.
      * @param wait Wait until the PDF has been generated before responding. Default true on sync.api hosts.
-     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another combined PDF. Send a new key with each new combined PDF, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
     public async createCombinedPdf(body: CreateCombinedPdfRequest, wait?: boolean, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -259,8 +338,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Creates a custom file from a PDF you uploaded, so you can merge it with other PDFs. Upload the file with the presigned upload (GET /uploads/presign) first, then pass its `fields.key` as `cache_id`. 
      * Create a custom file from an upload
      * @param body The uploaded file to create the custom file from.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async createCustomFileFromUpload(body: CreateCustomFileFromUploadRequest, _options?: Configuration): Promise<RequestContext> {
+    public async createCustomFileFromUpload(body: CreateCustomFileFromUploadRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'body' is not null or undefined
@@ -269,12 +349,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/custom_files';
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -308,11 +392,134 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
+     * Adds an email action to a template's draft. From then on, each processed submission emails its PDF to the recipients in `to`, `cc` and `bcc`: addresses, and tags for the address in one of the submission's fields (`{{ data.tenant_email }}`) or in its metadata (`{{ metadata.agent_email }}`). With `send_when`, only the submissions whose values meet its conditions send one. Without a paid plan (Starter or higher), email actions only email your team: test submissions' emails go to your account's users, and live submissions' emails aren't sent. 
+     * Create an email action
+     * @param templateId The template's ID.
+     * @param body The email action to create. Properties left out get their defaults.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async createEmailAction(templateId: string, body: CreateEmailActionRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new RequiredError("Client", "createEmailAction", "templateId");
+        }
+
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createEmailAction", "body");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/templates/{template_id}/email_actions'
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "CreateEmailActionRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("createEmailAction", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Adds a domain for email actions to send from, and returns the DNS records to add to it. DocSpring checks for them every few minutes, and the domain is verified once its DKIM and DMARC records are found. Needs a paid monthly plan. 
+     * Add an email domain
+     * @param body The domain to add.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async createEmailDomain(body: CreateEmailDomainRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "createEmailDomain", "body");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/email_domains';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "CreateEmailDomainRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("createEmailDomain", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
      * Creates a folder for organizing templates. Pass `parent_folder_id` to create it inside another folder. Folder names are unique within their parent folder. 
      * Create a folder
      * @param body The folder to create.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async createFolder(body: CreateFolderRequest, _options?: Configuration): Promise<RequestContext> {
+    public async createFolder(body: CreateFolderRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'body' is not null or undefined
@@ -321,12 +528,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/folders';
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -364,8 +575,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Record a signature request event
      * @param signatureRequestId The signature request's ID.
      * @param body The event to record.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async createSignatureRequestEvent(signatureRequestId: string, body: CreateSignatureRequestEventRequest, _options?: Configuration): Promise<RequestContext> {
+    public async createSignatureRequestEvent(signatureRequestId: string, body: CreateSignatureRequestEventRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'signatureRequestId' is not null or undefined
@@ -380,6 +592,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/signature_requests/{signature_request_id}/events'
             .replace('{signature_request_id}', encodeURIComponent(String(signatureRequestId)));
@@ -387,6 +600,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -424,14 +640,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Create a signature request token
      * @param signatureRequestId The signature request's ID.
      * @param body The kind of link to make. Send no body for an `api` token.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async createSignatureRequestToken(signatureRequestId: string, body?: CreateSignatureRequestTokenRequest, _options?: Configuration): Promise<RequestContext> {
+    public async createSignatureRequestToken(signatureRequestId: string, body?: CreateSignatureRequestTokenRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'signatureRequestId' is not null or undefined
         if (signatureRequestId === null || signatureRequestId === undefined) {
             throw new RequiredError("Client", "createSignatureRequestToken", "signatureRequestId");
         }
+
 
 
 
@@ -442,6 +660,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -475,13 +696,13 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID. 
+     * Creates a submission: fills in a template with your data and generates a PDF. The PDF is generated in the background: on sync.api hosts the request waits for it (unless you pass `wait=false`), otherwise poll GET /submissions/{submission_id} until `state` isn't `pending`.  Data that doesn't match the template's fields returns a 422 with an `invalid_data` error. The submission is still saved, with its errors, so you can find it in DocSpring: the error's `submission_id` is its ID.  With `signature_requests`, the PDF is generated once everyone has signed. DocSpring emails each signer a link to sign, unless `send_email` is false, and can send reminders and the completed document. 
      * Generate a PDF
      * @param templateId The template's ID.
      * @param body The submission's data and settings.
-     * @param version The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * @param version The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
      * @param wait Wait until the files have been generated before responding. Default true on sync.api hosts.
-     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another submission. Send a new key with each new submission, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
     public async createSubmission(templateId: string, body: CreateSubmissionRequest, version?: string, wait?: boolean, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -558,7 +779,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Generate PDFs in a batch
      * @param body The submissions to create, and the settings they share.
      * @param wait Wait until every file in the batch has been generated before responding. Default true on sync.api hosts.
-     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of creating another batch. Send a new key with each new batch, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` means the first request is still being processed: send the request again in a few seconds.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
     public async createSubmissionBatch(body: CreateSubmissionBatchRequest, wait?: boolean, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -618,18 +839,20 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
+     * Creates an HTML template, or a PDF or Word template from a file you uploaded with the presigned upload (GET /uploads/presign): pass its `fields.key` as `cache_id`. You can send a link to the file (`document_url`) or the file in base64 (`document_base64`) instead, or send the file with the request with POST /templates/upload. A Word template is made from a Word document (.docx) or an OpenDocument text file (.odt), which DocSpring converts to a Word document. It needs its `output_format`: what each submission makes, a Word document (`docx`), an OpenDocument file (`odt`) or a PDF. A page design (`page_designer`) takes its `layout` in the Page Designer layout format, or starts with an empty page without one.  A PDF template is ready to generate PDFs once DocSpring has processed its PDF, a template created from a `document_url` once its document has been downloaded, and one created from an .odt once it has been converted (`ready` is true). On sync.api hosts the request waits for that unless you pass `wait=false`. 
      * Create a template
      * @param body The template to create.
      * @param wait Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async createTemplate(body: CreateTemplateRequest, wait?: boolean, _options?: Configuration): Promise<RequestContext> {
+    public async createTemplate(body: CreateTemplateRequest, wait?: boolean, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'body' is not null or undefined
         if (body === null || body === undefined) {
             throw new RequiredError("Client", "createTemplate", "body");
         }
+
 
 
 
@@ -644,6 +867,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         if (wait !== undefined) {
             requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
         }
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -677,13 +903,14 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
+     * Makes PNG images of a template's pages filled in with the data you send (not a PDF), so you can check how an HTML, PDF or Word template or a page design prints with your data before you publish a version or send live data. A Word template's pages are its PDF's, whatever its `output_format`. It renders the template's draft, or the published `version` you ask for. A preview makes no submission and uses no credits, and its pages are watermarked like a test submission's PDF. It's `pending` while it renders: get it with GET /templates/{template_id}/previews/{preview_id} until it's `processed`, with an image of each page, or `error`. 
      * Preview a template with data
      * @param templateId The template's ID.
      * @param body The data to render the template with.
-     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async createTemplatePreview(templateId: string, body: CreateTemplatePreviewRequest, version?: string, _options?: Configuration): Promise<RequestContext> {
+    public async createTemplatePreview(templateId: string, body: CreateTemplatePreviewRequest, version?: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -699,6 +926,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/previews'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -711,6 +939,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         if (version !== undefined) {
             requestContext.setQueryParam("version", ObjectSerializer.serialize(version, "string", ""));
         }
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -747,8 +978,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Creates a webhook that sends a POST request to your endpoint whenever a subscribed event happens. Scope it to API tokens, templates or folders to receive only their events. 
      * Create a webhook
      * @param body The webhook to create.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async createWebhook(body: CreateWebhookRequest, _options?: Configuration): Promise<RequestContext> {
+    public async createWebhook(body: CreateWebhookRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'body' is not null or undefined
@@ -757,12 +989,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/webhooks';
 
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -796,17 +1032,66 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
+     * Deletes one of your account's email actions, with every template's customization of it. Emails it has already queued for submissions aren't sent. Submissions keep the record of the emails it sent. 
+     * Delete an account email action
+     * @param emailActionId The account email action's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async deleteAccountEmailAction(emailActionId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'emailActionId' is not null or undefined
+        if (emailActionId === null || emailActionId === undefined) {
+            throw new RequiredError("Client", "deleteAccountEmailAction", "emailActionId");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/email_actions/{email_action_id}'
+            .replace('{email_action_id}', encodeURIComponent(String(emailActionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("deleteAccountEmailAction", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
      * Deletes a custom file and returns it. Use a live API token: test tokens can't delete custom files. 
      * Delete a custom file
      * @param customFileId The custom file's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async deleteCustomFile(customFileId: string, _options?: Configuration): Promise<RequestContext> {
+    public async deleteCustomFile(customFileId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'customFileId' is not null or undefined
         if (customFileId === null || customFileId === undefined) {
             throw new RequiredError("Client", "deleteCustomFile", "customFileId");
         }
+
 
 
         // Path Params
@@ -816,6 +1101,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         let authMethod: SecurityAuthentication | undefined;
@@ -838,17 +1126,176 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
+     * Deletes an email action. Emails it has already queued for submissions aren't sent. Submissions keep the record of the emails it sent. 
+     * Delete an email action
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async deleteEmailAction(templateId: string, emailActionId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new RequiredError("Client", "deleteEmailAction", "templateId");
+        }
+
+
+        // verify required parameter 'emailActionId' is not null or undefined
+        if (emailActionId === null || emailActionId === undefined) {
+            throw new RequiredError("Client", "deleteEmailAction", "emailActionId");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/templates/{template_id}/email_actions/{email_action_id}'
+            .replace('{template_id}', encodeURIComponent(String(templateId)))
+            .replace('{email_action_id}', encodeURIComponent(String(emailActionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("deleteEmailAction", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Removes the template's changes to one of your account's email actions: it sends for this template as it is, and again if the template had turned it off. 
+     * Reset an account email action's customization
+     * @param templateId The template's ID.
+     * @param emailActionId The ID of one of your account's email actions that sends for the template.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async deleteEmailActionCustomization(templateId: string, emailActionId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new RequiredError("Client", "deleteEmailActionCustomization", "templateId");
+        }
+
+
+        // verify required parameter 'emailActionId' is not null or undefined
+        if (emailActionId === null || emailActionId === undefined) {
+            throw new RequiredError("Client", "deleteEmailActionCustomization", "emailActionId");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/templates/{template_id}/email_actions/{email_action_id}/customization'
+            .replace('{template_id}', encodeURIComponent(String(templateId)))
+            .replace('{email_action_id}', encodeURIComponent(String(emailActionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("deleteEmailActionCustomization", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Removes an email domain. Email actions that send from an address at it fail until you add and verify it again, or change their `from_address`. You can then remove its DNS records. 
+     * Remove an email domain
+     * @param emailDomainId The email domain's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async deleteEmailDomain(emailDomainId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'emailDomainId' is not null or undefined
+        if (emailDomainId === null || emailDomainId === undefined) {
+            throw new RequiredError("Client", "deleteEmailDomain", "emailDomainId");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/email_domains/{email_domain_id}'
+            .replace('{email_domain_id}', encodeURIComponent(String(emailDomainId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("deleteEmailDomain", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
      * Deletes an empty folder and returns it. A folder that still has templates or folders in it can't be deleted. 
      * Delete a folder
      * @param folderId The folder's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async deleteFolder(folderId: string, _options?: Configuration): Promise<RequestContext> {
+    public async deleteFolder(folderId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'folderId' is not null or undefined
         if (folderId === null || folderId === undefined) {
             throw new RequiredError("Client", "deleteFolder", "folderId");
         }
+
 
 
         // Path Params
@@ -858,6 +1305,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         let authMethod: SecurityAuthentication | undefined;
@@ -884,14 +1334,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Delete a template
      * @param templateId The template's ID.
      * @param version Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async deleteTemplate(templateId: string, version?: string, _options?: Configuration): Promise<RequestContext> {
+    public async deleteTemplate(templateId: string, version?: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
         if (templateId === null || templateId === undefined) {
             throw new RequiredError("Client", "deleteTemplate", "templateId");
         }
+
 
 
 
@@ -907,6 +1359,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         if (version !== undefined) {
             requestContext.setQueryParam("version", ObjectSerializer.serialize(version, "string", ""));
         }
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         let authMethod: SecurityAuthentication | undefined;
@@ -932,14 +1387,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Deletes a webhook so it stops receiving events, and returns it.
      * Delete a webhook
      * @param webhookId The webhook's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async deleteWebhook(webhookId: string, _options?: Configuration): Promise<RequestContext> {
+    public async deleteWebhook(webhookId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'webhookId' is not null or undefined
         if (webhookId === null || webhookId === undefined) {
             throw new RequiredError("Client", "deleteWebhook", "webhookId");
         }
+
 
 
         // Path Params
@@ -949,6 +1406,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         let authMethod: SecurityAuthentication | undefined;
@@ -974,14 +1434,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Deletes a combined PDF's PDF and returns the expired combined PDF.
      * Expire a combined PDF
      * @param combinedPdfId The combined PDF's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async expireCombinedPdf(combinedPdfId: string, _options?: Configuration): Promise<RequestContext> {
+    public async expireCombinedPdf(combinedPdfId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'combinedPdfId' is not null or undefined
         if (combinedPdfId === null || combinedPdfId === undefined) {
             throw new RequiredError("Client", "expireCombinedPdf", "combinedPdfId");
         }
+
 
 
         // Path Params
@@ -991,6 +1453,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         let authMethod: SecurityAuthentication | undefined;
@@ -1016,14 +1481,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Deletes a submission's data and PDF now, and returns the expired submission.
      * Expire a submission
      * @param submissionId The submission's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async expireSubmission(submissionId: string, _options?: Configuration): Promise<RequestContext> {
+    public async expireSubmission(submissionId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'submissionId' is not null or undefined
         if (submissionId === null || submissionId === undefined) {
             throw new RequiredError("Client", "expireSubmission", "submissionId");
         }
+
 
 
         // Path Params
@@ -1033,6 +1500,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.DELETE);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         let authMethod: SecurityAuthentication | undefined;
@@ -1060,8 +1530,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * @param submissionId The submission's ID.
      * @param body The formats to make.
      * @param wait Wait until the files have been generated before responding. Default true on sync.api hosts.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async generateSubmissionFiles(submissionId: string, body: GenerateSubmissionFilesRequest, wait?: boolean, _options?: Configuration): Promise<RequestContext> {
+    public async generateSubmissionFiles(submissionId: string, body: GenerateSubmissionFilesRequest, wait?: boolean, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'submissionId' is not null or undefined
@@ -1077,6 +1548,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
 
 
+
         // Path Params
         const localVarPath = '/submissions/{submission_id}/generate_files'
             .replace('{submission_id}', encodeURIComponent(String(submissionId)));
@@ -1089,6 +1561,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         if (wait !== undefined) {
             requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
         }
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -1125,14 +1600,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Generates a preview of a submission's PDF in the background, such as for a submission still waiting for its signature requests. It's in `files.preview` once `preview_generated_at` changes. 
      * Generate a preview PDF
      * @param submissionId The submission's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async generateSubmissionPreview(submissionId: string, _options?: Configuration): Promise<RequestContext> {
+    public async generateSubmissionPreview(submissionId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'submissionId' is not null or undefined
         if (submissionId === null || submissionId === undefined) {
             throw new RequiredError("Client", "generateSubmissionPreview", "submissionId");
         }
+
 
 
         // Path Params
@@ -1142,6 +1619,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         let authMethod: SecurityAuthentication | undefined;
@@ -1158,6 +1638,48 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         if (_config.validateRequests !== false) {
             validateRequest("generateSubmissionPreview", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Returns one of your account's email actions, with its settings and whether its emails are failing.
+     * Get an account email action
+     * @param emailActionId The account email action's ID.
+     */
+    public async getAccountEmailAction(emailActionId: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'emailActionId' is not null or undefined
+        if (emailActionId === null || emailActionId === undefined) {
+            throw new RequiredError("Client", "getAccountEmailAction", "emailActionId");
+        }
+
+
+        // Path Params
+        const localVarPath = '/email_actions/{email_action_id}'
+            .replace('{email_action_id}', encodeURIComponent(String(emailActionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("getAccountEmailAction", requestContext);
         }
 
         return requestContext;
@@ -1242,6 +1764,98 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         if (_config.validateRequests !== false) {
             validateRequest("getCustomFile", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Returns one of a template's email actions, with its settings and whether its emails are failing.
+     * Get an email action
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     */
+    public async getEmailAction(templateId: string, emailActionId: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new RequiredError("Client", "getEmailAction", "templateId");
+        }
+
+
+        // verify required parameter 'emailActionId' is not null or undefined
+        if (emailActionId === null || emailActionId === undefined) {
+            throw new RequiredError("Client", "getEmailAction", "emailActionId");
+        }
+
+
+        // Path Params
+        const localVarPath = '/templates/{template_id}/email_actions/{email_action_id}'
+            .replace('{template_id}', encodeURIComponent(String(templateId)))
+            .replace('{email_action_id}', encodeURIComponent(String(emailActionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("getEmailAction", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Returns an email domain, whether it's verified, and the DNS records to add to it.
+     * Get an email domain
+     * @param emailDomainId The email domain's ID.
+     */
+    public async getEmailDomain(emailDomainId: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'emailDomainId' is not null or undefined
+        if (emailDomainId === null || emailDomainId === undefined) {
+            throw new RequiredError("Client", "getEmailDomain", "emailDomainId");
+        }
+
+
+        // Path Params
+        const localVarPath = '/email_domains/{email_domain_id}'
+            .replace('{email_domain_id}', encodeURIComponent(String(emailDomainId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("getEmailDomain", requestContext);
         }
 
         return requestContext;
@@ -1460,7 +2074,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Returns a template: its draft, or one of its published versions.
      * Get a template
      * @param templateId The template's ID.
-     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public async getTemplate(templateId: string, version?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -1509,7 +2123,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Returns what changed in the template's draft since its latest published version (or in a published version since the one before it): fields added, removed, changed and moved, the settings that changed, and whether the document was replaced. Check it before you publish a version. 
      * Compare a version of a template with the one before it
      * @param templateId The template's ID.
-     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public async getTemplateDiff(templateId: string, version?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -1559,7 +2173,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Generate typed code for a template's submission data
      * @param templateId The template's ID.
      * @param lang The language to generate the code in.
-     * @param version The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * @param version The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default.
      * @param justTypes Return only the types (interfaces, classes or structs), without the code that converts JSON to and from them. Default false. JavaScript has no types, PHP has no types-only code, and Rust's code is only types (serde converts the JSON), so theirs is the same either way.
      */
     public async getTemplateModelCode(templateId: string, lang: ModelCodeLanguage, version?: string, justTypes?: boolean, _options?: Configuration): Promise<RequestContext> {
@@ -1626,7 +2240,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Returns a JPEG image of each page of a PDF template's PDF, with temporary links to download them: the draft's PDF, or a published version's. Use them to see the pages that fields are placed on. 
      * Get images of a template's pages
      * @param templateId The template's ID.
-     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public async getTemplatePageImages(templateId: string, version?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -1725,7 +2339,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Returns the JSON Schema that a submission's `data` must match. Use it to check data before you create submissions, or to build a form for the template's fields. 
      * Get the JSON Schema of a template's submission data
      * @param templateId The template's ID.
-     * @param version The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published), the version a submission uses by default.
+     * @param version The template version: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`, the version a submission uses by default.
      */
     public async getTemplateSchema(templateId: string, version?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -1807,6 +2421,54 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         if (_config.validateRequests !== false) {
             validateRequest("getWebhook", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Returns your account's email actions, newest first, one page at a time. Each one emails the files of every template's processed submissions, or of the templates and folders it lists. A template's own email actions are listed with the template (`GET /templates/{template_id}/email_actions`). 
+     * List account email actions
+     * @param limit How many items to return (1-100, default 50).
+     * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public async listAccountEmailActions(limit?: number, cursor?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+
+
+        // Path Params
+        const localVarPath = '/email_actions';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (limit !== undefined) {
+            requestContext.setQueryParam("limit", ObjectSerializer.serialize(limit, "number", ""));
+        }
+
+        // Query Params
+        if (cursor !== undefined) {
+            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
+        }
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("listAccountEmailActions", requestContext);
         }
 
         return requestContext;
@@ -1903,6 +2565,110 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         if (_config.validateRequests !== false) {
             validateRequest("listCustomFiles", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Returns the email actions of a template's draft, and your account's email actions that send for it, newest first, one page at a time. Each one emails every processed submission's files to the people it lists. An account email action (`template_id` null) shows the settings it sends for this template, with the template's changes in `customization`. 
+     * List email actions
+     * @param templateId The template's ID.
+     * @param limit How many items to return (1-100, default 50).
+     * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public async listEmailActions(templateId: string, limit?: number, cursor?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new RequiredError("Client", "listEmailActions", "templateId");
+        }
+
+
+
+
+        // Path Params
+        const localVarPath = '/templates/{template_id}/email_actions'
+            .replace('{template_id}', encodeURIComponent(String(templateId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (limit !== undefined) {
+            requestContext.setQueryParam("limit", ObjectSerializer.serialize(limit, "number", ""));
+        }
+
+        // Query Params
+        if (cursor !== undefined) {
+            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
+        }
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("listEmailActions", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Returns the domains in your account that email actions can send from once they're verified, newest first, one page at a time. 
+     * List email domains
+     * @param limit How many items to return (1-100, default 50).
+     * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
+     */
+    public async listEmailDomains(limit?: number, cursor?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+
+
+        // Path Params
+        const localVarPath = '/email_domains';
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.GET);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (limit !== undefined) {
+            requestContext.setQueryParam("limit", ObjectSerializer.serialize(limit, "number", ""));
+        }
+
+        // Query Params
+        if (cursor !== undefined) {
+            requestContext.setQueryParam("cursor", ObjectSerializer.serialize(cursor, "string", ""));
+        }
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("listEmailDomains", requestContext);
         }
 
         return requestContext;
@@ -2064,7 +2830,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Returns a template's fields with all of their settings, page by page: the draft's fields, or a published version's. A PDF template's fields are placed on its pages: GET /templates/{template_id}/page_images has images of the pages. 
      * List a template's fields
      * @param templateId The template's ID.
-     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `draft`.
+     * @param version A published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `draft`.
      */
     public async listTemplateFields(templateId: string, version?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -2210,7 +2976,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     /**
      * Returns the templates in your account (their drafts), newest first, one page at a time. Each one is a summary: get a template by its ID for its settings, its PDF in full, its HTML, defaults and published versions. 
      * List templates
-     * @param query Only list templates whose name contains this text (ignoring case).
+     * @param query Only list templates whose name contains this text (ignoring case). `%` and `_` match themselves.
      * @param parentFolderId Only list the templates in this folder (not in its subfolders).
      * @param limit How many items to return (1-100, default 50).
      * @param cursor The previous page's `next_cursor`, to get the next page. It's the ID of that page's last item, so get the next page before you delete or change the items on this one.
@@ -2357,8 +3123,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Move a folder
      * @param folderId The folder's ID.
      * @param body Where to move the folder.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async moveFolder(folderId: string, body: MoveFolderRequest, _options?: Configuration): Promise<RequestContext> {
+    public async moveFolder(folderId: string, body: MoveFolderRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'folderId' is not null or undefined
@@ -2373,6 +3140,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/folders/{folder_id}/move'
             .replace('{folder_id}', encodeURIComponent(String(folderId)));
@@ -2380,6 +3148,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -2417,8 +3188,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Move a template to a folder
      * @param templateId The template's ID.
      * @param body Where to move the template.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async moveTemplate(templateId: string, body: MoveTemplateRequest, _options?: Configuration): Promise<RequestContext> {
+    public async moveTemplate(templateId: string, body: MoveTemplateRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -2433,6 +3205,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/move'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -2440,6 +3213,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -2477,8 +3253,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Publish a template version
      * @param templateId The template's ID.
      * @param body The version to publish.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async publishTemplateVersion(templateId: string, body: PublishTemplateVersionRequest, _options?: Configuration): Promise<RequestContext> {
+    public async publishTemplateVersion(templateId: string, body: PublishTemplateVersionRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -2493,6 +3270,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/publish_version'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -2500,6 +3278,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -2537,8 +3318,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Remove fields from a template
      * @param templateId The template's ID.
      * @param body The fields to remove from the template's draft.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async removeTemplateFields(templateId: string, body: RemoveTemplateFieldsRequest, _options?: Configuration): Promise<RequestContext> {
+    public async removeTemplateFields(templateId: string, body: RemoveTemplateFieldsRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -2553,6 +3335,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/fields/remove'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -2560,6 +3343,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -2597,8 +3383,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Rename a folder
      * @param folderId The folder's ID.
      * @param body The folder's new name.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async renameFolder(folderId: string, body: RenameFolderRequest, _options?: Configuration): Promise<RequestContext> {
+    public async renameFolder(folderId: string, body: RenameFolderRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'folderId' is not null or undefined
@@ -2613,6 +3400,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/folders/{folder_id}/rename'
             .replace('{folder_id}', encodeURIComponent(String(folderId)));
@@ -2620,6 +3408,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -2657,8 +3448,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Reorder a template's fields
      * @param templateId The template's ID.
      * @param body The new order of the fields in the template's draft.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async reorderTemplateFields(templateId: string, body: ReorderTemplateFieldsRequest, _options?: Configuration): Promise<RequestContext> {
+    public async reorderTemplateFields(templateId: string, body: ReorderTemplateFieldsRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -2673,6 +3465,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/fields/reorder'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -2680,6 +3473,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -2717,8 +3513,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Restore a template version
      * @param templateId The template's ID.
      * @param body The version to restore.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async restoreTemplateVersion(templateId: string, body: RestoreTemplateVersionRequest, _options?: Configuration): Promise<RequestContext> {
+    public async restoreTemplateVersion(templateId: string, body: RestoreTemplateVersionRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -2733,6 +3530,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/restore_version'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -2740,6 +3538,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -2767,6 +3568,121 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         if (_config.validateRequests !== false) {
             validateRequest("restoreTemplateVersion", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Sends the account email action's email to the API token's user only, as it would go for one template it sends for, with each field shown as its name in brackets, so you can check how it looks. When the email action attaches its files and that template is a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. 
+     * Send a test email for an account email action
+     * @param emailActionId The account email action's ID.
+     * @param body Which template the test email is for.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async sendAccountEmailActionTestEmail(emailActionId: string, body?: SendAccountEmailActionTestEmailRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'emailActionId' is not null or undefined
+        if (emailActionId === null || emailActionId === undefined) {
+            throw new RequiredError("Client", "sendAccountEmailActionTestEmail", "emailActionId");
+        }
+
+
+
+
+        // Path Params
+        const localVarPath = '/email_actions/{email_action_id}/test_email'
+            .replace('{email_action_id}', encodeURIComponent(String(emailActionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "SendAccountEmailActionTestEmailRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("sendAccountEmailActionTestEmail", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Sends the email action's email to the API token's user only, with each field and metadata value shown as its name in brackets, so you can check how it looks. When the email action attaches its files and the template is a PDF template, the test attaches the template's blank PDF. It isn't recorded on any submission. Without a paid plan, the user needs a confirmed email address. 
+     * Send a test email
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async sendEmailActionTestEmail(templateId: string, emailActionId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new RequiredError("Client", "sendEmailActionTestEmail", "templateId");
+        }
+
+
+        // verify required parameter 'emailActionId' is not null or undefined
+        if (emailActionId === null || emailActionId === undefined) {
+            throw new RequiredError("Client", "sendEmailActionTestEmail", "emailActionId");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/templates/{template_id}/email_actions/{email_action_id}/test_email'
+            .replace('{template_id}', encodeURIComponent(String(templateId)))
+            .replace('{email_action_id}', encodeURIComponent(String(emailActionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("sendEmailActionTestEmail", requestContext);
         }
 
         return requestContext;
@@ -2807,12 +3723,224 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
+     * Changes one of your account's email actions. Properties left out keep their values. Its templates' customizations keep their own changes, and follow the rest. Set `enabled` to false to stop its emails for every template. 
+     * Update an account email action
+     * @param emailActionId The account email action's ID.
+     * @param body The settings to change. Properties left out keep their values.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async updateAccountEmailAction(emailActionId: string, body: UpdateAccountEmailActionRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'emailActionId' is not null or undefined
+        if (emailActionId === null || emailActionId === undefined) {
+            throw new RequiredError("Client", "updateAccountEmailAction", "emailActionId");
+        }
+
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "updateAccountEmailAction", "body");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/email_actions/{email_action_id}'
+            .replace('{email_action_id}', encodeURIComponent(String(emailActionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "UpdateAccountEmailActionRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("updateAccountEmailAction", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Changes an email action's settings. Properties left out keep their values. Set `enabled` to false to stop its emails, or to true to turn it back on after DocSpring turned it off. 
+     * Update an email action
+     * @param templateId The template's ID.
+     * @param emailActionId The email action's ID.
+     * @param body The settings to change. Properties left out keep their values.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async updateEmailAction(templateId: string, emailActionId: string, body: UpdateEmailActionRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new RequiredError("Client", "updateEmailAction", "templateId");
+        }
+
+
+        // verify required parameter 'emailActionId' is not null or undefined
+        if (emailActionId === null || emailActionId === undefined) {
+            throw new RequiredError("Client", "updateEmailAction", "emailActionId");
+        }
+
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "updateEmailAction", "body");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/templates/{template_id}/email_actions/{email_action_id}'
+            .replace('{template_id}', encodeURIComponent(String(templateId)))
+            .replace('{email_action_id}', encodeURIComponent(String(emailActionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "UpdateEmailActionRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("updateEmailAction", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Changes one of your account's email actions for this template only, replacing any changes the template had. Each setting you send is changed for this template, and the ones you leave out follow the account email action, including later changes to it. Set `enabled` to false to stop it sending for this template. 
+     * Customize an account email action for a template
+     * @param templateId The template's ID.
+     * @param emailActionId The ID of one of your account's email actions that sends for the template.
+     * @param body The template's changes to the account email action, replacing any it had. Each setting you send is changed for this template, and the ones you leave out follow the account email action. `enabled: false` stops it sending for this template; left out, it sends.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async updateEmailActionCustomization(templateId: string, emailActionId: string, body: UpdateEmailActionCustomizationRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new RequiredError("Client", "updateEmailActionCustomization", "templateId");
+        }
+
+
+        // verify required parameter 'emailActionId' is not null or undefined
+        if (emailActionId === null || emailActionId === undefined) {
+            throw new RequiredError("Client", "updateEmailActionCustomization", "emailActionId");
+        }
+
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new RequiredError("Client", "updateEmailActionCustomization", "body");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/templates/{template_id}/email_actions/{email_action_id}/customization'
+            .replace('{template_id}', encodeURIComponent(String(templateId)))
+            .replace('{email_action_id}', encodeURIComponent(String(emailActionId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        // Body Params
+        const contentType = ObjectSerializer.getPreferredMediaType([
+            "application/json"
+        ]);
+        requestContext.setHeaderParam("Content-Type", contentType);
+        const serializedBody = ObjectSerializer.stringify(
+            ObjectSerializer.serialize(body, "UpdateEmailActionCustomizationRequest", ""),
+            contentType
+        );
+        requestContext.setBody(serializedBody);
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("updateEmailActionCustomization", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
      * Changes a pending signature request's metadata, or how your app authenticated the person (for the audit trail). Once the person has opened it, only its metadata can be changed, and a completed or declined signature request can't be changed. 
      * Update a signature request
      * @param signatureRequestId The signature request's ID.
      * @param body The settings to change. Properties left out keep their values.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async updateSignatureRequest(signatureRequestId: string, body: UpdateSignatureRequestRequest, _options?: Configuration): Promise<RequestContext> {
+    public async updateSignatureRequest(signatureRequestId: string, body: UpdateSignatureRequestRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'signatureRequestId' is not null or undefined
@@ -2827,6 +3955,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/signature_requests/{signature_request_id}'
             .replace('{signature_request_id}', encodeURIComponent(String(signatureRequestId)));
@@ -2834,6 +3963,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -2867,12 +3999,13 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
     }
 
     /**
-     * Changes a template's draft. Properties left out keep their values. `defaults` and `html_engine_options` replace the whole object, and `field_groups` changes only the groups it lists. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
+     * Changes a template's draft. Properties left out keep their values. `defaults`, `html_engine_options` and a page design's `layout` replace the whole object, and `field_groups` changes only the groups it lists. A new layout adds a field for each new value it reads. Settings such as `webhook_url`, `public_submissions` and `expire_after` apply to every published version too, and setting `parent_folder_id` moves the template and all of its published versions. 
      * Update a template
      * @param templateId The template's ID.
      * @param body The settings to change. Properties left out keep their values.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async updateTemplate(templateId: string, body: UpdateTemplateRequest, _options?: Configuration): Promise<RequestContext> {
+    public async updateTemplate(templateId: string, body: UpdateTemplateRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -2887,6 +4020,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -2894,6 +4028,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -2932,8 +4069,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * @param templateId The template's ID.
      * @param body The new PDF, or a Word template's new Word document, as one of `cache_id`, `document_url` and `document_base64`.
      * @param wait Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async updateTemplateDocument(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, _options?: Configuration): Promise<RequestContext> {
+    public async updateTemplateDocument(templateId: string, body: UpdateTemplateDocumentRequest, wait?: boolean, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -2949,6 +4087,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/document'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -2961,6 +4100,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         if (wait !== undefined) {
             requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
         }
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -2998,8 +4140,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Update a template's fields
      * @param templateId The template's ID.
      * @param body The fields to change in the template's draft.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async updateTemplateFields(templateId: string, body: UpdateTemplateFieldsRequest, _options?: Configuration): Promise<RequestContext> {
+    public async updateTemplateFields(templateId: string, body: UpdateTemplateFieldsRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -3014,6 +4157,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/fields'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -3021,6 +4165,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -3058,8 +4205,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Update a webhook
      * @param webhookId The webhook's ID.
      * @param body The settings to change. Properties left out keep their values.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async updateWebhook(webhookId: string, body: UpdateWebhookRequest, _options?: Configuration): Promise<RequestContext> {
+    public async updateWebhook(webhookId: string, body: UpdateWebhookRequest, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'webhookId' is not null or undefined
@@ -3074,6 +4222,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/webhooks/{webhook_id}'
             .replace('{webhook_id}', encodeURIComponent(String(webhookId)));
@@ -3081,6 +4230,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.PUT);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -3127,14 +4279,16 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * @param fieldNaming With `detect_fields`, how the fields are named. `ai` (the default) names them and sets their types and settings with AI; `preserve` keeps the names of the PDF's form fields, and AI only names the fields it detected. `preserve` needs `field_source` `auto` or `pdf_form_fields`.
      * @param fieldLogic With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
      * @param outputFormat What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async uploadTemplate(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, outputFormat?: OutputFormat, _options?: Configuration): Promise<RequestContext> {
+    public async uploadTemplate(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, outputFormat?: OutputFormat, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'document' is not null or undefined
         if (document === null || document === undefined) {
             throw new RequiredError("Client", "uploadTemplate", "document");
         }
+
 
 
 
@@ -3158,6 +4312,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         if (wait !== undefined) {
             requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
         }
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
         // Form Params
         const useForm = canConsumeForm([
@@ -3249,8 +4406,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * @param document The new PDF, or the new Word document (.docx or .odt) of a Word template.
      * @param wait Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
      * @param reimportFields Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async uploadTemplateDocument(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, _options?: Configuration): Promise<RequestContext> {
+    public async uploadTemplateDocument(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -3267,6 +4425,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/document/upload'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -3279,6 +4438,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         if (wait !== undefined) {
             requestContext.setQueryParam("wait", ObjectSerializer.serialize(wait, "boolean", ""));
         }
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
         // Form Params
         const useForm = canConsumeForm([
@@ -3336,9 +4498,10 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
      * Check a submission without creating it
      * @param templateId The template's ID.
      * @param body The submission's data and settings.
-     * @param version The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` or `draft`. Default `latest` (the draft when no version has been published).
+     * @param version The template version to use: a published version (`1.2.0`, or `1` for the latest 1.x.x), `latest` (the newest published version, or the draft when none has been published) or `draft`. Default `latest`.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
      */
-    public async validateSubmission(templateId: string, body: ValidateSubmissionRequest, version?: string, _options?: Configuration): Promise<RequestContext> {
+    public async validateSubmission(templateId: string, body: ValidateSubmissionRequest, version?: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'templateId' is not null or undefined
@@ -3354,6 +4517,7 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
 
 
+
         // Path Params
         const localVarPath = '/templates/{template_id}/submissions/validate'
             .replace('{template_id}', encodeURIComponent(String(templateId)));
@@ -3366,6 +4530,9 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
         if (version !== undefined) {
             requestContext.setQueryParam("version", ObjectSerializer.serialize(version, "string", ""));
         }
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
 
 
         // Body Params
@@ -3393,6 +4560,53 @@ export class ClientRequestFactory extends BaseAPIRequestFactory {
 
         if (_config.validateRequests !== false) {
             validateRequest("validateSubmission", requestContext);
+        }
+
+        return requestContext;
+    }
+
+    /**
+     * Checks the email domain's DNS records now, instead of waiting for the next check. If DocSpring has stopped looking for its DKIM records (3 days after they were created), it starts again with new ones: replace the CNAME records with them. 
+     * Verify an email domain
+     * @param emailDomainId The email domain's ID.
+     * @param idempotencyKey A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     */
+    public async verifyEmailDomain(emailDomainId: string, idempotencyKey?: string, _options?: Configuration): Promise<RequestContext> {
+        let _config = _options || this.configuration;
+
+        // verify required parameter 'emailDomainId' is not null or undefined
+        if (emailDomainId === null || emailDomainId === undefined) {
+            throw new RequiredError("Client", "verifyEmailDomain", "emailDomainId");
+        }
+
+
+
+        // Path Params
+        const localVarPath = '/email_domains/{email_domain_id}/verify'
+            .replace('{email_domain_id}', encodeURIComponent(String(emailDomainId)));
+
+        // Make Request Context
+        const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
+        requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Header Params
+        requestContext.setHeaderParam("Idempotency-Key", ObjectSerializer.serialize(idempotencyKey, "string", ""));
+
+
+        let authMethod: SecurityAuthentication | undefined;
+        // Apply auth methods
+        authMethod = _config.authMethods["api_token_basic"]
+        if (authMethod?.applySecurityAuthentication) {
+            await authMethod?.applySecurityAuthentication(requestContext);
+        }
+        
+        const defaultAuth: SecurityAuthentication | undefined = _config?.authMethods?.default
+        if (defaultAuth?.applySecurityAuthentication) {
+            await defaultAuth?.applySecurityAuthentication(requestContext);
+        }
+
+        if (_config.validateRequests !== false) {
+            validateRequest("verifyEmailDomain", requestContext);
         }
 
         return requestContext;
@@ -3534,6 +4748,63 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
+     * @params response Response returned by the server for a request to createAccountEmailAction
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async createAccountEmailActionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailAction >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "unknown template", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "email actions turned off for the account", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
      * @params response Response returned by the server for a request to createCombinedPdf
      * @throws ApiException if the response code was not in [200, 299]
      */
@@ -3652,6 +4923,127 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "CustomFile", ""
             ) as CustomFile;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to createEmailAction
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async createEmailActionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailAction >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid email action", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "email actions turned off for the account", body, response.headers);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "locked template", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to createEmailDomain
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async createEmailDomainWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailDomain >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("201", response.httpStatusCode)) {
+            const body: EmailDomain = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailDomain", ""
+            ) as EmailDomain;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid domain", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "plan without email actions", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailDomain = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailDomain", ""
+            ) as EmailDomain;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -4188,6 +5580,49 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
+     * @params response Response returned by the server for a request to deleteAccountEmailAction
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async deleteAccountEmailActionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailAction >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
      * @params response Response returned by the server for a request to deleteCustomFile
      * @throws ApiException if the response code was not in [200, 299]
      */
@@ -4235,6 +5670,149 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "CustomFile", ""
             ) as CustomFile;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to deleteEmailAction
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async deleteEmailActionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailAction >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "locked template", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to deleteEmailActionCustomization
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async deleteEmailActionCustomizationWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailAction >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "locked template", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to deleteEmailDomain
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async deleteEmailDomainWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailDomain >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailDomain = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailDomain", ""
+            ) as EmailDomain;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailDomain = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailDomain", ""
+            ) as EmailDomain;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -4658,6 +6236,56 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
+     * @params response Response returned by the server for a request to getAccountEmailAction
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async getAccountEmailActionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailAction >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "account email action not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
      * @params response Response returned by the server for a request to getCombinedPdf
      * @throws ApiException if the response code was not in [200, 299]
      */
@@ -4748,6 +6376,106 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "CustomFile", ""
             ) as CustomFile;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to getEmailAction
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async getEmailActionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailAction >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "email action not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to getEmailDomain
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async getEmailDomainWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailDomain >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailDomain = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailDomain", ""
+            ) as EmailDomain;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "email domain not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailDomain = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailDomain", ""
+            ) as EmailDomain;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -5372,6 +7100,49 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
+     * @params response Response returned by the server for a request to listAccountEmailActions
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async listAccountEmailActionsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailActionList >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailActionList = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailActionList", ""
+            ) as EmailActionList;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailActionList = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailActionList", ""
+            ) as EmailActionList;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
      * @params response Response returned by the server for a request to listCombinedPdfs
      * @throws ApiException if the response code was not in [200, 299]
      */
@@ -5462,6 +7233,99 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "CustomFileList", ""
             ) as CustomFileList;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to listEmailActions
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async listEmailActionsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailActionList >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailActionList = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailActionList", ""
+            ) as EmailActionList;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("404", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template not found", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailActionList = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailActionList", ""
+            ) as EmailActionList;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to listEmailDomains
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async listEmailDomainsWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailDomainList >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailDomainList = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailDomainList", ""
+            ) as EmailDomainList;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailDomainList = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailDomainList", ""
+            ) as EmailDomainList;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -6199,6 +8063,120 @@ export class ClientResponseProcessor {
      * Unwraps the actual response sent by the server from the response context and deserializes the response content
      * to the expected objects
      *
+     * @params response Response returned by the server for a request to sendAccountEmailActionTestEmail
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async sendAccountEmailActionTestEmailWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailActionTestEmail >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailActionTestEmail = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailActionTestEmail", ""
+            ) as EmailActionTestEmail;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template it does not send for", body, response.headers);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "no template to send for", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailActionTestEmail = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailActionTestEmail", ""
+            ) as EmailActionTestEmail;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to sendEmailActionTestEmail
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async sendEmailActionTestEmailWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailActionTestEmail >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailActionTestEmail = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailActionTestEmail", ""
+            ) as EmailActionTestEmail;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "email action that cannot send", body, response.headers);
+        }
+        if (isCodeInRange("403", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "email actions turned off for the account", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailActionTestEmail = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailActionTestEmail", ""
+            ) as EmailActionTestEmail;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
      * @params response Response returned by the server for a request to testAuthentication
      * @throws ApiException if the response code was not in [200, 299]
      */
@@ -6232,6 +8210,163 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "AuthenticationCheck", ""
             ) as AuthenticationCheck;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to updateAccountEmailAction
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async updateAccountEmailActionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailAction >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to updateEmailAction
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async updateEmailActionWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailAction >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid email action", body, response.headers);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "account email action", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to updateEmailActionCustomization
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async updateEmailActionCustomizationWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailAction >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("422", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "invalid customization", body, response.headers);
+        }
+        if (isCodeInRange("409", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "template\&#39;s own email action", body, response.headers);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailAction = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailAction", ""
+            ) as EmailAction;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 
@@ -6737,6 +8872,49 @@ export class ClientResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "SubmissionValidation", ""
             ) as SubmissionValidation;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+
+        throw new ApiException<string | Blob | undefined>(response.httpStatusCode, "Unknown API Status Code!", await response.getBodyAsAny(), response.headers);
+    }
+
+    /**
+     * Unwraps the actual response sent by the server from the response context and deserializes the response content
+     * to the expected objects
+     *
+     * @params response Response returned by the server for a request to verifyEmailDomain
+     * @throws ApiException if the response code was not in [200, 299]
+     */
+     public async verifyEmailDomainWithHttpInfo(response: ResponseContext): Promise<HttpInfo<EmailDomain >> {
+        const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
+        if (isCodeInRange("200", response.httpStatusCode)) {
+            const body: EmailDomain = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailDomain", ""
+            ) as EmailDomain;
+            return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
+        }
+        if (isCodeInRange("401", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "authentication failed", body, response.headers);
+        }
+        if (isCodeInRange("429", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Too many requests: wait the number of seconds in the Retry-After header, then send the request again.", body, response.headers);
+        }
+
+        // Work around for missing responses in specification, e.g. for petstore.yaml
+        if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
+            const body: EmailDomain = ObjectSerializer.deserialize(
+                ObjectSerializer.parse(await response.body.text(), contentType),
+                "EmailDomain", ""
+            ) as EmailDomain;
             return new HttpInfo(response.httpStatusCode, response.headers, response.body, body);
         }
 

@@ -25,7 +25,7 @@ export class UpdateTemplateDocumentRequest {
     */
     'document_url'?: string;
     /**
-    * The template's document (a PDF, or a Word template's Word document), encoded as base64 (a `data:` URI works too), instead of `cache_id`. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`.
+    * The template's document (a PDF, or a Word template's Word document), encoded as base64 (a `data:` URI works too), instead of `cache_id`. Line breaks and spaces in it are ignored. Up to 7 MB before it's encoded: send a larger file with `cache_id` or `document_url`.
     */
     'document_base64'?: string;
     /**
