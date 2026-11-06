@@ -20,6 +20,7 @@ import { SignatureRequestEmailAttachments } from '../models/SignatureRequestEmai
 import { TemplateDefaultsInput } from '../models/TemplateDefaultsInput';
 import { TemplateFieldDependencyInput } from '../models/TemplateFieldDependencyInput';
 import { TemplateFormMode } from '../models/TemplateFormMode';
+import { TemplateFormSectionInput } from '../models/TemplateFormSectionInput';
 import { HttpFile } from '../http/http';
 
 /**
@@ -71,7 +72,7 @@ export class UpdateTemplateRequest {
     */
     'editable_submissions'?: boolean;
     /**
-    * The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted.
+    * The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and Web Forms JS) aren't restricted.
     */
     'embed_domains'?: Array<string>;
     /**
@@ -123,7 +124,7 @@ export class UpdateTemplateRequest {
     */
     'public_web_form'?: boolean;
     /**
-    * Where the web form sends people after they submit it.
+    * Where the web form sends people after they submit it, instead of showing its success screen. After its `?` or `#`, it can have variables such as `{{ data.first_name }}`, which the form fills in with what they submitted.
     */
     'redirect_url'?: string | null;
     /**
@@ -155,6 +156,18 @@ export class UpdateTemplateRequest {
     */
     'signature_request_signing_url'?: string | null;
     /**
+    * The title of the web form's success screen. When it's null or empty, the screen says "Thanks for filling out" and the template's name. It can have variables such as `{{ data.first_name }}`.
+    */
+    'success_title'?: string | null;
+    /**
+    * A message under the title of the web form's success screen, as plain text. Line breaks show, and web addresses become links. It can have variables such as `{{ data.first_name }}`.
+    */
+    'success_message'?: string | null;
+    /**
+    * Whether the web form's success screen has a "Fill out again" button, which clears the form so someone can fill it in again.
+    */
+    'show_fill_again_button'?: boolean;
+    /**
     * A Slack incoming webhook URL that is notified about the template's submissions. It's never returned; `has_slack_webhook_url` says if it's set.
     */
     'slack_webhook_url'?: string | null;
@@ -170,6 +183,10 @@ export class UpdateTemplateRequest {
     * Changes to the settings of the template's field groups, each with the `name` of the group it changes. Settings left out keep their values, and groups left out are unchanged.
     */
     'field_groups'?: Array<FieldGroupInput>;
+    /**
+    * The web form's sections, in order. Setting them replaces all of the sections; an empty list removes them.
+    */
+    'form_sections'?: Array<TemplateFormSectionInput>;
     /**
     * The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
     */
@@ -405,6 +422,24 @@ export class UpdateTemplateRequest {
             "format": ""
         },
         {
+            "name": "success_title",
+            "baseName": "success_title",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "success_message",
+            "baseName": "success_message",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "show_fill_again_button",
+            "baseName": "show_fill_again_button",
+            "type": "boolean",
+            "format": ""
+        },
+        {
             "name": "slack_webhook_url",
             "baseName": "slack_webhook_url",
             "type": "string",
@@ -426,6 +461,12 @@ export class UpdateTemplateRequest {
             "name": "field_groups",
             "baseName": "field_groups",
             "type": "Array<FieldGroupInput>",
+            "format": ""
+        },
+        {
+            "name": "form_sections",
+            "baseName": "form_sections",
+            "type": "Array<TemplateFormSectionInput>",
             "format": ""
         },
         {

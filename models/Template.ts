@@ -22,6 +22,7 @@ import { TemplateDefaults } from '../models/TemplateDefaults';
 import { TemplateDocument } from '../models/TemplateDocument';
 import { TemplateFieldDependency } from '../models/TemplateFieldDependency';
 import { TemplateFormMode } from '../models/TemplateFormMode';
+import { TemplateFormSection } from '../models/TemplateFormSection';
 import { TemplateType } from '../models/TemplateType';
 import { TemplateVersion } from '../models/TemplateVersion';
 import { HttpFile } from '../http/http';
@@ -119,7 +120,7 @@ export class Template {
     */
     'editable_submissions': boolean;
     /**
-    * The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted.
+    * The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and Web Forms JS) aren't restricted.
     */
     'embed_domains': Array<string>;
     /**
@@ -171,7 +172,7 @@ export class Template {
     */
     'public_web_form': boolean;
     /**
-    * Where the web form sends people after they submit it.
+    * Where the web form sends people after they submit it, instead of showing its success screen. After its `?` or `#`, it can have variables such as `{{ data.first_name }}`, which the form fills in with what they submitted.
     */
     'redirect_url': string | null;
     /**
@@ -203,6 +204,18 @@ export class Template {
     */
     'signature_request_signing_url': string | null;
     /**
+    * The title of the web form's success screen. When it's null or empty, the screen says "Thanks for filling out" and the template's name. It can have variables such as `{{ data.first_name }}`.
+    */
+    'success_title': string | null;
+    /**
+    * A message under the title of the web form's success screen, as plain text. Line breaks show, and web addresses become links. It can have variables such as `{{ data.first_name }}`.
+    */
+    'success_message': string | null;
+    /**
+    * Whether the web form's success screen has a "Fill out again" button, which clears the form so someone can fill it in again.
+    */
+    'show_fill_again_button': boolean;
+    /**
     * Whether `slack_webhook_url` is set.
     */
     'has_slack_webhook_url': boolean;
@@ -219,6 +232,10 @@ export class Template {
     * The groups of the template's fields, with their settings. A field's name puts it in groups: `address/city` is in the group `address`, and `items/0/price` is in the list `items` and its items' group `items/~`.
     */
     'field_groups': Array<FieldGroup>;
+    /**
+    * The web form's sections, in order: Web Forms JS and the hosted web form show one section at a time. Empty when the template has none, and the web form shows all of its fields together, in the order the fields endpoint lists them. A field that no section lists (one added later) goes after the field before it in that order, in that field's section.
+    */
+    'form_sections': Array<TemplateFormSection>;
     /**
     * The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
     */
@@ -528,6 +545,24 @@ export class Template {
             "format": ""
         },
         {
+            "name": "success_title",
+            "baseName": "success_title",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "success_message",
+            "baseName": "success_message",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "show_fill_again_button",
+            "baseName": "show_fill_again_button",
+            "type": "boolean",
+            "format": ""
+        },
+        {
             "name": "has_slack_webhook_url",
             "baseName": "has_slack_webhook_url",
             "type": "boolean",
@@ -555,6 +590,12 @@ export class Template {
             "name": "field_groups",
             "baseName": "field_groups",
             "type": "Array<FieldGroup>",
+            "format": ""
+        },
+        {
+            "name": "form_sections",
+            "baseName": "form_sections",
+            "type": "Array<TemplateFormSection>",
             "format": ""
         },
         {

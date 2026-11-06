@@ -167,6 +167,8 @@ models/TemplateFieldLogicStatus.ts
 models/TemplateFieldMove.ts
 models/TemplateFields.ts
 models/TemplateFormMode.ts
+models/TemplateFormSection.ts
+models/TemplateFormSectionInput.ts
 models/TemplateModelCode.ts
 models/TemplatePageAiError.ts
 models/TemplatePageAiNamingStatus.ts

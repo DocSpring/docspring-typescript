@@ -156,6 +156,8 @@ import { TemplateFieldLogicStatus } from '../models/TemplateFieldLogicStatus';
 import { TemplateFieldMove } from '../models/TemplateFieldMove';
 import { TemplateFields } from '../models/TemplateFields';
 import { TemplateFormMode } from '../models/TemplateFormMode';
+import { TemplateFormSection } from '../models/TemplateFormSection';
+import { TemplateFormSectionInput } from '../models/TemplateFormSectionInput';
 import { TemplateModelCode } from '../models/TemplateModelCode';
 import { TemplatePageAiError } from '../models/TemplatePageAiError';
 import { TemplatePageAiNamingStatus } from '../models/TemplatePageAiNamingStatus';
@@ -210,7 +212,7 @@ export interface ClientAddTemplateFieldsRequest {
      */
     body: AddTemplateFieldsRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientaddTemplateFields
@@ -233,7 +235,7 @@ export interface ClientCopyTemplateRequest {
      */
     body?: CopyTemplateRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcopyTemplate
@@ -249,7 +251,7 @@ export interface ClientCreateAccountEmailActionRequest {
      */
     body: CreateAccountEmailActionRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateAccountEmailAction
@@ -272,7 +274,7 @@ export interface ClientCreateCombinedPdfRequest {
      */
     wait?: boolean
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateCombinedPdf
@@ -288,7 +290,7 @@ export interface ClientCreateCustomFileFromUploadRequest {
      */
     body: CreateCustomFileFromUploadRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateCustomFileFromUpload
@@ -311,7 +313,7 @@ export interface ClientCreateEmailActionRequest {
      */
     body: CreateEmailActionRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateEmailAction
@@ -327,7 +329,7 @@ export interface ClientCreateEmailDomainRequest {
      */
     body: CreateEmailDomainRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateEmailDomain
@@ -343,7 +345,7 @@ export interface ClientCreateFolderRequest {
      */
     body: CreateFolderRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateFolder
@@ -366,7 +368,7 @@ export interface ClientCreateSignatureRequestEventRequest {
      */
     body: CreateSignatureRequestEventRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateSignatureRequestEvent
@@ -389,7 +391,7 @@ export interface ClientCreateSignatureRequestTokenRequest {
      */
     body?: CreateSignatureRequestTokenRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateSignatureRequestToken
@@ -426,7 +428,7 @@ export interface ClientCreateSubmissionRequest {
      */
     wait?: boolean
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateSubmission
@@ -449,7 +451,7 @@ export interface ClientCreateSubmissionBatchRequest {
      */
     wait?: boolean
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateSubmissionBatch
@@ -472,7 +474,7 @@ export interface ClientCreateTemplateRequest {
      */
     wait?: boolean
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateTemplate
@@ -502,7 +504,7 @@ export interface ClientCreateTemplatePreviewRequest {
      */
     version?: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateTemplatePreview
@@ -518,7 +520,7 @@ export interface ClientCreateWebhookRequest {
      */
     body: CreateWebhookRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientcreateWebhook
@@ -535,7 +537,7 @@ export interface ClientDeleteAccountEmailActionRequest {
      */
     emailActionId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteAccountEmailAction
@@ -552,7 +554,7 @@ export interface ClientDeleteCustomFileRequest {
      */
     customFileId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteCustomFile
@@ -576,7 +578,7 @@ export interface ClientDeleteEmailActionRequest {
      */
     emailActionId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteEmailAction
@@ -600,7 +602,7 @@ export interface ClientDeleteEmailActionCustomizationRequest {
      */
     emailActionId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteEmailActionCustomization
@@ -617,7 +619,7 @@ export interface ClientDeleteEmailDomainRequest {
      */
     emailDomainId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteEmailDomain
@@ -634,7 +636,7 @@ export interface ClientDeleteFolderRequest {
      */
     folderId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteFolder
@@ -658,7 +660,7 @@ export interface ClientDeleteTemplateRequest {
      */
     version?: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteTemplate
@@ -675,7 +677,7 @@ export interface ClientDeleteWebhookRequest {
      */
     webhookId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientdeleteWebhook
@@ -692,7 +694,7 @@ export interface ClientExpireCombinedPdfRequest {
      */
     combinedPdfId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientexpireCombinedPdf
@@ -709,7 +711,7 @@ export interface ClientExpireSubmissionRequest {
      */
     submissionId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientexpireSubmission
@@ -739,7 +741,7 @@ export interface ClientGenerateSubmissionFilesRequest {
      */
     wait?: boolean
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgenerateSubmissionFiles
@@ -756,7 +758,7 @@ export interface ClientGenerateSubmissionPreviewRequest {
      */
     submissionId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientgenerateSubmissionPreview
@@ -1360,7 +1362,7 @@ export interface ClientMoveFolderRequest {
      */
     body: MoveFolderRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientmoveFolder
@@ -1383,7 +1385,7 @@ export interface ClientMoveTemplateRequest {
      */
     body: MoveTemplateRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientmoveTemplate
@@ -1406,7 +1408,7 @@ export interface ClientPublishTemplateVersionRequest {
      */
     body: PublishTemplateVersionRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientpublishTemplateVersion
@@ -1429,7 +1431,7 @@ export interface ClientRemoveTemplateFieldsRequest {
      */
     body: RemoveTemplateFieldsRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientremoveTemplateFields
@@ -1452,7 +1454,7 @@ export interface ClientRenameFolderRequest {
      */
     body: RenameFolderRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientrenameFolder
@@ -1475,7 +1477,7 @@ export interface ClientReorderTemplateFieldsRequest {
      */
     body: ReorderTemplateFieldsRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientreorderTemplateFields
@@ -1498,7 +1500,7 @@ export interface ClientRestoreTemplateVersionRequest {
      */
     body: RestoreTemplateVersionRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientrestoreTemplateVersion
@@ -1521,7 +1523,7 @@ export interface ClientSendAccountEmailActionTestEmailRequest {
      */
     body?: SendAccountEmailActionTestEmailRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientsendAccountEmailActionTestEmail
@@ -1545,7 +1547,7 @@ export interface ClientSendEmailActionTestEmailRequest {
      */
     emailActionId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientsendEmailActionTestEmail
@@ -1571,7 +1573,7 @@ export interface ClientUpdateAccountEmailActionRequest {
      */
     body: UpdateAccountEmailActionRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateAccountEmailAction
@@ -1601,7 +1603,7 @@ export interface ClientUpdateEmailActionRequest {
      */
     body: UpdateEmailActionRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateEmailAction
@@ -1631,7 +1633,7 @@ export interface ClientUpdateEmailActionCustomizationRequest {
      */
     body: UpdateEmailActionCustomizationRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateEmailActionCustomization
@@ -1654,7 +1656,7 @@ export interface ClientUpdateSignatureRequestRequest {
      */
     body: UpdateSignatureRequestRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateSignatureRequest
@@ -1677,7 +1679,7 @@ export interface ClientUpdateTemplateRequest {
      */
     body: UpdateTemplateRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateTemplate
@@ -1707,7 +1709,7 @@ export interface ClientUpdateTemplateDocumentRequest {
      */
     wait?: boolean
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateTemplateDocument
@@ -1730,7 +1732,7 @@ export interface ClientUpdateTemplateFieldsRequest {
      */
     body: UpdateTemplateFieldsRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateTemplateFields
@@ -1753,7 +1755,7 @@ export interface ClientUpdateWebhookRequest {
      */
     body: UpdateWebhookRequest
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientupdateWebhook
@@ -1840,7 +1842,14 @@ export interface ClientUploadTemplateRequest {
      */
     outputFormat?: OutputFormat
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * With `detect_fields`, whether AI field setup keeps the fields that only the office receiving the form fills in, such as a "For office use only" box (`true`), or leaves them out (`false`). Default: your account's template settings.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientuploadTemplate
+     */
+    includeOfficeUseFields?: boolean
+    /**
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientuploadTemplate
@@ -1878,7 +1887,7 @@ export interface ClientUploadTemplateDocumentRequest {
      */
     reimportFields?: boolean
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientuploadTemplateDocument
@@ -1908,7 +1917,7 @@ export interface ClientValidateSubmissionRequest {
      */
     version?: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientvalidateSubmission
@@ -1925,7 +1934,7 @@ export interface ClientVerifyEmailDomainRequest {
      */
     emailDomainId: string
     /**
-     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then.
+     * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
      * @memberof ClientverifyEmailDomain
@@ -3260,7 +3269,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public uploadTemplateWithHttpInfo(param: ClientUploadTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.uploadTemplateWithHttpInfo(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat, param.idempotencyKey,  options).toPromise();
+        return this.api.uploadTemplateWithHttpInfo(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat, param.includeOfficeUseFields, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -3269,7 +3278,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public uploadTemplate(param: ClientUploadTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.uploadTemplate(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat, param.idempotencyKey,  options).toPromise();
+        return this.api.uploadTemplate(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat, param.includeOfficeUseFields, param.idempotencyKey,  options).toPromise();
     }
 
     /**

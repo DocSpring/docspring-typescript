@@ -22,11 +22,11 @@ export class HtmlEngineOptionsInput {
     */
     'format'?: PageFormat;
     /**
-    * The page width for the `Custom` format, with a unit (`8.5in`, `210mm`).
+    * The page width for the `Custom` format, with a unit (`8.5in`, `210mm`), from 0.05in to 200in.
     */
     'width'?: string;
     /**
-    * The page height for the `Custom` format, with a unit.
+    * The page height for the `Custom` format, with a unit, from 0.05in to 200in.
     */
     'height'?: string;
     /**
@@ -42,7 +42,7 @@ export class HtmlEngineOptionsInput {
     */
     'print_background'?: boolean;
     /**
-    * The top margin, with a unit, such as `1in` or `20mm`.
+    * The top margin, with a unit, such as `1in` or `20mm`. The top and bottom margins together must be less than the page's height.
     */
     'margin_top'?: string;
     /**
@@ -50,7 +50,7 @@ export class HtmlEngineOptionsInput {
     */
     'margin_bottom'?: string;
     /**
-    * The left margin, with a unit.
+    * The left margin, with a unit. The left and right margins together must be less than the page's width.
     */
     'margin_left'?: string;
     /**

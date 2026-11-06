@@ -152,6 +152,8 @@ export * from '../models/TemplateFieldLogicStatus';
 export * from '../models/TemplateFieldMove';
 export * from '../models/TemplateFields';
 export * from '../models/TemplateFormMode';
+export * from '../models/TemplateFormSection';
+export * from '../models/TemplateFormSectionInput';
 export * from '../models/TemplateModelCode';
 export * from '../models/TemplatePageAiError';
 export * from '../models/TemplatePageAiNamingStatus';
@@ -214,7 +216,7 @@ import { CreateSignatureRequestTokenRequest  } from '../models/CreateSignatureRe
 import { CreateSubmissionBatchRequest } from '../models/CreateSubmissionBatchRequest';
 import { CreateSubmissionRequest                     } from '../models/CreateSubmissionRequest';
 import { CreateTemplatePreviewRequest } from '../models/CreateTemplatePreviewRequest';
-import { CreateTemplateRequest                                                      } from '../models/CreateTemplateRequest';
+import { CreateTemplateRequest                                                          } from '../models/CreateTemplateRequest';
 import { CreateWebhookRequest            } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
 import { CustomFileList } from '../models/CustomFileList';
@@ -238,7 +240,7 @@ import { EmailDomainRecordState } from '../models/EmailDomainRecordState';
 import { EmailDomainState } from '../models/EmailDomainState';
 import { ErrorCode } from '../models/ErrorCode';
 import { ErrorDetail } from '../models/ErrorDetail';
-import { ErrorInfo            } from '../models/ErrorInfo';
+import { ErrorInfo              } from '../models/ErrorInfo';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { ExpirationInterval } from '../models/ExpirationInterval';
 import { Field                                                                                            } from '../models/Field';
@@ -319,7 +321,7 @@ import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
 import { SubmissionState } from '../models/SubmissionState';
 import { SubmissionSummary                    } from '../models/SubmissionSummary';
 import { SubmissionValidation } from '../models/SubmissionValidation';
-import { Template                                                            } from '../models/Template';
+import { Template                                                                } from '../models/Template';
 import { TemplateActor      } from '../models/TemplateActor';
 import { TemplateActorType } from '../models/TemplateActorType';
 import { TemplateDefaults                     } from '../models/TemplateDefaults';
@@ -342,6 +344,8 @@ import { TemplateFieldLogicStatus } from '../models/TemplateFieldLogicStatus';
 import { TemplateFieldMove } from '../models/TemplateFieldMove';
 import { TemplateFields } from '../models/TemplateFields';
 import { TemplateFormMode } from '../models/TemplateFormMode';
+import { TemplateFormSection } from '../models/TemplateFormSection';
+import { TemplateFormSectionInput } from '../models/TemplateFormSectionInput';
 import { TemplateModelCode    } from '../models/TemplateModelCode';
 import { TemplatePageAiError } from '../models/TemplatePageAiError';
 import { TemplatePageAiNamingStatus } from '../models/TemplatePageAiNamingStatus';
@@ -367,7 +371,7 @@ import { UpdateEmailActionRequest                  } from '../models/UpdateEmail
 import { UpdateSignatureRequestRequest          } from '../models/UpdateSignatureRequestRequest';
 import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
 import { UpdateTemplateFieldsRequest } from '../models/UpdateTemplateFieldsRequest';
-import { UpdateTemplateRequest                                              } from '../models/UpdateTemplateRequest';
+import { UpdateTemplateRequest                                                  } from '../models/UpdateTemplateRequest';
 import { UpdateWebhookRequest            } from '../models/UpdateWebhookRequest';
 import { UploadMethod } from '../models/UploadMethod';
 import { UploadPresign     } from '../models/UploadPresign';
@@ -562,6 +566,8 @@ let typeMap: {[index: string]: any} = {
     "TemplateFieldDependencyInput": TemplateFieldDependencyInput,
     "TemplateFieldMove": TemplateFieldMove,
     "TemplateFields": TemplateFields,
+    "TemplateFormSection": TemplateFormSection,
+    "TemplateFormSectionInput": TemplateFormSectionInput,
     "TemplateModelCode": TemplateModelCode,
     "TemplatePageImages": TemplatePageImages,
     "TemplatePageProcessingStatus": TemplatePageProcessingStatus,

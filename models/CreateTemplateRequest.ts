@@ -78,7 +78,7 @@ export class CreateTemplateRequest {
     */
     'editable_submissions'?: boolean;
     /**
-    * The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and the simple form) aren't restricted.
+    * The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and Web Forms JS) aren't restricted.
     */
     'embed_domains'?: Array<string>;
     /**
@@ -130,7 +130,7 @@ export class CreateTemplateRequest {
     */
     'public_web_form'?: boolean;
     /**
-    * Where the web form sends people after they submit it.
+    * Where the web form sends people after they submit it, instead of showing its success screen. After its `?` or `#`, it can have variables such as `{{ data.first_name }}`, which the form fills in with what they submitted.
     */
     'redirect_url'?: string | null;
     /**
@@ -161,6 +161,18 @@ export class CreateTemplateRequest {
     * A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page. PDF templates only.
     */
     'signature_request_signing_url'?: string | null;
+    /**
+    * The title of the web form's success screen. When it's null or empty, the screen says "Thanks for filling out" and the template's name. It can have variables such as `{{ data.first_name }}`.
+    */
+    'success_title'?: string | null;
+    /**
+    * A message under the title of the web form's success screen, as plain text. Line breaks show, and web addresses become links. It can have variables such as `{{ data.first_name }}`.
+    */
+    'success_message'?: string | null;
+    /**
+    * Whether the web form's success screen has a "Fill out again" button, which clears the form so someone can fill it in again.
+    */
+    'show_fill_again_button'?: boolean;
     /**
     * A Slack incoming webhook URL that is notified about the template's submissions. It's never returned; `has_slack_webhook_url` says if it's set.
     */
@@ -241,6 +253,10 @@ export class CreateTemplateRequest {
     * With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
     */
     'field_logic'?: FieldSetupLogic;
+    /**
+    * With `detect_fields`, whether AI field setup keeps the fields that only the office receiving the form fills in, such as a "For office use only" box (`true`), or leaves them out (`false`). Default: your account's template settings.
+    */
+    'include_office_use_fields'?: boolean;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -446,6 +462,24 @@ export class CreateTemplateRequest {
             "format": ""
         },
         {
+            "name": "success_title",
+            "baseName": "success_title",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "success_message",
+            "baseName": "success_message",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "show_fill_again_button",
+            "baseName": "show_fill_again_button",
+            "type": "boolean",
+            "format": ""
+        },
+        {
             "name": "slack_webhook_url",
             "baseName": "slack_webhook_url",
             "type": "string",
@@ -563,6 +597,12 @@ export class CreateTemplateRequest {
             "name": "field_logic",
             "baseName": "field_logic",
             "type": "FieldSetupLogic",
+            "format": ""
+        },
+        {
+            "name": "include_office_use_fields",
+            "baseName": "include_office_use_fields",
+            "type": "boolean",
             "format": ""
         }    ];
 
