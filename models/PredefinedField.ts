@@ -38,6 +38,10 @@ export class PredefinedField {
     */
     'option_list'?: string | null;
     /**
+    * The labels forms show for `option_list`'s values, by value, as a field's `option_labels`, such as `{"married_filing_jointly": "Married filing jointly"}`. Each key must be one of `option_list`'s values. A value without a label shows the value, or its sentence case when the values are lowercase words joined by underscores. Null gives no value a label of its own.
+    */
+    'option_labels'?: { [key: string]: string; } | null;
+    /**
     * Whether the template must have a field with this name. The embedded editor shows the names that are missing, and with `disableDoneButtonIfPredefinedFieldsMissing` keeps its Done button disabled until the template has them. Default false.
     */
     'required_in_template'?: boolean;
@@ -79,6 +83,12 @@ export class PredefinedField {
             "name": "option_list",
             "baseName": "option_list",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "option_labels",
+            "baseName": "option_labels",
+            "type": "{ [key: string]: string; }",
             "format": ""
         },
         {

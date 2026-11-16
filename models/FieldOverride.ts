@@ -17,6 +17,7 @@ import { FieldDisplayType } from '../models/FieldDisplayType';
 import { ImageGravity } from '../models/ImageGravity';
 import { ImageScaleType } from '../models/ImageScaleType';
 import { NumberConditionType } from '../models/NumberConditionType';
+import { NumberPart } from '../models/NumberPart';
 import { ShapeType } from '../models/ShapeType';
 import { StringConditionType } from '../models/StringConditionType';
 import { TextAlignment } from '../models/TextAlignment';
@@ -54,6 +55,14 @@ export class FieldOverride {
     */
     'option_list'?: string | null;
     /**
+    * The label forms show for each option, keyed by its value, such as `{"no": "No, I don't"}`. Each key must be one of the options.
+    */
+    'option_labels'?: { [key: string]: string; } | null;
+    /**
+    * Print the chosen option's label instead of its value.
+    */
+    'print_option_labels'?: boolean;
+    /**
     * The names of the fields a combined field joins, separated by commas.
     */
     'combined_field_names'?: string;
@@ -89,6 +98,14 @@ export class FieldOverride {
     * The kind of barcode a field with display_type `barcode` prints.
     */
     'barcode_symbology'?: BarcodeSymbology;
+    /**
+    * Fill the last boxes of the field's comb fields, padding the value on the left, as amounts are written on paper forms.
+    */
+    'comb_fill_from_right'?: boolean;
+    /**
+    * With `comb_fill_from_right`, pad the value with zeros instead of spaces.
+    */
+    'comb_pad_with_zeros'?: boolean;
     /**
     * Leave the field off the PDF. Its value is still in the data, and combined fields can use it.
     */
@@ -194,7 +211,7 @@ export class FieldOverride {
     */
     'comb_number_of_cells'?: number;
     /**
-    * The character of the value that the first box starts from, for a value split over several comb fields (such as the parts of a Social Security number).
+    * How many boxes of the value's row come before this field, for a value split over several comb fields (such as the parts of a Social Security number).
     */
     'comb_value_offset'?: number;
     /**
@@ -274,6 +291,10 @@ export class FieldOverride {
     */
     'decimal_places'?: number | null;
     /**
+    * Which part of a number field's number this field prints: the whole number, only the part before the decimal point, or only the decimal places.
+    */
+    'number_part'?: NumberPart;
+    /**
     * How an image is resized to its field.
     */
     'image_scale_type'?: ImageScaleType;
@@ -321,6 +342,18 @@ export class FieldOverride {
             "name": "option_list",
             "baseName": "option_list",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "option_labels",
+            "baseName": "option_labels",
+            "type": "{ [key: string]: string; }",
+            "format": ""
+        },
+        {
+            "name": "print_option_labels",
+            "baseName": "print_option_labels",
+            "type": "boolean",
             "format": ""
         },
         {
@@ -375,6 +408,18 @@ export class FieldOverride {
             "name": "barcode_symbology",
             "baseName": "barcode_symbology",
             "type": "BarcodeSymbology",
+            "format": ""
+        },
+        {
+            "name": "comb_fill_from_right",
+            "baseName": "comb_fill_from_right",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "comb_pad_with_zeros",
+            "baseName": "comb_pad_with_zeros",
+            "type": "boolean",
             "format": ""
         },
         {
@@ -651,6 +696,12 @@ export class FieldOverride {
             "name": "decimal_places",
             "baseName": "decimal_places",
             "type": "number",
+            "format": ""
+        },
+        {
+            "name": "number_part",
+            "baseName": "number_part",
+            "type": "NumberPart",
             "format": ""
         },
         {

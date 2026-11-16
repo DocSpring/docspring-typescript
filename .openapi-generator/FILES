@@ -101,6 +101,7 @@ models/ModelCodeLanguage.ts
 models/MoveFolderRequest.ts
 models/MoveTemplateRequest.ts
 models/NumberConditionType.ts
+models/NumberPart.ts
 models/ObjectSerializer.ts
 models/OutputFormat.ts
 models/PageFormat.ts
@@ -178,6 +179,8 @@ models/TemplatePageImages.ts
 models/TemplatePageProcessingStatus.ts
 models/TemplatePreview.ts
 models/TemplatePreviewState.ts
+models/TemplateSignerRole.ts
+models/TemplateSignerRoleInput.ts
 models/TemplateSourcePdf.ts
 models/TemplateSummary.ts
 models/TemplateSummaryList.ts

@@ -117,6 +117,10 @@ const request: ClientAddTemplateFieldsRequest = {
         metadata: "metadata_example",
         required: true,
         option_list: "option_list_example",
+        option_labels: {
+          "key": "key_example",
+        },
+        print_option_labels: true,
         combined_field_names: "combined_field_names_example",
         combined_field_type: null,
         combined_field_separator: "combined_field_separator_example",
@@ -130,6 +134,9 @@ const request: ClientAddTemplateFieldsRequest = {
         signature_allow_draw: true,
         signature_allow_type: true,
         barcode_symbology: null,
+        comb_fill_from_right: true,
+        comb_pad_with_zeros: true,
+        print_digits_only: true,
         hidden: true,
         x: 3.14,
         y: 3.14,
@@ -191,8 +198,10 @@ const request: ClientAddTemplateFieldsRequest = {
         invert_boolean_condition: true,
         currency: true,
         decimal_places: 1,
+        number_part: null,
         image_scale_type: null,
         image_gravity: null,
+        signer_role: "signer_role_example",
         dependencies: null,
         id: 1,
       },
@@ -921,6 +930,10 @@ const request: ClientCreateSubmissionRequest = {
         title: "title_example",
         required: true,
         option_list: "option_list_example",
+        option_labels: {
+          "key": "key_example",
+        },
+        print_option_labels: true,
         combined_field_names: "combined_field_names_example",
         combined_field_type: null,
         combined_field_separator: "combined_field_separator_example",
@@ -930,6 +943,8 @@ const request: ClientCreateSubmissionRequest = {
         signature_allow_draw: true,
         signature_allow_type: true,
         barcode_symbology: null,
+        comb_fill_from_right: true,
+        comb_pad_with_zeros: true,
         hidden: true,
         x: 3.14,
         y: 3.14,
@@ -976,6 +991,7 @@ const request: ClientCreateSubmissionRequest = {
         number_condition_range_exclusive_max: true,
         invert_boolean_condition: true,
         decimal_places: 1,
+        number_part: null,
         image_scale_type: null,
         image_gravity: null,
       },
@@ -1116,6 +1132,10 @@ const request: ClientCreateSubmissionBatchRequest = {
             title: "title_example",
             required: true,
             option_list: "option_list_example",
+            option_labels: {
+              "key": "key_example",
+            },
+            print_option_labels: true,
             combined_field_names: "combined_field_names_example",
             combined_field_type: null,
             combined_field_separator: "combined_field_separator_example",
@@ -1125,6 +1145,8 @@ const request: ClientCreateSubmissionBatchRequest = {
             signature_allow_draw: true,
             signature_allow_type: true,
             barcode_symbology: null,
+            comb_fill_from_right: true,
+            comb_pad_with_zeros: true,
             hidden: true,
             x: 3.14,
             y: 3.14,
@@ -1171,6 +1193,7 @@ const request: ClientCreateSubmissionBatchRequest = {
             number_condition_range_exclusive_max: true,
             invert_boolean_condition: true,
             decimal_places: 1,
+            number_part: null,
             image_scale_type: null,
             image_gravity: null,
           },
@@ -1258,6 +1281,7 @@ const request: ClientCreateTemplateRequest = {
     ai_field_naming_language: null,
     allow_additional_properties: true,
     allow_skipping_optional_fields: true,
+    continue_before_optional_fields: true,
     default_form_mode: null,
     editable_submissions: true,
     embed_domains: [
@@ -1288,6 +1312,7 @@ const request: ClientCreateTemplateRequest = {
     success_title: "success_title_example",
     success_message: "success_message_example",
     show_fill_again_button: true,
+    form_sections_in_order: true,
     slack_webhook_url: "slack_webhook_url_example",
     defaults: null,
     field_dependencies: [
@@ -1303,6 +1328,18 @@ const request: ClientCreateTemplateRequest = {
         group: "group_example",
       },
     ],
+    signer_roles: [
+      {
+        id: "id_example",
+        key: "key_example",
+        name: "name_example",
+        name_expression: "name_expression_example",
+        email_expression: "email_expression_example",
+      },
+    ],
+    signature_request_cc: [
+      "signature_request_cc_example",
+    ],
     predefined_fields: [
       {
         name: "name_example",
@@ -1310,6 +1347,9 @@ const request: ClientCreateTemplateRequest = {
         title: "title_example",
         type: null,
         option_list: "option_list_example",
+        option_labels: {
+          "key": "key_example",
+        },
         required_in_template: true,
         field_required: true,
       },
@@ -1322,6 +1362,8 @@ const request: ClientCreateTemplateRequest = {
     html_engine_options: null,
     html_escape_data: true,
     layout: {},
+    override_account_expiry: true,
+    sync_fields: true,
     cache_id: "cache_id_example",
     document_url: "document_url_example",
     document_base64: "document_base64_example",
@@ -1892,7 +1934,7 @@ Name | Type | Description  | Notes
 # **deleteTemplate**
 > Template deleteTemplate()
 
-Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. 
+Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. A deleted template can be restored from Trash in the dashboard for a limited time; a single deleted version can't. 
 
 ### Example
 
@@ -2075,7 +2117,7 @@ Name | Type | Description  | Notes
 # **expireSubmission**
 > Submission expireSubmission()
 
-Deletes a submission's data and PDF now, and returns the expired submission.
+Deletes a submission's data and files now, along with any signature requests and audit trail, and returns the expired submission. 
 
 ### Example
 
@@ -4969,6 +5011,7 @@ const request: ClientUpdateTemplateRequest = {
     ai_field_naming_language: null,
     allow_additional_properties: true,
     allow_skipping_optional_fields: true,
+    continue_before_optional_fields: true,
     default_form_mode: null,
     editable_submissions: true,
     embed_domains: [
@@ -4999,6 +5042,7 @@ const request: ClientUpdateTemplateRequest = {
     success_title: "success_title_example",
     success_message: "success_message_example",
     show_fill_again_button: true,
+    form_sections_in_order: true,
     slack_webhook_url: "slack_webhook_url_example",
     defaults: null,
     field_dependencies: [
@@ -5035,6 +5079,18 @@ const request: ClientUpdateTemplateRequest = {
         ],
       },
     ],
+    signer_roles: [
+      {
+        id: "id_example",
+        key: "key_example",
+        name: "name_example",
+        name_expression: "name_expression_example",
+        email_expression: "email_expression_example",
+      },
+    ],
+    signature_request_cc: [
+      "signature_request_cc_example",
+    ],
     predefined_fields: [
       {
         name: "name_example",
@@ -5042,6 +5098,9 @@ const request: ClientUpdateTemplateRequest = {
         title: "title_example",
         type: null,
         option_list: "option_list_example",
+        option_labels: {
+          "key": "key_example",
+        },
         required_in_template: true,
         field_required: true,
       },
@@ -5054,6 +5113,8 @@ const request: ClientUpdateTemplateRequest = {
     html_engine_options: null,
     html_escape_data: true,
     layout: {},
+    override_account_expiry: true,
+    sync_fields: true,
   },
     // A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. (optional)
   idempotencyKey: "Idempotency-Key_example",
@@ -5124,6 +5185,7 @@ const request: ClientUpdateTemplateDocumentRequest = {
     document_base64: "document_base64_example",
     filename: "filename_example",
     reimport_fields: true,
+    sync_fields: true,
   },
     // Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. (optional)
   wait: true,
@@ -5207,6 +5269,10 @@ const request: ClientUpdateTemplateFieldsRequest = {
         metadata: "metadata_example",
         required: true,
         option_list: "option_list_example",
+        option_labels: {
+          "key": "key_example",
+        },
+        print_option_labels: true,
         combined_field_names: "combined_field_names_example",
         combined_field_type: null,
         combined_field_separator: "combined_field_separator_example",
@@ -5220,6 +5286,9 @@ const request: ClientUpdateTemplateFieldsRequest = {
         signature_allow_draw: true,
         signature_allow_type: true,
         barcode_symbology: null,
+        comb_fill_from_right: true,
+        comb_pad_with_zeros: true,
+        print_digits_only: true,
         hidden: true,
         x: 3.14,
         y: 3.14,
@@ -5281,8 +5350,10 @@ const request: ClientUpdateTemplateFieldsRequest = {
         invert_boolean_condition: true,
         currency: true,
         decimal_places: 1,
+        number_part: null,
         image_scale_type: null,
         image_gravity: null,
+        signer_role: "signer_role_example",
         dependencies: null,
         id: 1,
       },
@@ -5459,6 +5530,8 @@ const request: ClientUploadTemplateRequest = {
   outputFormat: null,
     // With `detect_fields`, whether AI field setup keeps the fields that only the office receiving the form fills in, such as a "For office use only" box (`true`), or leaves them out (`false`). Default: your account's template settings. (optional)
   includeOfficeUseFields: true,
+    // Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs. (optional)
+  syncFields: true,
     // A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. (optional)
   idempotencyKey: "Idempotency-Key_example",
 };
@@ -5484,6 +5557,7 @@ Name | Type | Description  | Notes
  **fieldLogic** | **FieldSetupLogic** | With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings. | (optional) defaults to undefined
  **outputFormat** | **OutputFormat** | What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document. | (optional) defaults to undefined
  **includeOfficeUseFields** | [**boolean**] | With `detect_fields`, whether AI field setup keeps the fields that only the office receiving the form fills in, such as a "For office use only" box (`true`), or leaves them out (`false`). Default: your account's template settings. | (optional) defaults to undefined
+ **syncFields** | [**boolean**] | Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs. | (optional) defaults to undefined
  **idempotencyKey** | [**string**] | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. | (optional) defaults to undefined
 
 
@@ -5537,6 +5611,8 @@ const request: ClientUploadTemplateDocumentRequest = {
   wait: true,
     // Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. (optional)
   reimportFields: true,
+    // Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs. (optional)
+  syncFields: true,
     // A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. (optional)
   idempotencyKey: "Idempotency-Key_example",
 };
@@ -5554,6 +5630,7 @@ Name | Type | Description  | Notes
  **document** | [**HttpFile**] | The new PDF, or the new Word document (.docx or .odt) of a Word template. | defaults to undefined
  **wait** | [**boolean**] | Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts. | (optional) defaults to undefined
  **reimportFields** | [**boolean**] | Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag. | (optional) defaults to undefined
+ **syncFields** | [**boolean**] | Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs. | (optional) defaults to undefined
  **idempotencyKey** | [**string**] | A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links. | (optional) defaults to undefined
 
 
@@ -5620,6 +5697,10 @@ const request: ClientValidateSubmissionRequest = {
         title: "title_example",
         required: true,
         option_list: "option_list_example",
+        option_labels: {
+          "key": "key_example",
+        },
+        print_option_labels: true,
         combined_field_names: "combined_field_names_example",
         combined_field_type: null,
         combined_field_separator: "combined_field_separator_example",
@@ -5629,6 +5710,8 @@ const request: ClientValidateSubmissionRequest = {
         signature_allow_draw: true,
         signature_allow_type: true,
         barcode_symbology: null,
+        comb_fill_from_right: true,
+        comb_pad_with_zeros: true,
         hidden: true,
         x: 3.14,
         y: 3.14,
@@ -5675,6 +5758,7 @@ const request: ClientValidateSubmissionRequest = {
         number_condition_range_exclusive_max: true,
         invert_boolean_condition: true,
         decimal_places: 1,
+        number_part: null,
         image_scale_type: null,
         image_gravity: null,
       },

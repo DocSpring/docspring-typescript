@@ -93,6 +93,7 @@ import { ModelCodeLanguage } from '../models/ModelCodeLanguage';
 import { MoveFolderRequest } from '../models/MoveFolderRequest';
 import { MoveTemplateRequest } from '../models/MoveTemplateRequest';
 import { NumberConditionType } from '../models/NumberConditionType';
+import { NumberPart } from '../models/NumberPart';
 import { OutputFormat } from '../models/OutputFormat';
 import { PageFormat } from '../models/PageFormat';
 import { PageImage } from '../models/PageImage';
@@ -169,6 +170,8 @@ import { TemplatePageImages } from '../models/TemplatePageImages';
 import { TemplatePageProcessingStatus } from '../models/TemplatePageProcessingStatus';
 import { TemplatePreview } from '../models/TemplatePreview';
 import { TemplatePreviewState } from '../models/TemplatePreviewState';
+import { TemplateSignerRole } from '../models/TemplateSignerRole';
+import { TemplateSignerRoleInput } from '../models/TemplateSignerRoleInput';
 import { TemplateSourcePdf } from '../models/TemplateSourcePdf';
 import { TemplateSummary } from '../models/TemplateSummary';
 import { TemplateSummaryList } from '../models/TemplateSummaryList';
@@ -793,7 +796,7 @@ export class PromiseClient {
     }
 
     /**
-     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. 
+     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. A deleted template can be restored from Trash in the dashboard for a limited time; a single deleted version can't. 
      * Delete a template
      * @param templateId The template's ID.
      * @param [version] Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted.
@@ -806,7 +809,7 @@ export class PromiseClient {
     }
 
     /**
-     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. 
+     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. A deleted template can be restored from Trash in the dashboard for a limited time; a single deleted version can't. 
      * Delete a template
      * @param templateId The template's ID.
      * @param [version] Delete only this published version (`1.2.0`) or the draft (`draft`, when no version has been published). Without it, the draft and every published version are deleted.
@@ -867,7 +870,7 @@ export class PromiseClient {
     }
 
     /**
-     * Deletes a submission's data and PDF now, and returns the expired submission.
+     * Deletes a submission's data and files now, along with any signature requests and audit trail, and returns the expired submission. 
      * Expire a submission
      * @param submissionId The submission's ID.
      * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
@@ -879,7 +882,7 @@ export class PromiseClient {
     }
 
     /**
-     * Deletes a submission's data and PDF now, and returns the expired submission.
+     * Deletes a submission's data and files now, along with any signature requests and audit trail, and returns the expired submission. 
      * Expire a submission
      * @param submissionId The submission's ID.
      * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
@@ -2127,11 +2130,12 @@ export class PromiseClient {
      * @param [fieldLogic] With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
      * @param [outputFormat] What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document.
      * @param [includeOfficeUseFields] With `detect_fields`, whether AI field setup keeps the fields that only the office receiving the form fills in, such as a "For office use only" box (`true`), or leaves them out (`false`). Default: your account's template settings.
+     * @param [syncFields] Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs.
      * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      */
-    public uploadTemplateWithHttpInfo(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, outputFormat?: OutputFormat, includeOfficeUseFields?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Template>> {
+    public uploadTemplateWithHttpInfo(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, outputFormat?: OutputFormat, includeOfficeUseFields?: boolean, syncFields?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Template>> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.uploadTemplateWithHttpInfo(document, wait, name, description, parentFolderId, aiFieldNamingLanguage, detectFields, fieldSource, fieldNaming, fieldLogic, outputFormat, includeOfficeUseFields, idempotencyKey, observableOptions);
+        const result = this.api.uploadTemplateWithHttpInfo(document, wait, name, description, parentFolderId, aiFieldNamingLanguage, detectFields, fieldSource, fieldNaming, fieldLogic, outputFormat, includeOfficeUseFields, syncFields, idempotencyKey, observableOptions);
         return result.toPromise();
     }
 
@@ -2150,11 +2154,12 @@ export class PromiseClient {
      * @param [fieldLogic] With `detect_fields`, whether AI reads the whole form once the fields are named and sets up conditional logic and required fields (`ai`) or not (`none`). Default: your account's template settings.
      * @param [outputFormat] What each submission of a Word template makes unless its request sets `output_formats`: `docx` (a Word document), `odt` (an OpenDocument file, converted from the Word document) or `pdf`. Required when `document` is a Word document.
      * @param [includeOfficeUseFields] With `detect_fields`, whether AI field setup keeps the fields that only the office receiving the form fills in, such as a "For office use only" box (`true`), or leaves them out (`false`). Default: your account's template settings.
+     * @param [syncFields] Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs.
      * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      */
-    public uploadTemplate(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, outputFormat?: OutputFormat, includeOfficeUseFields?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<Template> {
+    public uploadTemplate(document: HttpFile, wait?: boolean, name?: string, description?: string, parentFolderId?: string, aiFieldNamingLanguage?: AiFieldNamingLanguage, detectFields?: boolean, fieldSource?: FieldSetupSource, fieldNaming?: FieldSetupNaming, fieldLogic?: FieldSetupLogic, outputFormat?: OutputFormat, includeOfficeUseFields?: boolean, syncFields?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<Template> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.uploadTemplate(document, wait, name, description, parentFolderId, aiFieldNamingLanguage, detectFields, fieldSource, fieldNaming, fieldLogic, outputFormat, includeOfficeUseFields, idempotencyKey, observableOptions);
+        const result = this.api.uploadTemplate(document, wait, name, description, parentFolderId, aiFieldNamingLanguage, detectFields, fieldSource, fieldNaming, fieldLogic, outputFormat, includeOfficeUseFields, syncFields, idempotencyKey, observableOptions);
         return result.toPromise();
     }
 
@@ -2165,11 +2170,12 @@ export class PromiseClient {
      * @param document The new PDF, or the new Word document (.docx or .odt) of a Word template.
      * @param [wait] Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
      * @param [reimportFields] Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag.
+     * @param [syncFields] Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs.
      * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      */
-    public uploadTemplateDocumentWithHttpInfo(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Template>> {
+    public uploadTemplateDocumentWithHttpInfo(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, syncFields?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<HttpInfo<Template>> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.uploadTemplateDocumentWithHttpInfo(templateId, document, wait, reimportFields, idempotencyKey, observableOptions);
+        const result = this.api.uploadTemplateDocumentWithHttpInfo(templateId, document, wait, reimportFields, syncFields, idempotencyKey, observableOptions);
         return result.toPromise();
     }
 
@@ -2180,11 +2186,12 @@ export class PromiseClient {
      * @param document The new PDF, or the new Word document (.docx or .odt) of a Word template.
      * @param [wait] Wait until the PDF has been processed, a `document_url`'s PDF or Word document downloaded, and an OpenDocument file converted, before responding. Default true on sync.api hosts.
      * @param [reimportFields] Replace all of the template's fields with the fillable fields in the new PDF, once DocSpring has processed it (`document.field_reimport_state`). As on a first upload, the default typeface, font size, bold and color are taken from the PDF's fields; the template's other settings are kept. If the PDF has no fillable fields, the template keeps its fields. A locked template can't re-import its fields. Only for PDF templates: a Word template adds a field for each new tag.
+     * @param [syncFields] Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs.
      * @param [idempotencyKey] A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      */
-    public uploadTemplateDocument(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<Template> {
+    public uploadTemplateDocument(templateId: string, document: HttpFile, wait?: boolean, reimportFields?: boolean, syncFields?: boolean, idempotencyKey?: string, _options?: PromiseConfigurationOptions): Promise<Template> {
         const observableOptions = wrapOptions(_options);
-        const result = this.api.uploadTemplateDocument(templateId, document, wait, reimportFields, idempotencyKey, observableOptions);
+        const result = this.api.uploadTemplateDocument(templateId, document, wait, reimportFields, syncFields, idempotencyKey, observableOptions);
         return result.toPromise();
     }
 

@@ -23,6 +23,7 @@ import { TemplateDocument } from '../models/TemplateDocument';
 import { TemplateFieldDependency } from '../models/TemplateFieldDependency';
 import { TemplateFormMode } from '../models/TemplateFormMode';
 import { TemplateFormSection } from '../models/TemplateFormSection';
+import { TemplateSignerRole } from '../models/TemplateSignerRole';
 import { TemplateType } from '../models/TemplateType';
 import { TemplateVersion } from '../models/TemplateVersion';
 import { HttpFile } from '../http/http';
@@ -108,9 +109,13 @@ export class Template {
     */
     'allow_additional_properties': boolean;
     /**
-    * Visual forms and signature request forms show the Continue button as soon as the required fields are filled in, without visiting each optional field. The `allowSkippingOptionalFields` embed option overrides it.
+    * Visual Forms JS 2.16.0 to 2.23.0 only: with it on, Continue takes the place of Next once the required fields are filled in. Later versions use `continue_before_optional_fields`.
     */
     'allow_skipping_optional_fields': boolean;
+    /**
+    * Visual forms and signature request forms show the Continue button next to Next as soon as the required fields are filled in, without visiting each optional field. Turned off, Continue shows in place of Next only once every field has a value or has been visited. The `allowSkippingOptionalFields` embed option overrides it.
+    */
+    'continue_before_optional_fields': boolean;
     /**
     * The hosted form that /templates/{template_id}/form shows when its URL has no `mode` parameter: `web` (the web form), `visual` (the visual form, where fields are filled in on the PDF) or `dual` (both, in tabs). Only PDF templates have a visual form, so other templates accept only `web`.
     */
@@ -120,7 +125,7 @@ export class Template {
     */
     'editable_submissions': boolean;
     /**
-    * The sites that can embed the template's live signature requests and its embedded template editor: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. Forms embedded on a page (Visual Forms JS and Web Forms JS) aren't restricted.
+    * The sites that can embed the template's live signature requests, its embedded template editor and its visual form: a host such as `app.example.com`, with an optional leading wildcard (`*.example.com`), port (`localhost:3000`) or scheme (`https://app.example.com`; without one, `http` and `https` both work), without a path. Each one is stored in lowercase, without a trailing slash. Browsers open a live signature request in a frame only on these sites (and DocSpring's), so with an empty list it can't be embedded anywhere; a test signature request can be embedded on any site. The embedded template editor loads only for a page on one of these sites (by its Referer or Origin header), and on any site when the list is empty. A visual form embedded with Visual Forms JS loads only on these sites, and on any site when the list is empty. Web Forms JS isn't restricted.
     */
     'embed_domains': Array<string>;
     /**
@@ -144,11 +149,11 @@ export class Template {
     */
     'has_encrypt_pdfs_password': boolean;
     /**
-    * Delete each submission's data and PDF after `expire_after` `expiration_interval`.
+    * Delete each submission's data and files after `expire_after` `expiration_interval`, when `override_account_expiry` is on.
     */
     'expire_submissions': boolean;
     /**
-    * How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` is on. At most 5256000 (10 years in minutes).
+    * How many `expiration_interval`s a submission's data and PDF are kept for, when `expire_submissions` and `override_account_expiry` are on. At most 5256000 (10 years in minutes).
     */
     'expire_after': number;
     /**
@@ -176,31 +181,31 @@ export class Template {
     */
     'redirect_url': string | null;
     /**
-    * How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. PDF templates only. A signature request uses the value it had when the request was created.
+    * How DocSpring's completed emails send the signed PDF to your signers and CCs: `attachment` (attached, or a download link when it's too big to attach) or `link` (a download link). Null uses your account's rule: a link if your account has signed a BAA, otherwise attached. A signature request uses the value it had when the request was created.
     */
     'signature_request_email_attachments': SignatureRequestEmailAttachments | (string & {}) | null;
     /**
-    * The address DocSpring's emails to your signers come from: an address at one of your verified email domains, on the Growth plan or higher. Null sends them from DocSpring's shared address, with "via DocSpring" after the sender name. PDF templates only.
+    * The address DocSpring's emails to your signers come from: an address at one of your verified email domains, on the Growth plan or higher. Null sends them from DocSpring's shared address, with "via DocSpring" after the sender name.
     */
     'signature_request_from_address': string | null;
     /**
-    * Puts a signing token in `signature_request_signing_url`, as `{{ token_id }}` and `{{ token_secret }}`, so your page can open the signing form without creating a token itself. The email then carries a credential: anyone who has it can open the form and sign. PDF templates only.
+    * Puts a signing token in `signature_request_signing_url`, as `{{ token_id }}` and `{{ token_secret }}`, so your page can open the signing form without creating a token itself. The email then carries a credential: anyone who has it can open the form and sign.
     */
     'signature_request_include_signing_token': boolean;
     /**
-    * The sender name on the emails DocSpring sends your signers, as in "Acme via DocSpring". It can't contain an email address, a website or quotes. Null uses your account's name. PDF templates only.
+    * The sender name on the emails DocSpring sends your signers, as in "Acme via DocSpring". It can't contain an email address, a website or quotes. Null uses your account's name.
     */
     'signature_request_from_name': string | null;
     /**
-    * Who DocSpring tells when a signature request's document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Empty means your account's owner. A submission's `notification_emails` replaces them. PDF templates only.
+    * Who DocSpring tells when a signature request's document is completed or declined, or an email bounces or can't be sent: members of your DocSpring team or addresses at your verified email domains. Empty means your account's owner. A submission's `notification_emails` replaces them.
     */
     'signature_request_notification_emails': Array<string>;
     /**
-    * Where your signers' replies to DocSpring's emails go: a member of your DocSpring team or an address at one of your verified email domains. Null means your account's owner. A submission's `reply_to` replaces it. PDF templates only.
+    * Where your signers' replies to DocSpring's emails go: a member of your DocSpring team or an address at one of your verified email domains. Null means your account's owner. A submission's `reply_to` replaces it.
     */
     'signature_request_reply_to': string | null;
     /**
-    * A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page. PDF templates only.
+    * A page on your own site that the button in DocSpring's email to a signer opens, instead of DocSpring's signing page: an https URL on one of your verified email domains or a subdomain of one, on the Growth plan or higher. It must include `{{ signature_request_id }}`. Your page authenticates the signer, creates a token for the signature request, and opens the signing form with it. Null links to DocSpring's signing page.
     */
     'signature_request_signing_url': string | null;
     /**
@@ -215,6 +220,10 @@ export class Template {
     * Whether the web form's success screen has a "Fill out again" button, which clears the form so someone can fill it in again.
     */
     'show_fill_again_button': boolean;
+    /**
+    * Whether a web form with sections makes people fill them out in order. When true, a later section stays locked until they reach it with Next. When false, they can open any section from the list, and Next and Submit still check their answers.
+    */
+    'form_sections_in_order': boolean;
     /**
     * Whether `slack_webhook_url` is set.
     */
@@ -236,6 +245,14 @@ export class Template {
     * The web form's sections, in order: Web Forms JS and the hosted web form show one section at a time. Empty when the template has none, and the web form shows all of its fields together, in the order the fields endpoint lists them. A field that no section lists (one added later) goes after the field before it in that order, in that field's section.
     */
     'form_sections': Array<TemplateFormSection>;
+    /**
+    * The people who sign the template's submissions, in order. A field's `signer_role` says which signer fills it in or signs it, and a signature request's `role` says which signer it's for. Role N is also `Signer N`. Setting it replaces the whole list: a role left out is deleted, and its fields are left unassigned. Without roles (an empty list), a template's signers are Signer 1, Signer 2 and so on, and each signature request lists the fields its signer fills in or signs.
+    */
+    'signer_roles': Array<TemplateSignerRole>;
+    /**
+    * Who gets a copy of the completed document when DocSpring emails a submission's signers, with the submission's `cc`: email addresses, or `{{ variables }}` that name an address in the submission's data, such as `{{ agent.email }}`. A value the data doesn't have prints nothing, and an address that comes out blank is left out. The data has to have the value, so it's one of the template's fields (one the sender fills in) or the template allows additional properties: setting a variable that isn't a field is a `422` otherwise. They don't sign. Setting it replaces the whole list.
+    */
+    'signature_request_cc': Array<string>;
     /**
     * The field names that people using the embedded template editor choose from, each with the data type and settings a field gets when it's given that name. Setting it replaces the whole list; an empty list turns them off.
     */
@@ -280,6 +297,10 @@ export class Template {
     * The template's published versions, newest first (up to 100).
     */
     'versions': Array<TemplateVersion>;
+    /**
+    * Whether the template's own expiry (`expire_submissions`, `expire_after` and `expiration_interval`) decides when all its submissions are deleted, with or without signature requests, including keeping them until you delete them. When false, the account's expiry settings do. Turning `expire_submissions` on also turns this on, unless the same request sets it, and so does creating a template with `expire_submissions` on or off.
+    */
+    'override_account_expiry': boolean;
 
     static readonly discriminator: string | undefined = undefined;
 
@@ -403,6 +424,12 @@ export class Template {
         {
             "name": "allow_skipping_optional_fields",
             "baseName": "allow_skipping_optional_fields",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "continue_before_optional_fields",
+            "baseName": "continue_before_optional_fields",
             "type": "boolean",
             "format": ""
         },
@@ -563,6 +590,12 @@ export class Template {
             "format": ""
         },
         {
+            "name": "form_sections_in_order",
+            "baseName": "form_sections_in_order",
+            "type": "boolean",
+            "format": ""
+        },
+        {
             "name": "has_slack_webhook_url",
             "baseName": "has_slack_webhook_url",
             "type": "boolean",
@@ -596,6 +629,18 @@ export class Template {
             "name": "form_sections",
             "baseName": "form_sections",
             "type": "Array<TemplateFormSection>",
+            "format": ""
+        },
+        {
+            "name": "signer_roles",
+            "baseName": "signer_roles",
+            "type": "Array<TemplateSignerRole>",
+            "format": ""
+        },
+        {
+            "name": "signature_request_cc",
+            "baseName": "signature_request_cc",
+            "type": "Array<string>",
             "format": ""
         },
         {
@@ -662,6 +707,12 @@ export class Template {
             "name": "versions",
             "baseName": "versions",
             "type": "Array<TemplateVersion>",
+            "format": ""
+        },
+        {
+            "name": "override_account_expiry",
+            "baseName": "override_account_expiry",
+            "type": "boolean",
             "format": ""
         }    ];
 

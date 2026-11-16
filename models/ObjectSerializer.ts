@@ -87,6 +87,7 @@ export * from '../models/ModelCodeLanguage';
 export * from '../models/MoveFolderRequest';
 export * from '../models/MoveTemplateRequest';
 export * from '../models/NumberConditionType';
+export * from '../models/NumberPart';
 export * from '../models/OutputFormat';
 export * from '../models/PageFormat';
 export * from '../models/PageImage';
@@ -163,6 +164,8 @@ export * from '../models/TemplatePageImages';
 export * from '../models/TemplatePageProcessingStatus';
 export * from '../models/TemplatePreview';
 export * from '../models/TemplatePreviewState';
+export * from '../models/TemplateSignerRole';
+export * from '../models/TemplateSignerRoleInput';
 export * from '../models/TemplateSourcePdf';
 export * from '../models/TemplateSummary';
 export * from '../models/TemplateSummaryList';
@@ -216,7 +219,7 @@ import { CreateSignatureRequestTokenRequest  } from '../models/CreateSignatureRe
 import { CreateSubmissionBatchRequest } from '../models/CreateSubmissionBatchRequest';
 import { CreateSubmissionRequest                     } from '../models/CreateSubmissionRequest';
 import { CreateTemplatePreviewRequest } from '../models/CreateTemplatePreviewRequest';
-import { CreateTemplateRequest                                                          } from '../models/CreateTemplateRequest';
+import { CreateTemplateRequest                                                                } from '../models/CreateTemplateRequest';
 import { CreateWebhookRequest            } from '../models/CreateWebhookRequest';
 import { CustomFile } from '../models/CustomFile';
 import { CustomFileList } from '../models/CustomFileList';
@@ -243,7 +246,7 @@ import { ErrorDetail } from '../models/ErrorDetail';
 import { ErrorInfo              } from '../models/ErrorInfo';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { ExpirationInterval } from '../models/ExpirationInterval';
-import { Field                                                                                            } from '../models/Field';
+import { Field                                                                                                   } from '../models/Field';
 import { FieldComparisonCondition    } from '../models/FieldComparisonCondition';
 import { FieldComparisonOperator } from '../models/FieldComparisonOperator';
 import { FieldDependency    } from '../models/FieldDependency';
@@ -255,8 +258,8 @@ import { FieldGroup         } from '../models/FieldGroup';
 import { FieldGroupInput } from '../models/FieldGroupInput';
 import { FieldGroupType } from '../models/FieldGroupType';
 import { FieldInCondition } from '../models/FieldInCondition';
-import { FieldInput                                                                                           } from '../models/FieldInput';
-import { FieldOverride                                                                } from '../models/FieldOverride';
+import { FieldInput                                                                                                  } from '../models/FieldInput';
+import { FieldOverride                                                                     } from '../models/FieldOverride';
 import { FieldPresenceCondition   } from '../models/FieldPresenceCondition';
 import { FieldPresenceOperator } from '../models/FieldPresenceOperator';
 import { FieldRangeCondition } from '../models/FieldRangeCondition';
@@ -279,12 +282,13 @@ import { ModelCodeLanguage } from '../models/ModelCodeLanguage';
 import { MoveFolderRequest } from '../models/MoveFolderRequest';
 import { MoveTemplateRequest } from '../models/MoveTemplateRequest';
 import { NumberConditionType } from '../models/NumberConditionType';
+import { NumberPart } from '../models/NumberPart';
 import { OutputFormat } from '../models/OutputFormat';
 import { PageFormat } from '../models/PageFormat';
 import { PageImage } from '../models/PageImage';
 import { PageImages     } from '../models/PageImages';
-import { PredefinedField        } from '../models/PredefinedField';
-import { PredefinedFieldInput        } from '../models/PredefinedFieldInput';
+import { PredefinedField         } from '../models/PredefinedField';
+import { PredefinedFieldInput         } from '../models/PredefinedFieldInput';
 import { PublishTemplateVersionRequest   } from '../models/PublishTemplateVersionRequest';
 import { RemoveTemplateFieldsRequest } from '../models/RemoveTemplateFieldsRequest';
 import { RenameFolderRequest } from '../models/RenameFolderRequest';
@@ -321,7 +325,7 @@ import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
 import { SubmissionState } from '../models/SubmissionState';
 import { SubmissionSummary                    } from '../models/SubmissionSummary';
 import { SubmissionValidation } from '../models/SubmissionValidation';
-import { Template                                                                } from '../models/Template';
+import { Template                                                                     } from '../models/Template';
 import { TemplateActor      } from '../models/TemplateActor';
 import { TemplateActorType } from '../models/TemplateActorType';
 import { TemplateDefaults                     } from '../models/TemplateDefaults';
@@ -355,6 +359,8 @@ import { TemplatePageImages } from '../models/TemplatePageImages';
 import { TemplatePageProcessingStatus      } from '../models/TemplatePageProcessingStatus';
 import { TemplatePreview         } from '../models/TemplatePreview';
 import { TemplatePreviewState } from '../models/TemplatePreviewState';
+import { TemplateSignerRole } from '../models/TemplateSignerRole';
+import { TemplateSignerRoleInput } from '../models/TemplateSignerRoleInput';
 import { TemplateSourcePdf } from '../models/TemplateSourcePdf';
 import { TemplateSummary                } from '../models/TemplateSummary';
 import { TemplateSummaryList } from '../models/TemplateSummaryList';
@@ -371,7 +377,7 @@ import { UpdateEmailActionRequest                  } from '../models/UpdateEmail
 import { UpdateSignatureRequestRequest          } from '../models/UpdateSignatureRequestRequest';
 import { UpdateTemplateDocumentRequest } from '../models/UpdateTemplateDocumentRequest';
 import { UpdateTemplateFieldsRequest } from '../models/UpdateTemplateFieldsRequest';
-import { UpdateTemplateRequest                                                  } from '../models/UpdateTemplateRequest';
+import { UpdateTemplateRequest                                                        } from '../models/UpdateTemplateRequest';
 import { UpdateWebhookRequest            } from '../models/UpdateWebhookRequest';
 import { UploadMethod } from '../models/UploadMethod';
 import { UploadPresign     } from '../models/UploadPresign';
@@ -427,6 +433,7 @@ let enumsMap: Set<string> = new Set<string>([
     "ImageScaleType",
     "ModelCodeLanguage",
     "NumberConditionType",
+    "NumberPart",
     "OutputFormat",
     "PageFormat",
     "ShapeType",
@@ -572,6 +579,8 @@ let typeMap: {[index: string]: any} = {
     "TemplatePageImages": TemplatePageImages,
     "TemplatePageProcessingStatus": TemplatePageProcessingStatus,
     "TemplatePreview": TemplatePreview,
+    "TemplateSignerRole": TemplateSignerRole,
+    "TemplateSignerRoleInput": TemplateSignerRoleInput,
     "TemplateSourcePdf": TemplateSourcePdf,
     "TemplateSummary": TemplateSummary,
     "TemplateSummaryList": TemplateSummaryList,

@@ -60,7 +60,7 @@ export class TemplateDefaultsInput {
     */
     'date_format'?: string | null;
     /**
-    * How date-time fields are printed, as a strftime format such as `%m/%d/%Y %H:%M:%S`.
+    * How date-time fields are printed, as a strftime format such as `%m/%d/%Y %H:%M`.
     */
     'date_time_format'?: string | null;
     /**

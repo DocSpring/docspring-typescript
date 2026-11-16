@@ -20,7 +20,7 @@
      "noUncheckedIndexedAccess": true,            /* Add 'undefined' to a type when accessed using an index. */
 
     "removeComments": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "./dist",
     "noLib": false,
     "lib": [

@@ -61,7 +61,7 @@ export class CombinedPdf {
     */
     'expired': boolean;
     /**
-    * When the combined PDF expires (`expires_in` after it's generated). Null if it's kept until you delete it.
+    * When the combined PDF expires (`expires_in`, or the account's expiry setting, after it's generated). Null if it's kept until you delete it.
     */
     'expires_at': Date | null;
     /**

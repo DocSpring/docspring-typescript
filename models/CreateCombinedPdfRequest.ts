@@ -34,7 +34,7 @@ export class CreateCombinedPdfRequest {
     */
     'delete_custom_files'?: boolean;
     /**
-    * Seconds after the PDF is generated until the combined PDF expires, up to 10 years (315360000). One that fails is kept for at least 48 hours. Without it, the combined PDF is kept until you delete it.
+    * Seconds after the PDF is generated until the combined PDF expires, up to 10 years (315360000), sooner or later than the account's expiry setting. Defaults to the account's expiry setting, which keeps it until you delete it when it's off. One that fails is kept for at least 48 hours.
     */
     'expires_in'?: number;
 

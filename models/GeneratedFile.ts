@@ -30,7 +30,7 @@ export class GeneratedFile {
     */
     'download_url': string | null;
     /**
-    * A link to download the file that doesn't expire: it redirects to a new temporary link. It needs your API token or a signed-in session, except for a submission of a template that makes its submissions public. Null until the file has been made.
+    * A link to download the file that doesn't expire: it redirects to a new temporary link. It needs your API token or a signed-in session, except for a submission of a template that makes its submissions public (a signing manifest's link always needs one). Null until the file has been made.
     */
     'permanent_url': string | null;
     /**
@@ -38,7 +38,7 @@ export class GeneratedFile {
     */
     'filename': string;
     /**
-    * The file's media type: `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` for a Word document, or `application/vnd.oasis.opendocument.text` for an OpenDocument file.
+    * The file's media type: `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` for a Word document, or `application/vnd.oasis.opendocument.text` for an OpenDocument file, or `application/json` for a signing manifest.
     */
     'content_type': string;
     /**

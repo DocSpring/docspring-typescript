@@ -27,6 +27,10 @@ export class SubmissionFiles {
     */
     'audit_trail'?: GeneratedFile;
     /**
+    * The audit data behind the audit trail of a submission with signature requests, as JSON: the hashes of the document and the audit trail, and each signing event with the salt and hash that DocSpring's signing record holds for it. It has who signed, like the audit trail, and goes when the submission expires, so keep it with the PDF and the audit trail.
+    */
+    'signing_manifest'?: GeneratedFile;
+    /**
     * The preview PDF from POST /submissions/{submission_id}/generate_preview, such as for a submission still waiting for its signature requests.
     */
     'preview'?: GeneratedFile;
@@ -54,6 +58,12 @@ export class SubmissionFiles {
         {
             "name": "audit_trail",
             "baseName": "audit_trail",
+            "type": "GeneratedFile",
+            "format": ""
+        },
+        {
+            "name": "signing_manifest",
+            "baseName": "signing_manifest",
             "type": "GeneratedFile",
             "format": ""
         },

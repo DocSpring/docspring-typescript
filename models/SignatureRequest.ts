@@ -37,7 +37,7 @@ export class SignatureRequest {
     */
     'email': string | null;
     /**
-    * The fields this person fills in. Null for a signature request created with API v1 without a field list: it asks for every field the submission's data doesn't have.
+    * The fields this person fills in or signs: the ones the template gives their role that data didn't fill in, and the ones their signature request listed. A submission's only signature request without a list also has every field without a role that data didn't fill in. Null for a signature request created with API v1 without a field list, on a PDF template without roles: it asks for every field the submission's data doesn't have.
     */
     'fields': Array<string> | null;
     /**
@@ -45,11 +45,11 @@ export class SignatureRequest {
     */
     'metadata': { [key: string]: any; };
     /**
-    * Which of the template's signers the person is. Until templates have roles of their own, a template's signers are `Signer 1`, `Signer 2` and so on, up to `Signer 100`: `Signer 1` is the one whose details the template's `@@signature_requests/0` fields print.
+    * Which of the template's signers the person is: their role's key (`tenant`) when the template has roles, otherwise `Signer 1`, `Signer 2` and so on, up to `Signer 100`. `Signer 1`, or the template's first role, is the one whose details the template's `@@signature_requests/0` fields print, and a role's details are in its `@@signature_requests/<key>` fields too (`@@signature_requests/tenant/completed_at`).
     */
     'role': string;
     /**
-    * The signer's position, from 0: `Signer 1` is 0. The template's `@@signature_requests/<sort_order>` fields print this signature request's details.
+    * The signer's position, from 0: `Signer 1` is 0, as is the template's first role. The template's `@@signature_requests/<sort_order>` fields, and its role's `@@signature_requests/<key>` fields, print this signature request's details.
     */
     'sort_order': number;
     /**

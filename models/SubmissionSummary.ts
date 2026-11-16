@@ -78,7 +78,7 @@ export class SubmissionSummary {
     */
     'files': SubmissionFiles;
     /**
-    * An expired submission's data, metadata, password and PDF have been deleted.
+    * An expired submission's data, metadata, password and files have been deleted, along with its signature requests and audit trail.
     */
     'expired': boolean;
     /**

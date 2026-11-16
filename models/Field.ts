@@ -19,6 +19,7 @@ import { FieldType } from '../models/FieldType';
 import { ImageGravity } from '../models/ImageGravity';
 import { ImageScaleType } from '../models/ImageScaleType';
 import { NumberConditionType } from '../models/NumberConditionType';
+import { NumberPart } from '../models/NumberPart';
 import { ShapeType } from '../models/ShapeType';
 import { StringConditionType } from '../models/StringConditionType';
 import { TextAlignment } from '../models/TextAlignment';
@@ -88,6 +89,14 @@ export class Field {
     */
     'option_list': string | null;
     /**
+    * With `option_list`: the label forms show for each option, keyed by its value, such as `{"head_of_household": "Head of household"}`. The data, the API and webhooks keep the value, and the PDF prints it unless `print_option_labels` is set. An option without a label shows its value, or its sentence case when the options are lowercase words joined by underscores (`head_of_household` shows as "Head of household"). The template's data schema has them as `x-option-labels`. Each key must be one of the options, and each label must have some text. Shared by every field with the same `name`.
+    */
+    'option_labels': { [key: string]: string; } | null;
+    /**
+    * Text display, with `option_labels`: the PDF prints the chosen option's label instead of its value, and an `editable` field's dropdown lists the labels. Shared by every field with the same `name`.
+    */
+    'print_option_labels': boolean;
+    /**
     * Combined fields only: a comma-separated list of the names of the fields whose values are combined, in order. Shared by every field with the same `name`.
     */
     'combined_field_names': string;
@@ -139,6 +148,18 @@ export class Field {
     * Barcode fields only: the barcode format, which the value must match. `code_128` and `pdf417` take any ASCII text; `code_39` and `code_93` take capital letters, digits, spaces and `- . $ / + %`; `code_25` takes digits; `ean_13` takes 12 digits, `ean_8` 7 digits and `upc_a` 11 digits (the check digit is added). Shared by every field with the same `name`.
     */
     'barcode_symbology': BarcodeSymbology | (string & {});
+    /**
+    * With `comb`: the value fills the last boxes of the comb fields with this name, padded on the left with spaces, or with zeros with `comb_pad_with_zeros`, as amounts are written on paper forms. A number with `decimal_places` in one row of boxes lines up on its decimal point, which takes no box: the decimal places fill the last boxes. Date fields ignore it: a date prints in its format. Shared by every field with the same `name`.
+    */
+    'comb_fill_from_right': boolean;
+    /**
+    * With `comb_fill_from_right`: pads the value on the left with zeros instead of spaces, such as `000123`. A negative number keeps its minus sign in the first box. Shared by every field with the same `name`.
+    */
+    'comb_pad_with_zeros': boolean;
+    /**
+    * With `comb`, for string fields: only the value's digits print, one in each box, and any punctuation is left out, so `123-45-6789` fills the 9 boxes of an SSN. The template's data schema accepts as many digits as the boxes hold, with anything but letters between them. Number and date fields ignore it. Shared by every field with the same `name`.
+    */
+    'print_digits_only': boolean;
     /**
     * Leaves the field off the PDF. It stays in the template's data schema (marked `x-hidden`) and on forms, so other fields, such as combined fields, can use its value. A hidden static check mark or shape isn't printed.
     */
@@ -264,11 +285,11 @@ export class Field {
     */
     'comb': boolean;
     /**
-    * With `comb`: how many boxes the field has. The value's maximum length in the template's data schema is this plus `comb_value_offset`.
+    * With `comb`: how many boxes the field has, up to 10,000. The value's maximum length in the template's data schema is the furthest that a comb field of its name reaches: its `comb_value_offset` plus its boxes. With `print_digits_only`, that many digits. A number field is split from its printed form (with `decimal_places`), and a number with a digit that no box prints (more digits than the boxes, or a digit where the offsets leave a gap) is a data error.
     */
     'comb_number_of_cells': number;
     /**
-    * With `comb`: the position, from 0, of the first character of the value that this field prints. For an SSN printed in boxes of 3, 2 and 4 digits, three fields named `ssn` use offsets 0, 3 and 5.
+    * With `comb`: how many boxes of the value's row come before this field, from 0 to 10,000. The comb fields that share a name make one row of boxes, and each prints the row's characters from its offset. For an SSN printed in boxes of 3, 2 and 4 digits, three fields named `ssn` use offsets 0, 3 and 5. The fields that print a number's whole part (`number_part`) make a row of their own, and so do the ones that print its decimal places.
     */
     'comb_value_offset': number;
     /**
@@ -384,6 +405,10 @@ export class Field {
     */
     'decimal_places': number | null;
     /**
+    * Number fields with text display: which part of the number this field prints. `all` prints the whole number, `whole` only the part before the decimal point (with a minus sign) and `decimals` only the decimal places. For an amount printed as `$ ____ . __`, two fields with the same name: one `whole`, and one `decimals` with `decimal_places` 2. The number is rounded once, to the `decimals` field's decimal places (2 when it sets none).
+    */
+    'number_part': NumberPart | (string & {});
+    /**
     * Image fields only: how the image is resized to the field. `fit` keeps its proportions and fits it inside the field, which can leave empty space; `fill` keeps its proportions and crops it to fill the field; `stretch` stretches it to the field's size. Signatures and initials always fit.
     */
     'image_scale_type': ImageScaleType | (string & {});
@@ -391,6 +416,10 @@ export class Field {
     * Image, signature and initials fields: where the image sits in the field with `fit`, or which part is kept with `fill`: `NorthWest` (top left), `North`, `NorthEast`, `West`, `Center`, `East`, `SouthWest`, `South` or `SouthEast` (bottom right). It also aligns typed signatures, and isn't used with `stretch`.
     */
     'image_gravity': ImageGravity | (string & {});
+    /**
+    * Who fills in or signs the field when a submission has signature requests: one of the template's `signer_roles`, by its key, or `sender` for a field that submission data fills in, which no signer is asked for. Null when it has no role: a submission's only signer fills it in when data doesn't, and with two or more signature requests one of them has to list it in its `fields`. In an HTML or Word template, a field whose tag gives it a role (`{% form_field tenant_name, role: tenant %}`) has that one, which only the code can change. Shared by every field with the same `name`.
+    */
+    'signer_role': string | null;
     /**
     * The field's own conditional logic rule: when other fields' values meet its conditions, the field is shown, made required, or both. Null when it has none. The template's rules (`field_dependencies`) can apply to the field too. Shared by every field with the same `name`.
     */
@@ -486,6 +515,18 @@ export class Field {
             "format": ""
         },
         {
+            "name": "option_labels",
+            "baseName": "option_labels",
+            "type": "{ [key: string]: string; }",
+            "format": ""
+        },
+        {
+            "name": "print_option_labels",
+            "baseName": "print_option_labels",
+            "type": "boolean",
+            "format": ""
+        },
+        {
             "name": "combined_field_names",
             "baseName": "combined_field_names",
             "type": "string",
@@ -561,6 +602,24 @@ export class Field {
             "name": "barcode_symbology",
             "baseName": "barcode_symbology",
             "type": "BarcodeSymbology",
+            "format": ""
+        },
+        {
+            "name": "comb_fill_from_right",
+            "baseName": "comb_fill_from_right",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "comb_pad_with_zeros",
+            "baseName": "comb_pad_with_zeros",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "print_digits_only",
+            "baseName": "print_digits_only",
+            "type": "boolean",
             "format": ""
         },
         {
@@ -930,6 +989,12 @@ export class Field {
             "format": ""
         },
         {
+            "name": "number_part",
+            "baseName": "number_part",
+            "type": "NumberPart",
+            "format": ""
+        },
+        {
             "name": "image_scale_type",
             "baseName": "image_scale_type",
             "type": "ImageScaleType",
@@ -939,6 +1004,12 @@ export class Field {
             "name": "image_gravity",
             "baseName": "image_gravity",
             "type": "ImageGravity",
+            "format": ""
+        },
+        {
+            "name": "signer_role",
+            "baseName": "signer_role",
+            "type": "string",
             "format": ""
         },
         {

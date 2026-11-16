@@ -91,6 +91,7 @@ import { ModelCodeLanguage } from '../models/ModelCodeLanguage';
 import { MoveFolderRequest } from '../models/MoveFolderRequest';
 import { MoveTemplateRequest } from '../models/MoveTemplateRequest';
 import { NumberConditionType } from '../models/NumberConditionType';
+import { NumberPart } from '../models/NumberPart';
 import { OutputFormat } from '../models/OutputFormat';
 import { PageFormat } from '../models/PageFormat';
 import { PageImage } from '../models/PageImage';
@@ -167,6 +168,8 @@ import { TemplatePageImages } from '../models/TemplatePageImages';
 import { TemplatePageProcessingStatus } from '../models/TemplatePageProcessingStatus';
 import { TemplatePreview } from '../models/TemplatePreview';
 import { TemplatePreviewState } from '../models/TemplatePreviewState';
+import { TemplateSignerRole } from '../models/TemplateSignerRole';
+import { TemplateSignerRoleInput } from '../models/TemplateSignerRoleInput';
 import { TemplateSourcePdf } from '../models/TemplateSourcePdf';
 import { TemplateSummary } from '../models/TemplateSummary';
 import { TemplateSummaryList } from '../models/TemplateSummaryList';
@@ -1849,6 +1852,13 @@ export interface ClientUploadTemplateRequest {
      */
     includeOfficeUseFields?: boolean
     /**
+     * Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientuploadTemplate
+     */
+    syncFields?: boolean
+    /**
      * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
      * @type string
@@ -1886,6 +1896,13 @@ export interface ClientUploadTemplateDocumentRequest {
      * @memberof ClientuploadTemplateDocument
      */
     reimportFields?: boolean
+    /**
+     * Add a field for each value the template's code, Word document or layout reads for the first time, with a type worked out from how it's used. Existing fields keep their settings, and a field you deleted while the code still read the value stays deleted. Default true. Set it to false to manage the fields yourself with the fields endpoints: a form field whose field isn't on the template then fails its submissions and previews. Only for HTML templates, Word templates and page designs.
+     * Defaults to: undefined
+     * @type boolean
+     * @memberof ClientuploadTemplateDocument
+     */
+    syncFields?: boolean
     /**
      * A key of your own, such as a UUID, that makes it safe to send this request again: for 24 hours, DocSpring answers a request with the same key from the same API token with the first request's response (and an `Idempotent-Replayed: true` header) instead of processing it again. Send a new key with each new request, and the same key each time you send the same request again, such as after a timeout, a network error or a 5xx. The same key with a different request is a 422 `idempotency_key_reused`. A 409 `idempotency_key_in_use` with a `Retry-After` header means the first request is still being processed: send the request again then. A repeated response is the first one as it was, so its `download_url` links may have expired: use `permanent_url`, or get the record again for new links.
      * Defaults to: undefined
@@ -2328,7 +2345,7 @@ export class ObjectClient {
     }
 
     /**
-     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. 
+     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. A deleted template can be restored from Trash in the dashboard for a limited time; a single deleted version can't. 
      * Delete a template
      * @param param the request object
      */
@@ -2337,7 +2354,7 @@ export class ObjectClient {
     }
 
     /**
-     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. 
+     * Deletes a template's draft and all of its published versions, or one published version (`version`). Returns the template as it was before it was deleted. A deleted template can be restored from Trash in the dashboard for a limited time; a single deleted version can't. 
      * Delete a template
      * @param param the request object
      */
@@ -2382,7 +2399,7 @@ export class ObjectClient {
     }
 
     /**
-     * Deletes a submission's data and PDF now, and returns the expired submission.
+     * Deletes a submission's data and files now, along with any signature requests and audit trail, and returns the expired submission. 
      * Expire a submission
      * @param param the request object
      */
@@ -2391,7 +2408,7 @@ export class ObjectClient {
     }
 
     /**
-     * Deletes a submission's data and PDF now, and returns the expired submission.
+     * Deletes a submission's data and files now, along with any signature requests and audit trail, and returns the expired submission. 
      * Expire a submission
      * @param param the request object
      */
@@ -3269,7 +3286,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public uploadTemplateWithHttpInfo(param: ClientUploadTemplateRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.uploadTemplateWithHttpInfo(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat, param.includeOfficeUseFields, param.idempotencyKey,  options).toPromise();
+        return this.api.uploadTemplateWithHttpInfo(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat, param.includeOfficeUseFields, param.syncFields, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -3278,7 +3295,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public uploadTemplate(param: ClientUploadTemplateRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.uploadTemplate(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat, param.includeOfficeUseFields, param.idempotencyKey,  options).toPromise();
+        return this.api.uploadTemplate(param.document, param.wait, param.name, param.description, param.parentFolderId, param.aiFieldNamingLanguage, param.detectFields, param.fieldSource, param.fieldNaming, param.fieldLogic, param.outputFormat, param.includeOfficeUseFields, param.syncFields, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -3287,7 +3304,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public uploadTemplateDocumentWithHttpInfo(param: ClientUploadTemplateDocumentRequest, options?: ConfigurationOptions): Promise<HttpInfo<Template>> {
-        return this.api.uploadTemplateDocumentWithHttpInfo(param.templateId, param.document, param.wait, param.reimportFields, param.idempotencyKey,  options).toPromise();
+        return this.api.uploadTemplateDocumentWithHttpInfo(param.templateId, param.document, param.wait, param.reimportFields, param.syncFields, param.idempotencyKey,  options).toPromise();
     }
 
     /**
@@ -3296,7 +3313,7 @@ export class ObjectClient {
      * @param param the request object
      */
     public uploadTemplateDocument(param: ClientUploadTemplateDocumentRequest, options?: ConfigurationOptions): Promise<Template> {
-        return this.api.uploadTemplateDocument(param.templateId, param.document, param.wait, param.reimportFields, param.idempotencyKey,  options).toPromise();
+        return this.api.uploadTemplateDocument(param.templateId, param.document, param.wait, param.reimportFields, param.syncFields, param.idempotencyKey,  options).toPromise();
     }
 
     /**

@@ -30,7 +30,7 @@ export class CreateSubmissionRequest {
     */
     'editable'?: boolean;
     /**
-    * The values of the template's fields, by field name. Required for PDF templates, Word templates and page designs, unless `signature_requests` collects them (PDF templates only). Signatures come only from signature requests: a value for a signature or initials field makes the submission `invalid_data`, in test mode too. To print an image or a name you send, use an Image or Text field.
+    * The values of the template's fields, by field name. Required for PDF templates, Word templates and page designs, unless `signature_requests` collects them. Signatures come only from signature requests: a value for a signature or initials field makes the submission `invalid_data`, in test mode too. To print an image or a name you send, use an Image or Text field.
     */
     'data'?: { [key: string]: any; };
     /**
@@ -42,11 +42,11 @@ export class CreateSubmissionRequest {
     */
     'password'?: string;
     /**
-    * What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission.
+    * What the submission makes: `pdf`, `docx` (a Word document, from a Word template), `odt` (an OpenDocument file, the format LibreOffice uses, converted from a Word template's Word document), and `png` (an image of each page of the PDF, up to 100 pages, which adds `pdf`) when you ask for it. Default `["pdf"]`, or a Word template's `output_format`. A Word template's submission with signature requests makes only `pdf`, which its signers sign. POST /submissions/{submission_id}/generate_files adds `png`, and a Word template's submission's `pdf`, `docx` or `odt`, to a processed submission.
     */
     'output_formats'?: Array<OutputFormat>;
     /**
-    * Seconds after the PDF is generated until the submission expires, up to 10 years (315360000). Default the template's expiration setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours. The demo API token's submissions expire within an hour: up to 3600, and that's their default.
+    * Seconds after the submission is processed until it expires, up to 10 years (315360000), sooner or later than the template's or the account's expiry setting. Defaults to the template's expiry when it overrides the account's (`override_account_expiry`), and otherwise to the account's expiry setting. A submission that isn't processed, such as one with invalid data, is kept for at least 48 hours. The demo API token's submissions expire within an hour: up to 3600, and that's their default.
     */
     'expires_in'?: number;
     /**
@@ -62,7 +62,7 @@ export class CreateSubmissionRequest {
     */
     'css'?: string;
     /**
-    * The people who sign the PDF, and fill in their fields first. The PDF is generated once every signature request is completed. PDF templates only. Without `role`s, the first signature request is `Signer 1`, the second `Signer 2`, and so on. To leave a signer out, give every signature request its `role` and leave that one's out.
+    * The people who sign the PDF, and fill in their fields first. The PDF is generated once every signature request is completed. The signers of an HTML template, a Word template or a page design fill in its form fields and signature tags in a PDF made from `data`, and a Word template's submission makes only a PDF. Without `role`s, the first signature request is `Signer 1`, the second `Signer 2`, and so on. To leave a signer out, give every signature request its `role` and leave that one's out.
     */
     'signature_requests'?: Array<SignatureRequestInput>;
     /**
@@ -82,7 +82,7 @@ export class CreateSubmissionRequest {
     */
     'email_message'?: string;
     /**
-    * People who get a copy of the completed document. They don't sign.
+    * People who get a copy of the completed document, as well as the template's `signature_request_cc`. They don't sign.
     */
     'cc'?: Array<string>;
     /**
