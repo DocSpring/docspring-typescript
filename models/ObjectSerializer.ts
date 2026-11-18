@@ -1,5 +1,6 @@
 export * from '../models/AddTemplateFieldsRequest';
 export * from '../models/AiFieldNamingLanguage';
+export * from '../models/AskSupportHelpRequest';
 export * from '../models/AuthenticationCheck';
 export * from '../models/BarcodeSymbology';
 export * from '../models/CheckCharacter';
@@ -88,6 +89,7 @@ export * from '../models/MoveFolderRequest';
 export * from '../models/MoveTemplateRequest';
 export * from '../models/NumberConditionType';
 export * from '../models/NumberPart';
+export * from '../models/OpenSupportTicketRequest';
 export * from '../models/OutputFormat';
 export * from '../models/PageFormat';
 export * from '../models/PageImage';
@@ -98,8 +100,10 @@ export * from '../models/PublishTemplateVersionRequest';
 export * from '../models/RemoveTemplateFieldsRequest';
 export * from '../models/RenameFolderRequest';
 export * from '../models/ReorderTemplateFieldsRequest';
+export * from '../models/ReplyToSupportTicketRequest';
 export * from '../models/RestoreTemplateVersionRequest';
 export * from '../models/SendAccountEmailActionTestEmailRequest';
+export * from '../models/SendSupportFeedbackRequest';
 export * from '../models/ShapeType';
 export * from '../models/SignatureRequest';
 export * from '../models/SignatureRequestAuthSecondFactorType';
@@ -130,6 +134,28 @@ export * from '../models/SubmissionSourcePdf';
 export * from '../models/SubmissionState';
 export * from '../models/SubmissionSummary';
 export * from '../models/SubmissionValidation';
+export * from '../models/SupportFeedback';
+export * from '../models/SupportHelp';
+export * from '../models/SupportHelpSource';
+export * from '../models/SupportHelpState';
+export * from '../models/SupportHelpTurn';
+export * from '../models/SupportHelpTurnRole';
+export * from '../models/SupportMessage';
+export * from '../models/SupportMessageAuthor';
+export * from '../models/SupportReportAgent';
+export * from '../models/SupportReportCategory';
+export * from '../models/SupportReportImpact';
+export * from '../models/SupportReportKind';
+export * from '../models/SupportReportSource';
+export * from '../models/SupportTicket';
+export * from '../models/SupportTicketList';
+export * from '../models/SupportTicketListStatus';
+export * from '../models/SupportTicketNotifications';
+export * from '../models/SupportTicketReply';
+export * from '../models/SupportTicketReplyOutcome';
+export * from '../models/SupportTicketResolution';
+export * from '../models/SupportTicketStatus';
+export * from '../models/SupportTicketWatch';
 export * from '../models/Template';
 export * from '../models/TemplateActor';
 export * from '../models/TemplateActorType';
@@ -195,6 +221,7 @@ export * from '../models/WebhookMode';
 
 import { AddTemplateFieldsRequest } from '../models/AddTemplateFieldsRequest';
 import { AiFieldNamingLanguage } from '../models/AiFieldNamingLanguage';
+import { AskSupportHelpRequest } from '../models/AskSupportHelpRequest';
 import { AuthenticationCheck } from '../models/AuthenticationCheck';
 import { BarcodeSymbology } from '../models/BarcodeSymbology';
 import { CheckCharacter } from '../models/CheckCharacter';
@@ -243,7 +270,7 @@ import { EmailDomainRecordState } from '../models/EmailDomainRecordState';
 import { EmailDomainState } from '../models/EmailDomainState';
 import { ErrorCode } from '../models/ErrorCode';
 import { ErrorDetail } from '../models/ErrorDetail';
-import { ErrorInfo              } from '../models/ErrorInfo';
+import { ErrorInfo               } from '../models/ErrorInfo';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { ExpirationInterval } from '../models/ExpirationInterval';
 import { Field                                                                                                   } from '../models/Field';
@@ -283,6 +310,7 @@ import { MoveFolderRequest } from '../models/MoveFolderRequest';
 import { MoveTemplateRequest } from '../models/MoveTemplateRequest';
 import { NumberConditionType } from '../models/NumberConditionType';
 import { NumberPart } from '../models/NumberPart';
+import { OpenSupportTicketRequest              } from '../models/OpenSupportTicketRequest';
 import { OutputFormat } from '../models/OutputFormat';
 import { PageFormat } from '../models/PageFormat';
 import { PageImage } from '../models/PageImage';
@@ -293,8 +321,10 @@ import { PublishTemplateVersionRequest   } from '../models/PublishTemplateVersio
 import { RemoveTemplateFieldsRequest } from '../models/RemoveTemplateFieldsRequest';
 import { RenameFolderRequest } from '../models/RenameFolderRequest';
 import { ReorderTemplateFieldsRequest } from '../models/ReorderTemplateFieldsRequest';
+import { ReplyToSupportTicketRequest   } from '../models/ReplyToSupportTicketRequest';
 import { RestoreTemplateVersionRequest } from '../models/RestoreTemplateVersionRequest';
 import { SendAccountEmailActionTestEmailRequest } from '../models/SendAccountEmailActionTestEmailRequest';
+import { SendSupportFeedbackRequest              } from '../models/SendSupportFeedbackRequest';
 import { ShapeType } from '../models/ShapeType';
 import { SignatureRequest                              } from '../models/SignatureRequest';
 import { SignatureRequestAuthSecondFactorType } from '../models/SignatureRequestAuthSecondFactorType';
@@ -325,6 +355,28 @@ import { SubmissionSourcePdf } from '../models/SubmissionSourcePdf';
 import { SubmissionState } from '../models/SubmissionState';
 import { SubmissionSummary                    } from '../models/SubmissionSummary';
 import { SubmissionValidation } from '../models/SubmissionValidation';
+import { SupportFeedback } from '../models/SupportFeedback';
+import { SupportHelp       } from '../models/SupportHelp';
+import { SupportHelpSource } from '../models/SupportHelpSource';
+import { SupportHelpState } from '../models/SupportHelpState';
+import { SupportHelpTurn   } from '../models/SupportHelpTurn';
+import { SupportHelpTurnRole } from '../models/SupportHelpTurnRole';
+import { SupportMessage      } from '../models/SupportMessage';
+import { SupportMessageAuthor } from '../models/SupportMessageAuthor';
+import { SupportReportAgent } from '../models/SupportReportAgent';
+import { SupportReportCategory } from '../models/SupportReportCategory';
+import { SupportReportImpact } from '../models/SupportReportImpact';
+import { SupportReportKind } from '../models/SupportReportKind';
+import { SupportReportSource } from '../models/SupportReportSource';
+import { SupportTicket                       } from '../models/SupportTicket';
+import { SupportTicketList } from '../models/SupportTicketList';
+import { SupportTicketListStatus } from '../models/SupportTicketListStatus';
+import { SupportTicketNotifications } from '../models/SupportTicketNotifications';
+import { SupportTicketReply } from '../models/SupportTicketReply';
+import { SupportTicketReplyOutcome } from '../models/SupportTicketReplyOutcome';
+import { SupportTicketResolution } from '../models/SupportTicketResolution';
+import { SupportTicketStatus } from '../models/SupportTicketStatus';
+import { SupportTicketWatch } from '../models/SupportTicketWatch';
 import { Template                                                                     } from '../models/Template';
 import { TemplateActor      } from '../models/TemplateActor';
 import { TemplateActorType } from '../models/TemplateActorType';
@@ -452,6 +504,17 @@ let enumsMap: Set<string> = new Set<string>([
     "SubmissionBatchState",
     "SubmissionSource",
     "SubmissionState",
+    "SupportHelpState",
+    "SupportHelpTurnRole",
+    "SupportMessageAuthor",
+    "SupportReportCategory",
+    "SupportReportImpact",
+    "SupportReportKind",
+    "SupportReportSource",
+    "SupportTicketListStatus",
+    "SupportTicketReplyOutcome",
+    "SupportTicketResolution",
+    "SupportTicketStatus",
     "TemplateActorType",
     "TemplateDocumentState",
     "TemplateFieldDependencyAction",
@@ -477,6 +540,7 @@ let enumsMap: Set<string> = new Set<string>([
 
 let typeMap: {[index: string]: any} = {
     "AddTemplateFieldsRequest": AddTemplateFieldsRequest,
+    "AskSupportHelpRequest": AskSupportHelpRequest,
     "AuthenticationCheck": AuthenticationCheck,
     "CombinedPdf": CombinedPdf,
     "CombinedPdfFiles": CombinedPdfFiles,
@@ -533,6 +597,7 @@ let typeMap: {[index: string]: any} = {
     "HtmlEngineOptionsInput": HtmlEngineOptionsInput,
     "MoveFolderRequest": MoveFolderRequest,
     "MoveTemplateRequest": MoveTemplateRequest,
+    "OpenSupportTicketRequest": OpenSupportTicketRequest,
     "PageImage": PageImage,
     "PageImages": PageImages,
     "PredefinedField": PredefinedField,
@@ -541,8 +606,10 @@ let typeMap: {[index: string]: any} = {
     "RemoveTemplateFieldsRequest": RemoveTemplateFieldsRequest,
     "RenameFolderRequest": RenameFolderRequest,
     "ReorderTemplateFieldsRequest": ReorderTemplateFieldsRequest,
+    "ReplyToSupportTicketRequest": ReplyToSupportTicketRequest,
     "RestoreTemplateVersionRequest": RestoreTemplateVersionRequest,
     "SendAccountEmailActionTestEmailRequest": SendAccountEmailActionTestEmailRequest,
+    "SendSupportFeedbackRequest": SendSupportFeedbackRequest,
     "SignatureRequest": SignatureRequest,
     "SignatureRequestEvent": SignatureRequestEvent,
     "SignatureRequestInput": SignatureRequestInput,
@@ -557,6 +624,17 @@ let typeMap: {[index: string]: any} = {
     "SubmissionSourcePdf": SubmissionSourcePdf,
     "SubmissionSummary": SubmissionSummary,
     "SubmissionValidation": SubmissionValidation,
+    "SupportFeedback": SupportFeedback,
+    "SupportHelp": SupportHelp,
+    "SupportHelpSource": SupportHelpSource,
+    "SupportHelpTurn": SupportHelpTurn,
+    "SupportMessage": SupportMessage,
+    "SupportReportAgent": SupportReportAgent,
+    "SupportTicket": SupportTicket,
+    "SupportTicketList": SupportTicketList,
+    "SupportTicketNotifications": SupportTicketNotifications,
+    "SupportTicketReply": SupportTicketReply,
+    "SupportTicketWatch": SupportTicketWatch,
     "Template": Template,
     "TemplateActor": TemplateActor,
     "TemplateDefaults": TemplateDefaults,
